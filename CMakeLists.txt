@@ -25,7 +25,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         copy.cpp
         copy.h
-        settings.json
+
+        settings.h settings.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Backie APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -47,7 +48,7 @@ endif()
 
 target_link_libraries(Backie PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-add_subdirectory(libs/spdlog)
+add_subdirectory(spdlog)
 target_link_libraries(Backie PRIVATE spdlog::spdlog)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
