@@ -1,0 +1,17 @@
+{
+    "destination": "W:/backup_testing/destination",
+    "tasks": [
+        {
+            "directory": "W:/backup_testing/3",
+            "filter": "",
+            "time": "",
+            "type": "watched"
+        },
+        {
+            "directory": "W:/backup_testing/1",
+            "filter": "",
+            "time": "18:00",
+            "type": "scheduled"
+        }
+    ]
+}
