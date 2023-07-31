@@ -1,6 +1,8 @@
 #include "settings.h"
 #include "spdlog/spdlog.h"
 
+#include <vector>
+
 void Settings::read_from_file(){
     std::ifstream file(path_to_settings);
     if (file.is_open()) {
@@ -23,6 +25,32 @@ void Settings::push_changes(){
     } else {
         SPDLOG_ERROR("Could not open the file for writing");
     }
+}
+
+std::vector<Task> Settings::get_task_list_by_type(const std::string& type){
+    std::vector<Task> tasks;
+
+    if (type != "scheduled" && type != "watched"){
+        return tasks;
+    }
+
+    for (const json& task_json : data["tasks"]){
+        if (task_json["type"] == type){
+
+            tasks.push_back(task_json_to_struct(task_json));
+        }
+    }
+    return tasks;
+
+}
+
+Task Settings::task_json_to_struct(json task_json){
+    Task task;
+    task.directory = task_json["directory"];
+    task.type = task_json["type"];
+    task.time = task_json["time"];
+    task.filter = task_json["filter"];
+    return task;
 }
 
 void Settings::backup_task(const std::string& directory, const std::string& type, const std::string& time, const std::string& filter){

@@ -2,15 +2,34 @@
     "destination": "W:/backup_testing/destination",
     "tasks": [
         {
-            "directory": "W:/backup_testing/3",
+            "directory": "W:/backup_testing/1",
+            "filter": "",
+            "time": "18:00",
+            "type": "scheduled"
+        },
+        {
+            "directory": "W:/backup_testing/2",
             "filter": "",
             "time": "",
             "type": "watched"
         },
         {
-            "directory": "W:/backup_testing/1",
+            "directory": "W:/backup_testing/3",
             "filter": "",
-            "time": "18:00",
+            "time": "21:30",
+            "type": "scheduled"
+        },
+        {
+            "directory": "W:/backup_testing/4",
+            "filter": "",
+            "time": "",
+            "type": "watched"
+        },
+
+        {
+            "directory": "W:/backup_testing/5",
+            "filter": "",
+            "time": "04:50",
             "type": "scheduled"
         }
     ]

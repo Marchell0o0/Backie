@@ -5,6 +5,7 @@
 
 #include <fstream>
 #include "nlohmann/json.hpp"
+#include "task.h"
 
 using json = nlohmann::json;
 
@@ -45,6 +46,13 @@ public:
      */
     void set_destination(const std::string& path_to_destination);
 
+    /**
+     * @brief returns a vector of all the tasks by type
+     * @param "scheduled"/"watched"
+     * @return vector of tasks
+     */
+    std::vector<Task> get_task_list_by_type(const std::string& type);
+
 private:
     /**
      * @brief Updates a backup task with new or modified settings.
@@ -55,6 +63,13 @@ private:
      */
     void update_backup_task(const std::string& directory, const std::string& type,
                             const std::string& time = "", const std::string& filter="");
+
+    /**
+     * @brief json task template to Task struct
+     * @param json task
+     * @return Task struct
+     */
+    Task task_json_to_struct(json task_json);
 };
 
 #endif // SETTINGS_H
