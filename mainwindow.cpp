@@ -13,3 +13,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_Sendnudes_clicked()
+{
+    qDebug() << "Nudes were successfully sent!";
+}
+
