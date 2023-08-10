@@ -14,8 +14,8 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_Sendnudes_clicked()
+void MainWindow::on_pushButton_clicked()
 {
-    qDebug() << "Nudes were successfully sent!";
+    qDebug() << "Button was pressed";
 }
 
