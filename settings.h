@@ -1,9 +1,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
-
 #include <fstream>
+#include <mutex>
 #include "nlohmann/json.hpp"
 #include "task.h"
 
@@ -12,7 +11,14 @@ using json = nlohmann::json;
 class Settings {
 public:
     json data;
-    std::string path_to_settings = "W:/Programming/Backie/Backie/settings.json";
+    std::string path_to_settings;
+    std::mutex file_mutex;
+
+    Settings() {
+        initialize_settings_path();
+    }
+
+    void initialize_settings_path();
 
     /**
      * @brief Reads the settings data from the file.

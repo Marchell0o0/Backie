@@ -1,13 +1,29 @@
 #include "settings.h"
 #include "spdlog/spdlog.h"
+#include <windows.h>
+#include <ShlObj.h>
+
 
 #include <vector>
 
-void Settings::read_from_file(){
-    std::ifstream file(path_to_settings);
-    if (file.is_open()) {
-        data = json::parse(file);
+void Settings::initialize_settings_path() {
+    char path[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_APPDATA, NULL, 0, path))) {
+        // Form the path to the Backie folder in AppData
+        std::string backieFolderPath = std::string(path) + "\\Backie";
+        // Check if the directory exists and if not, create it
+        if (GetFileAttributesA(backieFolderPath.c_str()) == INVALID_FILE_ATTRIBUTES) {
+            CreateDirectoryA(backieFolderPath.c_str(), NULL);
+        }
+        path_to_settings = backieFolderPath + "\\settings.json";
     } else {
+        // Default to relative path if we can't get appdata
+        path_to_settings = "./settings.json";
+
+    }
+    SPDLOG_INFO("Path to settings {}", path_to_settings);
+    std::ifstream file(path_to_settings);
+    if(!file.is_open()){
         SPDLOG_WARN("Creating new settings file");
         std::ofstream fout(path_to_settings);
         if (fout.is_open()) {
@@ -16,9 +32,21 @@ void Settings::read_from_file(){
             SPDLOG_ERROR("Could not create the file");
         }
     }
+
+}
+
+void Settings::read_from_file(){
+    std::lock_guard<std::mutex> lock(file_mutex);
+    std::ifstream file(path_to_settings);
+    if (file.is_open()) {
+        data = json::parse(file);
+    } else {
+        SPDLOG_ERROR("No settings file to read from");
+    }
 }
 
 void Settings::push_changes(){
+    std::lock_guard<std::mutex> lock(file_mutex);
     std::ofstream fout(path_to_settings);
     if (fout.is_open()) {
         fout << data.dump(4);
