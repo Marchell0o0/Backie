@@ -16,6 +16,13 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QPushButton" name="hiButton">
+      <property name="text">
+       <string>Hi there</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QListWidget" name="listWidget"/>
     </item>
     <item>
@@ -26,7 +33,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="Sendnudes">
+     <widget class="QPushButton" name="sendMessage">
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>

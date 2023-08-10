@@ -17,7 +17,9 @@ public:
 
 private slots:
 
-    void on_Sendnudes_clicked();
+    void on_hiButton_clicked();
+
+    void on_sendMessage_clicked();
 
 private:
     Ui::MainWindow *ui;
