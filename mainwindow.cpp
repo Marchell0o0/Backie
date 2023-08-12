@@ -18,9 +18,3 @@ void MainWindow::on_hiButton_clicked()
     qDebug() << "Hi there";
 }
 
-
-void MainWindow::on_sendMessage_clicked()
-{
-     qDebug() << "Message was successfully sent";
-}
-
