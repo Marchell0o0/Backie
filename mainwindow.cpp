@@ -13,9 +13,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_hiButton_clicked()
 {
-    qDebug() << "Button was pressed";
+    qDebug() << "Hi there";
 }
 
