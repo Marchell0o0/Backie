@@ -35,7 +35,7 @@
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="pushB_2">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -71,7 +71,7 @@
          <number>6</number>
         </property>
         <item row="1" column="1">
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="accountB">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -156,7 +156,7 @@ QPushButton:hover {
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="chooseFileLabel">
             <property name="text">
              <string>Choose a backup file:</string>
             </property>
@@ -198,7 +198,7 @@ QPushButton:hover {
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="sourceLineEdit">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -211,7 +211,7 @@ QPushButton:hover {
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="browseSourceB">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -269,17 +269,10 @@ QPushButton:hover {
         </item>
         <item>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="checkBox">
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="scheduledRadB">
             <property name="text">
              <string>Scheduled</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="checkBox_2">
-            <property name="text">
-             <string>Another type 1</string>
             </property>
            </widget>
           </item>
@@ -299,17 +292,24 @@ QPushButton:hover {
             </property>
            </spacer>
           </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="someOptionChBox">
+            <property name="text">
+             <string>Some option</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="1">
-           <widget class="QPushButton" name="pushButton_5">
+           <widget class="QPushButton" name="backupB">
             <property name="text">
              <string>Backup</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="checkBox_3">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="watchedRadB">
             <property name="text">
-             <string>Another type 2</string>
+             <string>Watched</string>
             </property>
            </widget>
           </item>
