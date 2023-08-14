@@ -17,6 +17,12 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        backupscreen.h
+        backupscreen.cpp
+        backupscreen.ui
+        signinscreen.h
+        signinscreen.cpp
+        signinscreen.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -30,6 +36,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         task.h
         scheduled_thread.h scheduled_thread.cpp
+        backupscreen.h backupscreen.cpp backupscreen.ui
+        signinscreen.h signinscreen.cpp signinscreen.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Backie APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

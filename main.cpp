@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     spdlog::set_level(spdlog::level::trace);
 
     QApplication a(argc, argv);
-    MainWindow w;
+    MainWindow mainWindow;
 
 //    Settings settings;
 //    settings.read_from_file();
@@ -44,6 +44,6 @@ int main(int argc, char *argv[]) {
 
 
 
-    w.show();
+    mainWindow.show();
     return a.exec();
 }
