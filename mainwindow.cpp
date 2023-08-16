@@ -14,8 +14,3 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::on_Sendnudes_clicked()
-{
-    qDebug() << "Nudes were successfully sent!";
-}
-
