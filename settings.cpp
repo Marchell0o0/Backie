@@ -1,10 +1,9 @@
-#include "settings.h"
-#include "spdlog/spdlog.h"
 #include <windows.h>
 #include <ShlObj.h>
-
-
 #include <vector>
+
+#include "settings.h"
+#include "spdlog/spdlog.h"
 
 void Settings::initialize_settings_path() {
     char path[MAX_PATH];
