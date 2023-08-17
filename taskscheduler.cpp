@@ -112,7 +112,11 @@ bool addTask(Backup backup){
             pTriggerCollection->Create(TASK_TRIGGER_MONTHLY, &pTrigger);
             IMonthlyTrigger* pMonthlyTrigger = NULL;
             pTrigger->QueryInterface(IID_IMonthlyTrigger, (void**)&pMonthlyTrigger);
-            pMonthlyTrigger->put_DaysOfMonth(1 << (backup.getDay() - 1));
+            if (backup.getDay() > 0) {
+                pMonthlyTrigger->put_DaysOfMonth(1 << (backup.getDay() - 1));
+            } else {
+                pMonthlyTrigger->put_RunOnLastDayOfMonth(true);
+            }
             pMonthlyTrigger->Release();
 
             break;

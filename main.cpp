@@ -69,6 +69,12 @@ int main(int argc, char *argv[]) {
     } else {
         SPDLOG_INFO("Couldn't add backup3. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastError()));
     }
+    auto backup4 = BackupFactory::CreateBackup<ScheduleRecurrence::MONTHLY>(BackupType::FULL, "W:/backup_testing/source", -1, 12, 30);
+    if (backup4 && addTask(*backup4)){
+        SPDLOG_INFO("Added backup4");
+    } else {
+        SPDLOG_INFO("Couldn't add backup4. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastError()));
+    }
 
 
     // TODO

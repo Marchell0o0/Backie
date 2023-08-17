@@ -112,6 +112,8 @@ public:
      * @param directory Directory for the backup.
      * @param args Date arguments. Array of ints of changing size. In this order year, month, day, hour, minute
      *
+     * Month could be equal to -1, which means the task should run on the last day of the month.
+     *
      * @return An optional containing a Backup object if creation is successful, or std::nullopt if not.
      */
     template <ScheduleRecurrence R, typename... Args>
@@ -180,7 +182,7 @@ private:
         } else if constexpr (R == ScheduleRecurrence::MONTHLY) {
             if (sizeof...(Args) != 3) return false;
             int dayOfMonth = temp[0], hour = temp[1], minute = temp[2];
-            return dayOfMonth >= 1 && dayOfMonth <= 31 && hour >= 0 && hour < 24 && minute >= 0 && minute < 60;
+            return (dayOfMonth >= 1 || dayOfMonth == -1) && dayOfMonth <= 31 && hour >= 0 && hour < 24 && minute >= 0 && minute < 60;
 
         } else if constexpr (R == ScheduleRecurrence::ONCE) {
             if (sizeof...(Args) != 5) return false;
