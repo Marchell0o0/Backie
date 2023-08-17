@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons/sideBar">
+        <file>user.svg</file>
+        <file>settings.svg</file>
+        <file>home.svg</file>
+        <file>envelope.svg</file>
+        <file>download.svg</file>
+    </qresource>
+</RCC>
