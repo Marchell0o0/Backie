@@ -25,15 +25,18 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Backie
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        copy.cpp
-        copy.h
+
+
 
         settings.h settings.cpp
 
         task.h
-        scheduled_thread.h scheduled_thread.cpp
-        taskscheduler.h taskscheduler.cpp
+
+
         backup.h backup.cpp
+        backupschedule.h backupschedule.cpp
+        backupfactory.h backupfactory.cpp
+        utils.h utils.cpp
 
     )
 # Define target properties for Android with Qt 6 as:
