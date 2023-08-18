@@ -1,9 +1,16 @@
 <RCC>
-    <qresource prefix="/icons/sideBar">
-        <file>user.svg</file>
-        <file>settings.svg</file>
-        <file>home.svg</file>
-        <file>envelope.svg</file>
-        <file>download.svg</file>
+    <qresource prefix="/resources">
+        <file>assets/icons/sideBar/download.svg</file>
+        <file>assets/icons/sideBar/envelope.svg</file>
+        <file>assets/icons/sideBar/home.svg</file>
+        <file>assets/icons/sideBar/settings.svg</file>
+        <file>assets/icons/sideBar/time-past.svg</file>
+        <file>assets/icons/sideBar/user.svg</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3916611.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917033.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917058.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917296.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917330.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917688.pdf</file>
     </qresource>
 </RCC>

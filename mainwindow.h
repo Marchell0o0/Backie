@@ -21,15 +21,21 @@ public:
 
 private slots:
 
-    void on_backupB_clicked();
+//    void on_accountScreenB_clicked();
 
-    void on_accountB_2_clicked();
+//    void on_backupScreenB_clicked();
+
+    void on_backupScreenB_clicked();
+
+    void on_accountScreenB_clicked();
+
+    void showMainScreen();
 
 private:
     Ui::MainWindow *ui;
     BackupScreen *backupScreen;
     SignInScreen *signInScreen;
-
     QStackedWidget *mainStackedWidget;
+    QStackedWidget *secondaryStackedWidget;
 };
 #endif // MAINWINDOW_H
