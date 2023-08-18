@@ -12,3 +12,9 @@ SignInScreen::~SignInScreen()
 {
     delete ui;
 }
+
+void SignInScreen::on_goMainWindowB_clicked()
+{
+    emit switchToMainScreen();
+}
+

@@ -14,15 +14,11 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
-        backupscreen.h
-        backupscreen.cpp
-        backupscreen.ui
-        signinscreen.h
-        signinscreen.cpp
-        signinscreen.ui
+        mainwindow.cpp mainwindow.h mainwindow.ui
+        backupscreen.h backupscreen.cpp backupscreen.ui
+        signinscreen.h signinscreen.cpp signinscreen.ui
+        recoverscreen.h recoverscreen.cpp recoverscreen.ui
+        Resources.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -38,11 +34,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         scheduled_thread.h scheduled_thread.cpp
         backupscreen.h backupscreen.cpp backupscreen.ui
         signinscreen.h signinscreen.cpp signinscreen.ui
+        assets/icons/licenses/delete
+        recoverscreen.h recoverscreen.cpp recoverscreen.ui
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Backie APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+# For more information, see https://doc.qt.io/qt-6/qt-
 else()
     if(ANDROID)
         add_library(Backie SHARED
