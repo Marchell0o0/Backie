@@ -16,12 +16,12 @@ MainWindow::MainWindow(QWidget *parent)
     signInScreen = new SignInScreen(this);
 
     // Add the screens to the corresponding QStackedWidgets
-    mainStackedWidget->addWidget(secondaryStackedWidget); // This is where our sidebar and its associated screens are
+    mainStackedWidget->addWidget(ui->pageMainScreen); // This is where our sidebar and its associated screens are
     secondaryStackedWidget->addWidget(backupScreen); // Adding backupScreen to the secondary stacked widget
     mainStackedWidget->addWidget(signInScreen); // Adding signInScreen to the primary stacked widget directly, not inside the secondary one
 
     // Starting with the main application view:
-    mainStackedWidget->setCurrentWidget(secondaryStackedWidget);
+    mainStackedWidget->setCurrentWidget(ui->pageMainScreen);
     secondaryStackedWidget->setCurrentWidget(backupScreen); // Show the backup screen first within the secondary widget
 
     connect(signInScreen, &SignInScreen::switchToMainScreen, this, &MainWindow::showMainScreen);
@@ -46,5 +46,5 @@ void MainWindow::on_accountScreenB_clicked()
 }
 
 void MainWindow::showMainScreen() {
-    mainStackedWidget->setCurrentWidget(secondaryStackedWidget);
+    mainStackedWidget->setCurrentWidget(ui->pageMainScreen);
 }
