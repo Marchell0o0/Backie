@@ -2,6 +2,7 @@
 #define BACKUPSCHEDULE_H
 
 #include <filesystem>
+#include <windows.h>
 
 #include "utils.h"
 
@@ -43,7 +44,7 @@ public:
      */
     std::wstring getTaskName();
 
-    bool addToTaskScheduler();
+    HRESULT addToTaskScheduler();
     bool deleteTask();
 
     // Getter methods for backup attributes

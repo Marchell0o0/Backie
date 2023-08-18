@@ -31,8 +31,9 @@ const std::string BackupSchedule::getTypeStr() {
         return "FULL";
     case BackupType::INCREMENTAL:
         return "INCREMENTAL";
+    default:
+        return "";
     }
-    return "";
 }
 
 std::filesystem::path BackupSchedule::getDirectory() const {
@@ -127,6 +128,9 @@ std::wstring BackupSchedule::getTaskName() {
     case BackupType::INCREMENTAL:
         typeString = L"Incremental";
         break;
+    default:
+        typeString = L"";
+        break;
     }
 
     taskName = typeString + L" " + recurrenceString + L" backup of " + directory.wstring();
@@ -174,7 +178,7 @@ static ITaskService* connectToTaskScheduler(){
     return pService;
 }
 
-static bool initializeCOM(){
+static HRESULT initializeCOM(){
     HRESULT hr = CoInitialize(NULL);
     if (hr != S_OK)
     {
@@ -182,18 +186,17 @@ static bool initializeCOM(){
             //            SPDLOG_WARN("COM library was already initialized on this thread.");
         } else if (hr == RPC_E_CHANGED_MODE) {
             SPDLOG_ERROR("A previous call to CoInitializeEx specified a different threading model.");
-            return false;
         } else {
             SPDLOG_ERROR("Couldn't initialize COM library. Error code: {}", hr);
-            return false;
         }
     }
-    return true;
+    return hr;
 }
 
-bool BackupSchedule::addToTaskScheduler(){
+HRESULT BackupSchedule::addToTaskScheduler(){
+    HRESULT hr = initializeCOM();
 
-    if (!initializeCOM()) return false;
+    if (FAILED(hr)) return hr;
 
     auto cleanup = [](auto &comObject)
     {
@@ -202,31 +205,31 @@ bool BackupSchedule::addToTaskScheduler(){
     };
 
     ComPtr<ITaskService> pService = connectToTaskScheduler();
-    if (!pService) return false;
+    if (!pService) return hr;
 
     ComPtr<ITaskFolder> pRootFolder;
-    HRESULT hr = pService->GetFolder(_bstr_t(L"\\"), &pRootFolder);
-    if (FAILED(hr)) return false;
+    hr = pService->GetFolder(_bstr_t(L"\\"), &pRootFolder);
+    if (FAILED(hr)) return hr;
 
     ComPtr<ITaskDefinition> pTask;
     hr = pService->NewTask(0, &pTask);
-    if (FAILED(hr)) return false;
+    if (FAILED(hr)) return hr;
 
     ComPtr<ITriggerCollection> pTriggerCollection;
     hr = pTask->get_Triggers(&pTriggerCollection);
-    if (FAILED(hr)) return false;
+    if (FAILED(hr)) return hr;
 
     ComPtr<IActionCollection> pActionCollection;
     hr = pTask->get_Actions(&pActionCollection);
-    if (FAILED(hr)) return false;
+    if (FAILED(hr)) return hr;
 
     ComPtr<IAction> pAction;
     hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
-    if (FAILED(hr)) return false;
+    if (FAILED(hr)) return hr;
 
     ComPtr<IExecAction> pExecAction;
     hr = pAction->QueryInterface(IID_IExecAction, (void **)&pExecAction);
-    if (FAILED(hr)) return false;
+    if (FAILED(hr)) return hr;
 
     ITrigger* pTrigger = NULL;
 
@@ -293,10 +296,10 @@ bool BackupSchedule::addToTaskScheduler(){
                                                    TASK_LOGON_INTERACTIVE_TOKEN,
                                                    _variant_t(L""),
                                                    &pRegisteredTask)))
-        return false;
+        return hr;
 
     CoUninitialize();
-    return true;
+    return hr;
 }
 
 bool BackupSchedule::deleteTask() {

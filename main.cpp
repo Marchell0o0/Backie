@@ -2,10 +2,14 @@
 
 #include <QApplication>
 #include <QPushButton>
+#include <QLocalServer>
+#include <QLocalSocket>
 #include <fstream>
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <unistd.h>
+#include <windows.h>
 
 #include "spdlog/spdlog.h"
 
@@ -24,10 +28,21 @@ int main(int argc, char *argv[]) {
     spdlog::set_level(spdlog::level::trace);
 
     if (argc > 1 && strcmp(argv[1], "--backup") == 0) {
+        QLocalSocket socket;
+        socket.connectToServer("BackupServer");
+
+        bool connected;
+        if (socket.waitForConnected(1000)) {  // 1 second timeout, adjust as needed
+            connected = true;
+        }
+
         QCoreApplication app(argc, argv);
 
         if (argc != 4) {
-            SPDLOG_ERROR("Wrong number of arguments");
+//            SPDLOG_ERROR("Wrong number of arguments");
+            if (connected){
+                socket.write("Wrong number of arguments");
+            }
             return 1;
         }
 
@@ -37,29 +52,60 @@ int main(int argc, char *argv[]) {
 
         auto backup = BackupFactory::CreateBackup(type, directory);
         if (!backup) {
-            SPDLOG_ERROR("Couldn't create backup. Error: {}",
-                        BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
+            if (connected){
+                std::string error = BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError());
+                std::string message = "Couldn't create backup. Error: " + error;
+                socket.write(message.c_str());
+            }
             return 1;
         }
 
-        SPDLOG_INFO("Backup requested with type {}, directory {}", static_cast<int>(type), directory.u8string());
+        if (connected){
+            std::string typeStr = std::to_string(static_cast<int>(backup->getType())); // Convert type to string representation
+            std::string message = "Backup requested with type " + typeStr + " for " + directory.u8string();
+            socket.write(message.c_str());
+        }
 
-        // send message that backup has started
+        sleep(1);
 
-        //get in other arguments and call executeBackup function...
+        //call executeBackup function...
+
+        if (connected){
+            socket.write("Backup executed succefuly");
+        }
 
         return 0;
     } else {
+        QLocalServer server;
+        if(!server.listen("BackupServer")) {
+            SPDLOG_ERROR("Server is not listening");
+        }
+
+        QObject::connect(&server, &QLocalServer::newConnection, &server, [&]() {
+            QLocalSocket* clientConnection = server.nextPendingConnection();
+            QObject::connect(clientConnection, &QLocalSocket::disconnected,
+                             clientConnection, &QLocalSocket::deleteLater);
+
+            QObject::connect(clientConnection, &QLocalSocket::readyRead, [clientConnection]() {
+                // read the data sent by the backup instance
+                QByteArray data = clientConnection->readAll();
+                std::cout << "Received data: " << data.data() << std::endl;
+            });
+        });
+
+
+
         QApplication app(argc, argv);
         MainWindow w;
 
-        auto backupShedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(BackupType::FULL, "W:/backup_testing/source", 15, 25);
-        if (backupShedule_test && backupShedule_test->addToTaskScheduler()){
-
-            SPDLOG_INFO("Added backup_test");
-        } else {
-            SPDLOG_ERROR("Couldn't add backupShedule_test. Error: {}",
-                        BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
+        auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(BackupType::FULL, "W:/backup_testing/source", 15, 40);
+        if (!backupSchedule_test){
+            SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
+                         BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
+        }
+        HRESULT hr = backupSchedule_test->addToTaskScheduler();
+        if (FAILED(hr)){
+            SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
         }
 
         SPDLOG_INFO("Drawing gui...");
