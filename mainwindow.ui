@@ -31,7 +31,7 @@
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="centralMainWidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
      <horstretch>0</horstretch>
@@ -90,7 +90,7 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <property name="geometry">
          <rect>
           <x>0</x>
@@ -104,7 +104,7 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QWidget" name="widget_2" native="true">
+          <widget class="QWidget" name="sidebarBase" native="true">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -127,10 +127,15 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: #282828;
-</string>
+            <string notr="true">background-color: #282828;</string>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
             <item>
              <spacer name="horizontalSpacer">
               <property name="orientation">
@@ -157,12 +162,24 @@
               </property>
               <item>
                <widget class="QPushButton" name="homeScreenB">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/home.svg</normaloff>:/resources/assets/icons/sideBar/home.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/home_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/home_grey.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -173,7 +190,8 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/download.svg</normaloff>:/resources/assets/icons/sideBar/download.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/backup_grey.svg</normaloff>
+                  <normalon>:/resources/assets/icons/sideBar/active/backup_white.svg</normalon>:/resources/assets/icons/sideBar/notActive/backup_grey.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -181,6 +199,10 @@
                <widget class="QPushButton" name="recoverScreenB">
                 <property name="text">
                  <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="Resources.qrc">
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/recover_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/recover_grey.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -191,7 +213,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/time-past.svg</normaloff>:/resources/assets/icons/sideBar/time-past.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/history_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/history_grey.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -202,7 +224,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/user.svg</normaloff>:/resources/assets/icons/sideBar/user.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/account_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/account_grey.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -229,7 +251,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/settings.svg</normaloff>:/resources/assets/icons/sideBar/settings.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/settings_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/settings_grey.svg</iconset>
                 </property>
                </widget>
               </item>

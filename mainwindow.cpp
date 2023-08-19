@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QFile>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -8,6 +9,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // If MainWindow is being initialized or shown
+    QFile mainWindowFile(":/styles/mainWindow.css");
+    mainWindowFile.open(QFile::ReadOnly);
+    QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
+    ui->centralMainWidget->setStyleSheet(mainWindowStyleSheet);
 
     mainStackedWidget = ui->mainStackedWidget;
     secondaryStackedWidget = ui->secondaryStackedWidget;
