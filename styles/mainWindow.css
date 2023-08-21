@@ -1,21 +1,13 @@
-QWidget#sidebarBase {
-    background-color: #282828;
+QStackedWidget#secondaryStackedWidget {
+    background-color: #595959;
 }
 
-
-/* Icon styling for SVGs */
 QPushButton#accountScreenB, QPushButton#backupScreenB, QPushButton#recoverScreenB, QPushButton#settingsScreenB, QPushButton#homeScreenB, QPushButton#historyScreenB {
     background-color: transparent;
-    width: 46px;
-    height: 46px;
+    width: 47px;
+    height: 47px;
     border: none;
-    icon-size: 28px;
-    border-radius: 7px;
+    border-radius: 5px;
 }
 /* Hover state */
-QPushButton#accountScreenB:hover, QPushButton#backupScreenB, QPushButton#recoverScreenB, QPushButton#settingsScreenB, QPushButton#homeScreenB, QPushButton#historyScreenB { {
-    /* This will give the appearance of a light rectangle around the icon */
-    background-color: rgba(255, 255, 255, 0.2);
-    /* Change the icon color to white */
-    color: white;
-}
+
