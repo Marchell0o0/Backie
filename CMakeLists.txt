@@ -36,12 +36,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         signinscreen.h signinscreen.cpp signinscreen.ui
         assets/icons/licenses/delete
         recoverscreen.h recoverscreen.cpp recoverscreen.ui
+        styles/mainWindow.qss
+        styles/mainWindow.css
+        assets/icons/sideBar/active/backup_grey.svg assets/icons/sideBar/active/history_grey.svg assets/icons/sideBar/active/home_grey.svg assets/icons/sideBar/active/recover_grey.svg assets/icons/sideBar/active/settings_grey.svg assets/icons/sideBar/iconLicenses/license-56530056-3916611.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917033.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917058.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917296.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917330.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917688.pdf assets/icons/sideBar/notActive/account_white.svg assets/icons/sideBar/notActive/backup_white.svg assets/icons/sideBar/notActive/history_white.svg assets/icons/sideBar/notActive/home_white.svg assets/icons/sideBar/notActive/recover_white.svg assets/icons/sideBar/notActive/settings_white.svg
+        styles/backupScreen.css
 
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Backie APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-
+# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
         add_library(Backie SHARED

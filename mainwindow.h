@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
+#include <QEvent>
+#include <QMap>
+#include <QPair>
+#include <QIcon>
+#include <QPushButton>
 
 #include "backupscreen.h"
 #include "signinscreen.h"
@@ -22,10 +27,6 @@ public:
 
 private slots:
 
-//    void on_accountScreenB_clicked();
-
-//    void on_backupScreenB_clicked();
-
     void on_backupScreenB_clicked();
 
     void on_accountScreenB_clicked();
@@ -34,6 +35,9 @@ private slots:
 
     void on_recoverScreenB_clicked();
 
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
     BackupScreen *backupScreen;
@@ -41,5 +45,6 @@ private:
     RecoverScreen *recoverScreen;
     QStackedWidget *mainStackedWidget;
     QStackedWidget *secondaryStackedWidget;
+
 };
 #endif // MAINWINDOW_H

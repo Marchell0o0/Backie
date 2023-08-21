@@ -1,0 +1,13 @@
+QStackedWidget#secondaryStackedWidget {
+    background-color: #595959;
+}
+
+QPushButton#accountScreenB, QPushButton#backupScreenB, QPushButton#recoverScreenB, QPushButton#settingsScreenB, QPushButton#homeScreenB, QPushButton#historyScreenB {
+    background-color: transparent;
+    width: 47px;
+    height: 47px;
+    border: none;
+    border-radius: 5px;
+}
+/* Hover state */
+
