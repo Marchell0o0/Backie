@@ -268,7 +268,8 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/notActive/recover_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/recover_grey.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/recover_grey.svg</normaloff>
+                  <normalon>:/resources/assets/icons/sideBar/active/recover_white.svg</normalon>:/resources/assets/icons/sideBar/notActive/recover_grey.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -299,7 +300,8 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/notActive/history_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/history_grey.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/history_grey.svg</normaloff>
+                  <normalon>:/resources/assets/icons/sideBar/active/history_white.svg</normalon>:/resources/assets/icons/sideBar/notActive/history_grey.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -330,7 +332,8 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/notActive/account_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/account_grey.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/account_grey.svg</normaloff>
+                  <normalon>:/resources/assets/icons/sideBar/active/account_white.svg</normalon>:/resources/assets/icons/sideBar/notActive/account_grey.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
@@ -377,7 +380,8 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/notActive/settings_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/settings_grey.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/settings_grey.svg</normaloff>
+                  <normalon>:/resources/assets/icons/sideBar/active/settings_white.svg</normalon>:/resources/assets/icons/sideBar/notActive/settings_grey.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
