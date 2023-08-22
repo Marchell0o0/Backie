@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 
 
         QApplication app(argc, argv);
-        MainWindow w;
+        MainWindow mainWindow;
 
         // Backlup Schedule testing
         /*
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
 
         // get messages from the worker backup
 
-        w.show();
+        mainWindow.show();
         return app.exec();
     }
 }
@@ -146,7 +146,3 @@ int main(int argc, char *argv[]) {
      * Simultaneous backup of the same folder. Lock file.
      *
      */
-
-    mainWindow.show();
-    return a.exec();
-}

@@ -33,7 +33,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         settings.h settings.cpp
         task.h
 
-        scheduled_thread.h scheduled_thread.cpp
         backupscreen.h backupscreen.cpp backupscreen.ui
         signinscreen.h signinscreen.cpp signinscreen.ui
         assets/icons/licenses/delete
