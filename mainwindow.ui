@@ -181,7 +181,7 @@
                 </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton:hover {
-    background-color: #3A3A3A;
+	background-color: #3A3A3A;
 }</string>
                 </property>
                 <property name="text">
@@ -189,13 +189,20 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/notActive/home_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/home_grey.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/home_grey.svg</normaloff>
+                  <normalon>:/resources/assets/icons/sideBar/active/home_white.svg</normalon>:/resources/assets/icons/sideBar/notActive/home_grey.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
                   <width>22</width>
                   <height>22</height>
                  </size>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>true</bool>
                 </property>
                 <property name="flat">
                  <bool>true</bool>
@@ -215,7 +222,7 @@
                 </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton:hover {
-    background-color: #3A3A3A;
+	background-color: #3A3A3A;
 }</string>
                 </property>
                 <property name="text">
@@ -223,13 +230,20 @@
                 </property>
                 <property name="icon">
                  <iconset resource="Resources.qrc">
-                  <normaloff>:/resources/assets/icons/sideBar/notActive/backup_grey.svg</normaloff>:/resources/assets/icons/sideBar/notActive/backup_grey.svg</iconset>
+                  <normaloff>:/resources/assets/icons/sideBar/notActive/backup_grey.svg</normaloff>
+                  <normalon>:/resources/assets/icons/sideBar/active/backup_white.svg</normalon>:/resources/assets/icons/sideBar/notActive/backup_grey.svg</iconset>
                 </property>
                 <property name="iconSize">
                  <size>
                   <width>22</width>
                   <height>22</height>
                  </size>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>true</bool>
                 </property>
                 <property name="flat">
                  <bool>true</bool>
@@ -246,7 +260,7 @@
                 </property>
                 <property name="styleSheet">
                  <string notr="true">QPushButton:hover {
-    background-color: #3A3A3A;
+	background-color: #3A3A3A;
 }</string>
                 </property>
                 <property name="text">

@@ -3,10 +3,10 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
-#include <QEvent>
-#include <QMap>
-#include <QPair>
-#include <QIcon>
+//#include <QEvent>
+//#include <QMap>
+//#include <QPair>
+//#include <QIcon>
 #include <QPushButton>
 
 #include "backupscreen.h"
