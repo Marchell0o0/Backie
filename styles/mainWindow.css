@@ -1,6 +1,9 @@
 QStackedWidget#secondaryStackedWidget {
     background-color: #595959;
 }
+QDateTimeEdit, QPushButton, QRadioButton, QLineEdit, QLabel {
+    color: lightgrey;
+}
 
 QPushButton#accountScreenB, QPushButton#backupScreenB, QPushButton#recoverScreenB, QPushButton#settingsScreenB, QPushButton#homeScreenB, QPushButton#historyScreenB {
     background-color: transparent;
@@ -10,4 +13,10 @@ QPushButton#accountScreenB, QPushButton#backupScreenB, QPushButton#recoverScreen
     border-radius: 5px;
 }
 /* Hover state */
-
+/*QPushButton#backupScreenB:hover {
+    background-color: #ffffff;
+}*/
+#backupScreenB QPushButton:hover
+{
+   background-color: #ffffff;
+}

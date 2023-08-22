@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QFile>
+#include <QTextStream>
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
@@ -11,10 +12,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Style for mainWindow
-    QFile mainWindowFile(":/styles/mainWindow.css");
-    mainWindowFile.open(QFile::ReadOnly);
-    QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
-    ui->centralMainWidget->setStyleSheet(mainWindowStyleSheet);
+//    QFile mainWindowFile(":/styles/mainWindow.css");
+//    mainWindowFile.open(QFile::ReadOnly);
+//    QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
+//    ui->centralMainWidget->setStyleSheet(mainWindowStyleSheet);
+
+//    QFile file(":/styles/mainWindow.css");
+//    if (file.open(QFile::ReadOnly | QFile::Text)) {
+//        QTextStream stream(&file);
+//        qApp->setStyleSheet(stream.readAll());
+//    }
+
+    QFile file(":/styles/mainWindow.css");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QLatin1String(file.readAll());
+    qApp->setStyleSheet(styleSheet);
 
     mainStackedWidget = ui->mainStackedWidget;
     secondaryStackedWidget = ui->secondaryStackedWidget;
