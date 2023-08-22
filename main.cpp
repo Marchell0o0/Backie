@@ -16,7 +16,7 @@
 #include "mainwindow.h"
 
 #include "backup.h"
-#include "backupschedule.h"
+//#include "backupschedule.h"
 #include "backupfactory.h"
 
 #include "utils.h"
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
         QLocalSocket socket;
         socket.connectToServer("BackupServer");
 
-        bool connected;
+        bool connected = false;
         if (socket.waitForConnected(1000)) {  // 1 second timeout, adjust as needed
             connected = true;
         }
@@ -98,6 +98,8 @@ int main(int argc, char *argv[]) {
         QApplication app(argc, argv);
         MainWindow w;
 
+        // Backlup Schedule testing
+        /*
         auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(BackupType::FULL, "W:/backup_testing/source", 15, 40);
         if (!backupSchedule_test){
             SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
@@ -107,6 +109,7 @@ int main(int argc, char *argv[]) {
         if (FAILED(hr)){
             SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
         }
+        */
 
         SPDLOG_INFO("Drawing gui...");
 

@@ -12,29 +12,54 @@
 
 #include "utils.h"
 
-//#include <optional>
-//#include <array>
-//#include <stdexcept>
-//#include <string>
-//#include <iostream>
+namespace fs = std::filesystem;
 
 class Backup {
     friend class BackupFactory;
 
 private:
-    Backup(BackupType type, std::filesystem::path dir);
+    Backup(BackupType type, fs::path dir);
 
 public:
 
-    //TODO executeBackup()
+    fs::path destination = "W:\\backup_testing\\destination";
+
+//    void performFullBackup() {
+//        for (const auto& entry : fs::recursive_directory_iterator(directory)) {
+//            if (entry.is_regular_file()) {
+//                auto destPath = destination / fs::relative(entry.path(), directory);
+//                fs::create_directories(destPath.parent_path()); // Ensure destination directory exists
+//                fs::copy(entry.path(), destPath, fs::copy_options::overwrite_existing);
+
+//                // Update the metadata with the current file's timestamp
+//                metadata.updateTimestamp(entry.path(), fs::last_write_time(entry.path()));
+//            }
+//        }
+//    }
+
+//    void performIncrementalBackup() {
+//        for (const auto& entry : fs::recursive_directory_iterator(directory)) {
+//            if (entry.is_regular_file()) {
+//                auto currentTimestamp = fs::last_write_time(entry.path());
+//                if (metadata.hasChangedSinceLastBackup(entry.path(), currentTimestamp)) {
+//                    auto destPath = destination / fs::relative(entry.path(), directory);
+//                    fs::create_directories(destPath.parent_path()); // Ensure destination directory exists
+//                    fs::copy(entry.path(), destPath, fs::copy_options::overwrite_existing);
+
+//                    // Update the metadata with the current file's timestamp
+//                    metadata.updateTimestamp(entry.path(), currentTimestamp);
+//                }
+//            }
+//        }
+//    }
 
     static BackupType getTypeFromStr(const std::string& string);
 
-    std::filesystem::path getDirectory() const;
+    fs::path getDirectory() const;
     BackupType getType() const;
 private:
     BackupType type;
-    std::filesystem::path directory;
+    fs::path directory;
 };
 
 #endif // BACKUP_H

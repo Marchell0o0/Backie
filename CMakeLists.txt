@@ -13,7 +13,8 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
 
-set(TASKSCHED_LIB "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x64/taskschd.lib")
+set(TASKSCHED_LIB "${CMAKE_CURRENT_SOURCE_DIR}/taskschd.lib")
+
 
 set(PROJECT_SOURCES
         main.cpp
