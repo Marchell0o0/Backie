@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3916611.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917033.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917058.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917296.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917330.pdf</file>
+        <file>assets/icons/sideBar/iconLicenses/license-56530056-3917688.pdf</file>
+        <file>assets/icons/sideBar/notActive/account_grey.svg</file>
+        <file>assets/icons/sideBar/notActive/backup_grey.svg</file>
+        <file>assets/icons/sideBar/notActive/history_grey.svg</file>
+        <file>assets/icons/sideBar/notActive/home_grey.svg</file>
+        <file>assets/icons/sideBar/notActive/recover_grey.svg</file>
+        <file>assets/icons/sideBar/notActive/settings_grey.svg</file>
+        <file>assets/icons/sideBar/active/account_white.svg</file>
+        <file>assets/icons/sideBar/active/history_white.svg</file>
+        <file>assets/icons/sideBar/active/home_white.svg</file>
+        <file>assets/icons/sideBar/active/recover_white.svg</file>
+        <file>assets/icons/sideBar/active/settings_white.svg</file>
+        <file>assets/icons/sideBar/active/backup_white.svg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>styles/mainWindow.qss</file>
+        <file>styles/mainWindow.css</file>
+    </qresource>
+</RCC>

@@ -2,6 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStackedWidget>
+#include <QEvent>
+#include <QMap>
+#include <QPair>
+#include <QIcon>
+#include <QPushButton>
+
+#include "backupscreen.h"
+#include "signinscreen.h"
+#include "recoverscreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -12,12 +22,29 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
 
+    void on_backupScreenB_clicked();
+
+    void on_accountScreenB_clicked();
+
+    void showMainScreen();
+
+    void on_recoverScreenB_clicked();
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
+    BackupScreen *backupScreen;
+    SignInScreen *signInScreen;
+    RecoverScreen *recoverScreen;
+    QStackedWidget *mainStackedWidget;
+    QStackedWidget *secondaryStackedWidget;
+
 };
 #endif // MAINWINDOW_H

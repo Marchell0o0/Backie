@@ -27,6 +27,11 @@
 int main(int argc, char *argv[]) {
     spdlog::set_level(spdlog::level::trace);
 
+    QApplication a(argc, argv);
+    MainWindow mainWindow;
+
+//    Settings settings;
+//    settings.read_from_file();
     if (argc > 1 && strcmp(argv[1], "--backup") == 0) {
         QLocalSocket socket;
         socket.connectToServer("BackupServer");
@@ -120,7 +125,6 @@ int main(int argc, char *argv[]) {
     }
 }
 
-
 //    if (IsRunningAsAdmin()) {
 //        SPDLOG_INFO("Running program as admin");
 //    } else {
@@ -143,5 +147,6 @@ int main(int argc, char *argv[]) {
      *
      */
 
-
-
+    mainWindow.show();
+    return a.exec();
+}
