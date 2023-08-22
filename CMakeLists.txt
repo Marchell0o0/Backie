@@ -11,6 +11,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Network)
+
+set(TASKSCHED_LIB "C:/Program Files (x86)/Windows Kits/10/Lib/10.0.22621.0/um/x64/taskschd.lib")
 
 set(PROJECT_SOURCES
         main.cpp
@@ -25,12 +28,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Backie
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        copy.cpp
-        copy.h
 
         settings.h settings.cpp
-
         task.h
+
         scheduled_thread.h scheduled_thread.cpp
         backupscreen.h backupscreen.cpp backupscreen.ui
         signinscreen.h signinscreen.cpp signinscreen.ui
@@ -40,6 +41,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         styles/mainWindow.css
         assets/icons/sideBar/active/backup_grey.svg assets/icons/sideBar/active/history_grey.svg assets/icons/sideBar/active/home_grey.svg assets/icons/sideBar/active/recover_grey.svg assets/icons/sideBar/active/settings_grey.svg assets/icons/sideBar/iconLicenses/license-56530056-3916611.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917033.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917058.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917296.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917330.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917688.pdf assets/icons/sideBar/notActive/account_white.svg assets/icons/sideBar/notActive/backup_white.svg assets/icons/sideBar/notActive/history_white.svg assets/icons/sideBar/notActive/home_white.svg assets/icons/sideBar/notActive/recover_white.svg assets/icons/sideBar/notActive/settings_white.svg
         styles/backupScreen.css
+
+        backup.h backup.cpp
+        backupschedule.h backupschedule.cpp
+        backupfactory.h backupfactory.cpp
+        utils.h utils.cpp
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -60,10 +66,10 @@ else()
     endif()
 endif()
 
-target_link_libraries(Backie PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 add_subdirectory(spdlog)
-target_link_libraries(Backie PRIVATE spdlog::spdlog)
+target_link_libraries(Backie PRIVATE Qt6::Network Qt${QT_VERSION_MAJOR}::Widgets ${TASKSCHED_LIB} spdlog::spdlog)
+
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
