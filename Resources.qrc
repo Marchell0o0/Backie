@@ -20,7 +20,6 @@
         <file>assets/icons/sideBar/active/backup_white.svg</file>
     </qresource>
     <qresource prefix="/">
-        <file>styles/mainWindow.qss</file>
         <file>styles/mainWindow.css</file>
         <file>styles/backupScreen.css</file>
     </qresource>

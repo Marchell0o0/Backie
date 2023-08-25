@@ -3,10 +3,6 @@
 
 #include <QMainWindow>
 #include <QStackedWidget>
-//#include <QEvent>
-//#include <QMap>
-//#include <QPair>
-//#include <QIcon>
 #include <QPushButton>
 
 #include "backupscreen.h"
@@ -27,16 +23,20 @@ public:
 
 private slots:
 
-    void on_backupScreenB_clicked();
+//    void on_backupScreenB_clicked();
 
-    void on_accountScreenB_clicked();
+//    void on_accountScreenB_clicked();
 
     void showMainScreen();
 
-    void on_recoverScreenB_clicked();
+//    void on_recoverScreenB_clicked();
 
-protected:
-    bool eventFilter(QObject *watched, QEvent *event) override;
+    void on_backupScreenB_toggled(bool checked);
+
+    void on_recoverScreenB_toggled(bool checked);
+
+
+    void on_accountScreenB_toggled(bool checked);
 
 private:
     Ui::MainWindow *ui;
