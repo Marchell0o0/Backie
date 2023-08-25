@@ -45,6 +45,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         backupschedule.h backupschedule.cpp
         backupfactory.h backupfactory.cpp
         utils.h utils.cpp
+        dialogcalendar.h dialogcalendar.cpp dialogcalendar.ui
 
     )
 # Define target properties for Android with Qt 6 as:
