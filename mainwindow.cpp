@@ -12,21 +12,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Style for mainWindow
-//    QFile mainWindowFile(":/styles/mainWindow.css");
-//    mainWindowFile.open(QFile::ReadOnly);
-//    QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
-//    ui->centralMainWidget->setStyleSheet(mainWindowStyleSheet);
-
-//    QFile file(":/styles/mainWindow.css");
-//    if (file.open(QFile::ReadOnly | QFile::Text)) {
-//        QTextStream stream(&file);
-//        qApp->setStyleSheet(stream.readAll());
-//    }
-
-    QFile file(":/styles/mainWindow.css");
-    file.open(QFile::ReadOnly);
-    QString styleSheet = QLatin1String(file.readAll());
-    qApp->setStyleSheet(styleSheet);
+    QFile mainWindowFile(":/styles/mainWindow.css");
+    mainWindowFile.open(QFile::ReadOnly);
+    QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
+    qApp->setStyleSheet(mainWindowStyleSheet);
+//    ui->sidebarBase->setStyleSheet(mainWindowStyleSheet);
 
     mainStackedWidget = ui->mainStackedWidget;
     secondaryStackedWidget = ui->secondaryStackedWidget;
@@ -47,13 +37,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(signInScreen, &SignInScreen::switchToMainScreen, this, &MainWindow::showMainScreen);
 
-
-    ui->homeScreenB->installEventFilter(this);
-    ui->backupScreenB->installEventFilter(this);
-    ui->recoverScreenB->installEventFilter(this);
-    ui->historyScreenB->installEventFilter(this);
-    ui->accountScreenB->installEventFilter(this);
-    ui->settingsScreenB->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -68,125 +51,33 @@ void MainWindow::showMainScreen()
     mainStackedWidget->setCurrentWidget(ui->pageMainScreen);
 }
 
-void MainWindow::on_backupScreenB_clicked()
+//void MainWindow::on_backupScreenB_clicked()
+//{
+//    secondaryStackedWidget->setCurrentWidget(backupScreen);
+//}
+
+void MainWindow::on_backupScreenB_toggled(bool checked)
 {
     secondaryStackedWidget->setCurrentWidget(backupScreen);
 }
 
-void MainWindow::on_accountScreenB_clicked()
+//void MainWindow::on_accountScreenB_clicked()
+//{
+//    mainStackedWidget->setCurrentWidget(signInScreen);
+//}
+
+void MainWindow::on_accountScreenB_toggled(bool checked)
 {
     mainStackedWidget->setCurrentWidget(signInScreen);
 }
 
-void MainWindow::on_recoverScreenB_clicked()
+
+//void MainWindow::on_recoverScreenB_clicked()
+//{
+//    secondaryStackedWidget->setCurrentWidget(recoverScreen);
+//}
+
+void MainWindow::on_recoverScreenB_toggled(bool checked)
 {
     secondaryStackedWidget->setCurrentWidget(recoverScreen);
-}
-
-// TODO: rewrite this function
-bool MainWindow::eventFilter(QObject *watched, QEvent *event)
-{
-    if (event->type() == QEvent::Enter)
-    {
-        if (watched == ui->homeScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/active/home_white.svg"));
-            }
-        }
-        else if (watched == ui->backupScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/active/backup_white.svg"));
-            }
-        }
-        else if (watched == ui->recoverScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/active/recover_white.svg"));
-            }
-        }
-        else if (watched == ui->historyScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/active/history_white.svg"));
-            }
-        }
-        else if (watched == ui->accountScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/active/account_white.svg"));
-            }
-        }
-        else if (watched == ui->settingsScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/active/settings_white.svg"));
-            }
-        }
-    }
-    else if (event->type() == QEvent::Leave)
-    {
-        if (watched == ui->homeScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/notActive/home_grey.svg"));
-            }
-        }
-        else if (watched == ui->backupScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/notActive/backup_grey.svg"));
-            }
-        }
-        else if (watched == ui->recoverScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/notActive/recover_grey.svg"));
-            }
-        }
-        else if (watched == ui->historyScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/notActive/history_grey.svg"));
-            }
-        }
-        else if (watched == ui->accountScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/notActive/account_grey.svg"));
-            }
-        }
-        else if (watched == ui->settingsScreenB)
-        {
-            QPushButton *btn = qobject_cast<QPushButton *>(watched);
-            if (btn)
-            {
-                btn->setIcon(QIcon(":/resources/assets/icons/sideBar/notActive/settings_grey.svg"));
-            }
-        }
-    }
-    return QWidget::eventFilter(watched, event);
 }

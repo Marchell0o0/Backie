@@ -63,7 +63,7 @@ QDateTimeEdit, QPushButton, QRadioButton, QLineEdit {
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>200</width>
+             <width>150</width>
              <height>20</height>
             </size>
            </property>
@@ -145,7 +145,7 @@ QDateTimeEdit, QPushButton, QRadioButton, QLineEdit {
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>90</height>
+               <height>20</height>
               </size>
              </property>
             </spacer>
@@ -173,7 +173,7 @@ QDateTimeEdit, QPushButton, QRadioButton, QLineEdit {
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_2">
                     <item>
-                     <widget class="QLineEdit" name="lineEdit">
+                     <widget class="QLineEdit" name="sourceEdit">
                       <property name="styleSheet">
                        <string notr="true"/>
                       </property>
@@ -212,7 +212,7 @@ QDateTimeEdit, QPushButton, QRadioButton, QLineEdit {
                     <property name="sizeHint" stdset="0">
                      <size>
                       <width>10</width>
-                      <height>20</height>
+                      <height>10</height>
                      </size>
                     </property>
                    </spacer>
@@ -245,18 +245,95 @@ QDateTimeEdit, QPushButton, QRadioButton, QLineEdit {
                     </item>
                    </layout>
                   </item>
+                  <item>
+                   <spacer name="verticalSpacer_6">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                     <enum>QSizePolicy::Fixed</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                  </layout>
                 </item>
+                <item alignment="Qt::AlignHCenter">
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>How often do you want to do a backup:</string>
+                  </property>
+                 </widget>
+                </item>
                 <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_4">
-                  <item>
-                   <widget class="QRadioButton" name="radioButton">
+                 <layout class="QGridLayout" name="gridLayout">
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <item row="1" column="1">
+                   <widget class="QRadioButton" name="radioButton_5">
                     <property name="text">
-                     <string>Scheduled</string>
+                     <string>Once a week</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
+                  <item row="1" column="0">
+                   <widget class="QRadioButton" name="radioButton_4">
+                    <property name="text">
+                     <string>Once a day</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <spacer name="horizontalSpacer_5">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QRadioButton" name="radioButton_2">
+                    <property name="acceptDrops">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Now</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QRadioButton" name="radioButton_3">
+                    <property name="text">
+                     <string>Once (choose a date)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QRadioButton" name="radioButton">
+                    <property name="text">
+                     <string>Once a month</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QRadioButton" name="radioButton_6">
+                    <property name="text">
+                     <string>Once a year</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
                    <widget class="QDateTimeEdit" name="dateTimeEdit"/>
                   </item>
                  </layout>
@@ -344,7 +421,7 @@ QDateTimeEdit, QPushButton, QRadioButton, QLineEdit {
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>200</width>
+             <width>150</width>
              <height>20</height>
             </size>
            </property>

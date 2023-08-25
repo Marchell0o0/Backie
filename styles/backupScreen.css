@@ -1,3 +1,13 @@
+QDateTimeEdit, QPushButton, QRadioButton, QLineEdit, QLabel {
+    color: lightgrey;
+}
+
 QStackedWidget {
     background-color: #595959;
+}
+QLineEdit:hover {
+    background-color: #000000;
+}
+QPushButton:hover {
+    background-color: #000000;
 }
