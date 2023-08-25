@@ -15,6 +15,10 @@ public:
     explicit BackupScreen(QWidget *parent = nullptr);
     ~BackupScreen();
 
+private slots:
+
+    void on_selectDate_clicked();
+
 private:
     Ui::BackupScreen *ui;
 };
