@@ -99,7 +99,7 @@
                  </spacer>
                 </item>
                 <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="label">
+                 <widget class="QLabel" name="createBackupL">
                   <property name="font">
                    <font>
                     <pointsize>16</pointsize>
@@ -115,7 +115,7 @@
                  </widget>
                 </item>
                 <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="label_2">
+                 <widget class="QLabel" name="descrpBackupL">
                   <property name="font">
                    <font>
                     <bold>false</bold>
@@ -161,7 +161,7 @@
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout">
                   <item alignment="Qt::AlignHCenter">
-                   <widget class="QLabel" name="label_3">
+                   <widget class="QLabel" name="sourceFolderL">
                     <property name="styleSheet">
                      <string notr="true"/>
                     </property>
@@ -186,7 +186,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton">
+                     <widget class="QPushButton" name="browseSourceB">
                       <property name="enabled">
                        <bool>true</bool>
                       </property>
@@ -221,7 +221,7 @@
                    </spacer>
                   </item>
                   <item alignment="Qt::AlignHCenter">
-                   <widget class="QLabel" name="label_4">
+                   <widget class="QLabel" name="destFolderL">
                     <property name="text">
                      <string>Choose a destination folder:</string>
                     </property>
@@ -230,7 +230,7 @@
                   <item>
                    <layout class="QHBoxLayout" name="horizontalLayout_3">
                     <item>
-                     <widget class="QLineEdit" name="lineEdit_2">
+                     <widget class="QLineEdit" name="destEdit">
                       <property name="inputMask">
                        <string/>
                       </property>
@@ -240,7 +240,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton_2">
+                     <widget class="QPushButton" name="browseDestB">
                       <property name="text">
                        <string>Browse...</string>
                       </property>
@@ -267,7 +267,7 @@
                  </layout>
                 </item>
                 <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="label_5">
+                 <widget class="QLabel" name="backupTypeL">
                   <property name="text">
                    <string>How often do you want to do a backup:</string>
                   </property>
@@ -278,18 +278,168 @@
                   <property name="topMargin">
                    <number>0</number>
                   </property>
-                  <item row="1" column="1">
-                   <widget class="QRadioButton" name="radioButton_5">
+                  <item row="0" column="1">
+                   <widget class="QRadioButton" name="OnceDateRB">
                     <property name="text">
-                     <string>Once a week</string>
+                     <string>Once (choose a date)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QRadioButton" name="nowTypeRB">
+                    <property name="acceptDrops">
+                     <bool>false</bool>
+                    </property>
+                    <property name="text">
+                     <string>Now</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QRadioButton" name="radioButton_4">
+                   <widget class="QRadioButton" name="OnceDayRB">
                     <property name="text">
                      <string>Once a day</string>
                     </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QStackedWidget" name="holderStackedWidget">
+                    <property name="acceptDrops">
+                     <bool>true</bool>
+                    </property>
+                    <property name="autoFillBackground">
+                     <bool>false</bool>
+                    </property>
+                    <property name="lineWidth">
+                     <number>1</number>
+                    </property>
+                    <property name="currentIndex">
+                     <number>1</number>
+                    </property>
+                    <widget class="QWidget" name="selectDatePage">
+                     <layout class="QHBoxLayout" name="horizontalLayout_4">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QPushButton" name="selectDateB">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true"/>
+                        </property>
+                        <property name="text">
+                         <string>Select date...</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                    <widget class="QWidget" name="selectMonthDayPage">
+                     <layout class="QHBoxLayout" name="horizontalLayout_10">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item>
+                       <widget class="QComboBox" name="selectMonthCB">
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="editable">
+                         <bool>false</bool>
+                        </property>
+                        <property name="currentText">
+                         <string/>
+                        </property>
+                        <property name="maxVisibleItems">
+                         <number>6</number>
+                        </property>
+                        <property name="placeholderText">
+                         <string>Month</string>
+                        </property>
+                        <property name="duplicatesEnabled">
+                         <bool>false</bool>
+                        </property>
+                        <property name="frame">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QComboBox" name="selectDayCB">
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="editable">
+                         <bool>false</bool>
+                        </property>
+                        <property name="currentText">
+                         <string/>
+                        </property>
+                        <property name="maxVisibleItems">
+                         <number>6</number>
+                        </property>
+                        <property name="placeholderText">
+                         <string>Day</string>
+                        </property>
+                        <property name="frame">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                    <widget class="QWidget" name="selectWeekPage">
+                     <layout class="QGridLayout" name="gridLayout_2">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>15</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
+                      <item row="0" column="0">
+                       <widget class="QSlider" name="selectWeekSlider">
+                        <property name="orientation">
+                         <enum>Qt::Horizontal</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
                    </widget>
                   </item>
                   <item row="0" column="2">
@@ -305,35 +455,22 @@
                     </property>
                    </spacer>
                   </item>
-                  <item row="0" column="0">
-                   <widget class="QRadioButton" name="radioButton_2">
-                    <property name="acceptDrops">
-                     <bool>false</bool>
-                    </property>
-                    <property name="text">
-                     <string>Now</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QRadioButton" name="radioButton_3">
-                    <property name="text">
-                     <string>Once (choose a date)</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="2" column="0">
-                   <widget class="QRadioButton" name="radioButton">
+                   <widget class="QRadioButton" name="OnceWeekRB">
+                    <property name="text">
+                     <string>Once a week</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QRadioButton" name="OnceMonthRB">
                     <property name="text">
                      <string>Once a month</string>
                     </property>
                    </widget>
                   </item>
                   <item row="2" column="1">
-                   <widget class="QRadioButton" name="radioButton_6">
+                   <widget class="QRadioButton" name="OnceYearRB">
                     <property name="text">
                      <string>Once a year</string>
                     </property>
@@ -341,25 +478,6 @@
                   </item>
                   <item row="2" column="2">
                    <widget class="QTimeEdit" name="timeEdit"/>
-                  </item>
-                  <item row="1" column="2">
-                   <widget class="QPushButton" name="selectDate">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="mouseTracking">
-                     <bool>true</bool>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QPushButton#selectDate:disabled {
-        background-color: #424242;
-        color: #7E7E7E;
-    }</string>
-                    </property>
-                    <property name="text">
-                     <string>Select date...</string>
-                    </property>
-                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -380,7 +498,7 @@
                  </spacer>
                 </item>
                 <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="chosenDateT">
+                 <widget class="QLabel" name="chosenDateL">
                   <property name="enabled">
                    <bool>true</bool>
                   </property>
@@ -405,9 +523,9 @@
                    </spacer>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton_3">
+                   <widget class="QPushButton" name="createBackupScheduleB">
                     <property name="text">
-                     <string>Create backup task</string>
+                     <string>Create backup schedule</string>
                     </property>
                    </widget>
                   </item>
@@ -472,102 +590,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>radioButton_2</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>selectDate</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>215</x>
-     <y>361</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>479</x>
-     <y>397</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_4</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>selectDate</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>233</x>
-     <y>404</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>565</x>
-     <y>402</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>selectDate</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>273</x>
-     <y>434</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>528</x>
-     <y>399</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_3</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>selectDate</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>355</x>
-     <y>360</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>579</x>
-     <y>390</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_5</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>selectDate</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>395</x>
-     <y>398</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>701</x>
-     <y>390</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_6</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>selectDate</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>370</x>
-     <y>432</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>669</x>
-     <y>405</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

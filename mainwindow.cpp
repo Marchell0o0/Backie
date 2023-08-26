@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     mainWindowFile.open(QFile::ReadOnly);
     QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
     qApp->setStyleSheet(mainWindowStyleSheet);
-//    ui->sidebarBase->setStyleSheet(mainWindowStyleSheet);
 
     mainStackedWidget = ui->mainStackedWidget;
     secondaryStackedWidget = ui->secondaryStackedWidget;
@@ -51,31 +50,15 @@ void MainWindow::showMainScreen()
     mainStackedWidget->setCurrentWidget(ui->pageMainScreen);
 }
 
-//void MainWindow::on_backupScreenB_clicked()
-//{
-//    secondaryStackedWidget->setCurrentWidget(backupScreen);
-//}
-
 void MainWindow::on_backupScreenB_toggled(bool checked)
 {
     secondaryStackedWidget->setCurrentWidget(backupScreen);
 }
 
-//void MainWindow::on_accountScreenB_clicked()
-//{
-//    mainStackedWidget->setCurrentWidget(signInScreen);
-//}
-
 void MainWindow::on_accountScreenB_toggled(bool checked)
 {
     mainStackedWidget->setCurrentWidget(signInScreen);
 }
-
-
-//void MainWindow::on_recoverScreenB_clicked()
-//{
-//    secondaryStackedWidget->setCurrentWidget(recoverScreen);
-//}
 
 void MainWindow::on_recoverScreenB_toggled(bool checked)
 {

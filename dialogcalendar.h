@@ -2,6 +2,7 @@
 #define DIALOGCALENDAR_H
 
 #include <QDialog>
+#include <QCalendarWidget>
 
 namespace Ui {
 class dialogCalendar;
@@ -19,6 +20,7 @@ public:
 
 private:
     Ui::dialogCalendar *ui;
+    QCalendarWidget *calendar;
 };
 
 #endif // DIALOGCALENDAR_H

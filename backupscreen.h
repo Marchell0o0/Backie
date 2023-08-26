@@ -17,10 +17,16 @@ public:
 
 private slots:
 
-    void on_selectDate_clicked();
+    void on_selectDateB_clicked();
+
+    void handleRadioButtonToggle(bool isChecked);
+
+    void printOutDateComponents(std::vector<int> dateComponents);
 
 private:
     Ui::BackupScreen *ui;
+    std::vector<int> dateComponents;
+
 };
 
 #endif // BACKUPSCREEN_H
