@@ -1,13 +1,56 @@
-QStackedWidget#secondaryStackedWidget {
+/*QStackedWidget#secondaryStackedWidget {
     background-color: #595959;
-}
+}*/
 
-QPushButton#accountScreenB, QPushButton#backupScreenB, QPushButton#recoverScreenB, QPushButton#settingsScreenB, QPushButton#homeScreenB, QPushButton#historyScreenB {
+/*QPushButton {
     background-color: transparent;
     width: 47px;
     height: 47px;
     border: none;
     border-radius: 5px;
+}*/
+/*QPushButton#accountScreenB, QPushButton#backupScreenB, QPushButton#recoverScreenB, QPushButton#settingsScreenB, QPushButton#homeScreenB, QPushButton#historyScreenB {
+    background-color: transparent;
+    width: 47px;
+    height: 47px;
+    border: none;
+    border-radius: 5px;
+}*/
+/*QPushButton:hover {
+    background-color: #000000;
 }
-/* Hover state */
 
+QWidget#sidebarBase {
+    background-color: #282828;
+}*/
+/*Default state*/
+QWidget, QStackedWidget {
+    background-color: #1E1E1E;
+}
+QPushButton {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #282828;
+    border-radius: 3px;
+    border: none;
+    color: white;
+}
+QDateTimeEdit, QRadioButton, QLabel {
+    color: lightgrey;
+}
+QLineEdit {
+    border: 2px solid darkgrey;
+    color: white;
+}
+/*Hover state*/
+QPushButton:hover {
+    background-color: #3A3A3A;
+}
+QLineEdit:hover {
+    background-color: #3A3A3A;
+}
+QCalendarWidget {
+    background-color: default;
+}
