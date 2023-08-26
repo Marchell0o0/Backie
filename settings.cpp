@@ -68,7 +68,6 @@ std::vector<Task> Settings::get_task_list_by_type(const std::string& type){
         }
     }
     return tasks;
-
 }
 
 Task Settings::task_json_to_struct(json task_json){

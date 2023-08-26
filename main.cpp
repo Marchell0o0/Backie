@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 
         sleep(1);
 
-        //call executeBackup function...
+        backup->performBackup();
 
         if (connected){
             socket.write("Backup executed succefuly");
@@ -104,21 +104,20 @@ int main(int argc, char *argv[]) {
         MainWindow mainWindow;
 
         // Backlup Schedule testing
-        /*
-        auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(BackupType::FULL, "W:/backup_testing/source", 15, 40);
+//        /*
+        auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(BackupType::INCREMENTAL, "W:/backup_testing/source", -1, 10, 30);
         if (!backupSchedule_test){
             SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
                          BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
+        } else {
+            HRESULT hr = backupSchedule_test->addToTaskScheduler();
+            if (FAILED(hr)){
+                SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
+            }
         }
-        HRESULT hr = backupSchedule_test->addToTaskScheduler();
-        if (FAILED(hr)){
-            SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
-        }
-        */
+//        */
 
         SPDLOG_INFO("Drawing gui...");
-
-        // get messages from the worker backup
 
         mainWindow.show();
         return app.exec();

@@ -21,7 +21,7 @@ enum class ScheduleRecurrence {
  * @class BackupSchedule
  * @brief Represents a scheduled backup.
  *
- * This class defines a backup with its type, directory, recurrence, and schedule data.
+ * This class defines a backup schedule with its type, directory, recurrence, and schedule data.
  * It provides methods to retrieve the backup details and generate task names and times.
  */
 class BackupSchedule {
