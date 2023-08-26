@@ -161,7 +161,7 @@
     border-radius: 5px;
 	padding: 0px;
 }
-QPushButton:hover {
+QPushButton:hover, QPushButton:checked {
 	background-color: #3A3A3A;
 }
 

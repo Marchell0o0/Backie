@@ -6,6 +6,10 @@ dialogCalendar::dialogCalendar(QWidget *parent) :
     ui(new Ui::dialogCalendar)
 {
     ui->setupUi(this);
+
+    calendar = ui->calendarWidget;
+    calendar->setMinimumDate(QDate::currentDate());
+    calendar->setMaximumDate(QDate::currentDate().addYears(5));
 }
 
 dialogCalendar::~dialogCalendar()

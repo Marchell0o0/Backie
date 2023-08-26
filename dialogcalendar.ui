@@ -19,6 +19,11 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QCalendarWidget" name="calendarWidget">
+     <property name="styleSheet">
+      <string notr="true">QCalendarWidget {
+    background-color: default;
+}</string>
+     </property>
      <property name="locale">
       <locale language="English" country="UnitedStates"/>
      </property>

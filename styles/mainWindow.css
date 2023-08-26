@@ -27,7 +27,7 @@ QWidget#sidebarBase {
 QWidget, QStackedWidget {
     background-color: #1E1E1E;
 }
-QPushButton {
+QPushButton, QComboBox, QTimeEdit {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
@@ -44,13 +44,17 @@ QLineEdit {
     border: 2px solid darkgrey;
     color: white;
 }
+QCalendarWidget {
+    background-color: default;
+}
 /*Hover state*/
-QPushButton:hover {
+QPushButton:hover, QComboBox:hover, QTimeEdit:hover {
     background-color: #3A3A3A;
 }
 QLineEdit:hover {
     background-color: #3A3A3A;
 }
-QCalendarWidget {
-    background-color: default;
+QPushButton:disabled {
+    background-color: #424242;
+    color: #7E7E7E;
 }
