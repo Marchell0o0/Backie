@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 
         std::filesystem::path directory = argv[2];
 
-        BackupType type = Backup::getTypeFromStr(argv[3]);
+        BackupType type = typeFromStr(argv[3]);
 
         auto backup = BackupFactory::CreateBackup(type, directory);
         if (!backup) {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
 
         sleep(1);
 
-        backup->performBackup();
+//        backup->performBackup();
 
         if (connected){
             socket.write("Backup executed succefuly");
@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
         MainWindow mainWindow;
 
         // Backlup Schedule testing
-//        /*
+        /*
         auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(BackupType::INCREMENTAL, "W:/backup_testing/source", -1, 10, 30);
         if (!backupSchedule_test){
             SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
@@ -115,7 +115,33 @@ int main(int argc, char *argv[]) {
                 SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
             }
         }
-//        */
+        */
+
+        // Full backup testing
+        /*
+        auto backup_test_full = BackupFactory::CreateBackup(BackupType::FULL, "W:\\Src folder 1");
+        if(!backup_test_full){
+            SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
+        } else {
+            SPDLOG_INFO("Performing full backup...");
+            if (!backup_test_full->performBackup();) {
+                SPDLOG_ERROR("Couldn't perform the backup");
+            }
+        }
+        */
+
+        // Incremental backup testing
+        /*
+        auto backup_test_incremental = BackupFactory::CreateBackup(BackupType::INCREMENTAL, "W:\\Src folder 1");
+        if(!backup_test_incremental){
+            SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
+        } else {
+            SPDLOG_INFO("Performing incremental backup...");
+            if (!backup_test_incremental->performBackup()) {
+                SPDLOG_ERROR("Couldn't perform the backup");
+            }
+        }
+        */
 
         SPDLOG_INFO("Drawing gui...");
 

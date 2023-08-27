@@ -25,17 +25,6 @@ BackupType BackupSchedule::getType() const {
     return type;
 }
 
-const std::string BackupSchedule::getTypeStr() {
-    switch(type){
-    case BackupType::FULL:
-        return "FULL";
-    case BackupType::INCREMENTAL:
-        return "INCREMENTAL";
-    default:
-        return "";
-    }
-}
-
 std::filesystem::path BackupSchedule::getDirectory() const {
     return directory;
 }
@@ -274,11 +263,11 @@ HRESULT BackupSchedule::addToTaskScheduler(){
     std::wstring startTime = getTaskTime();
 
     std::filesystem::path exePath = std::filesystem::current_path() / "Backie.exe";
-    std::wstring directory = getDirectory().wstring();
-    std::wstring type = stringToWString(getTypeStr());
+    std::wstring directoryWStr = getDirectory().wstring();
+    std::wstring typeWStr = stringToWString(strFromType(type));
 
     std::wstring args = L"/C \"" + exePath.wstring() +
-                        L" --backup " + directory + L" " + type +
+                        L" --backup " + directoryWStr + L" " + typeWStr +
                         L"\" >W:/Programming/Backie/backie_logs/log.txt 2>&1";
 
 

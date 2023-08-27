@@ -27,3 +27,26 @@ bool IsRunningAsAdmin() {
     }
     return isRunAsAdmin;
 }
+
+BackupType typeFromStr(const std::string& string){
+    BackupType type;
+    if (string == "FULL"){
+        type = BackupType::FULL;
+    } else if (string == "INCREMENTAL") {
+        type = BackupType::INCREMENTAL;
+    } else {
+        type = BackupType::NONE;
+    }
+    return type;
+}
+
+const std::string strFromType(const BackupType type){
+    switch (type) {
+    case BackupType::FULL:
+        return "FULL";
+    case BackupType::INCREMENTAL:
+        return "INCREMENTAL";
+    default:
+        return "";
+    }
+}

@@ -13,6 +13,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Network)
 
+
 set(TASKSCHED_LIB "${CMAKE_CURRENT_SOURCE_DIR}/taskschd.lib")
 
 
@@ -46,6 +47,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         backupfactory.h backupfactory.cpp
         utils.h utils.cpp
         dialogcalendar.h dialogcalendar.cpp dialogcalendar.ui
+        metadata.h
+        metadata.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

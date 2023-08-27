@@ -14,8 +14,12 @@ enum class BackupType {
     // DIFFERENTIAL  // Future extension
 };
 
-bool IsRunningAsAdmin();
+BackupType typeFromStr(const std::string& string);
+
+const std::string strFromType(const BackupType type);
 
 std::wstring stringToWString(const std::string& s);
+
+bool IsRunningAsAdmin();
 
 #endif // UTILS_H

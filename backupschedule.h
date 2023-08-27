@@ -50,7 +50,6 @@ public:
     // Getter methods for backup attributes
     std::filesystem::path getDirectory() const;
     BackupType getType() const;
-    const std::string getTypeStr();
     ScheduleRecurrence getRecurrence() const;
     int getYear() const;
     int getMonth() const;
