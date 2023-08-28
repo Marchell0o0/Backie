@@ -20,9 +20,7 @@
    <item>
     <widget class="QCalendarWidget" name="calendarWidget">
      <property name="styleSheet">
-      <string notr="true">QCalendarWidget {
-    background-color: default;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="locale">
       <locale language="English" country="UnitedStates"/>

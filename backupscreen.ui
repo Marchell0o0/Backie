@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>550</height>
+    <height>557</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -266,35 +266,32 @@
                   </item>
                  </layout>
                 </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QLabel" name="backupTypeL">
-                  <property name="text">
-                   <string>How often do you want to do a backup:</string>
-                  </property>
-                 </widget>
-                </item>
                 <item>
-                 <layout class="QGridLayout" name="gridLayout">
-                  <property name="topMargin">
-                   <number>0</number>
+                 <layout class="QGridLayout" name="gridLayout_4">
+                  <property name="bottomMargin">
+                   <number>20</number>
                   </property>
-                  <item row="0" column="1">
-                   <widget class="QRadioButton" name="OnceDateRB">
-                    <property name="text">
-                     <string>Once (choose a date)</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="0" column="0">
                    <widget class="QRadioButton" name="nowTypeRB">
-                    <property name="acceptDrops">
-                     <bool>false</bool>
-                    </property>
                     <property name="text">
                      <string>Now</string>
                     </property>
                     <property name="checked">
                      <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QRadioButton" name="OnceMonthRB">
+                    <property name="text">
+                     <string>Once a month</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QRadioButton" name="OnceYearRB">
+                    <property name="text">
+                     <string>Once a year</string>
                     </property>
                    </widget>
                   </item>
@@ -304,6 +301,33 @@
                      <string>Once a day</string>
                     </property>
                    </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QRadioButton" name="OnceDateRB">
+                    <property name="text">
+                     <string>Once (choose a date)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QRadioButton" name="OnceWeekRB">
+                    <property name="text">
+                     <string>Once a week</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <spacer name="horizontalSpacer_6">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
                   </item>
                   <item row="1" column="2">
                    <widget class="QStackedWidget" name="holderStackedWidget">
@@ -317,7 +341,7 @@
                      <number>1</number>
                     </property>
                     <property name="currentIndex">
-                     <number>1</number>
+                     <number>0</number>
                     </property>
                     <widget class="QWidget" name="selectDatePage">
                      <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -391,6 +415,66 @@
                         <property name="frame">
                          <bool>true</bool>
                         </property>
+                        <item>
+                         <property name="text">
+                          <string>January</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>February</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>March</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>April</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>May</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>June</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>July</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>August</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>September</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>October</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>November</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>December</string>
+                         </property>
+                        </item>
                        </widget>
                       </item>
                       <item>
@@ -413,6 +497,161 @@
                         <property name="frame">
                          <bool>true</bool>
                         </property>
+                        <item>
+                         <property name="text">
+                          <string>1</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>2</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>3</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>4</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>5</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>6</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>7</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>8</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>9</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>10</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>11</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>12</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>13</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>14</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>15</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>16</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>17</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>18</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>19</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>20</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>21</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>22</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>23</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>24</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>25</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>26</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>27</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>28</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>29</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>30</string>
+                         </property>
+                        </item>
+                        <item>
+                         <property name="text">
+                          <string>31</string>
+                         </property>
+                        </item>
                        </widget>
                       </item>
                      </layout>
@@ -423,7 +662,7 @@
                        <number>0</number>
                       </property>
                       <property name="topMargin">
-                       <number>15</number>
+                       <number>0</number>
                       </property>
                       <property name="rightMargin">
                        <number>0</number>
@@ -431,10 +670,182 @@
                       <property name="bottomMargin">
                        <number>0</number>
                       </property>
-                      <item row="0" column="0">
-                       <widget class="QSlider" name="selectWeekSlider">
+                      <property name="horizontalSpacing">
+                       <number>4</number>
+                      </property>
+                      <property name="verticalSpacing">
+                       <number>6</number>
+                      </property>
+                      <item row="0" column="2">
+                       <widget class="QPushButton" name="wdB">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>WD</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="0" alignment="Qt::AlignHCenter">
+                       <widget class="QPushButton" name="mnB">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>MN</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="checked">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="6">
+                       <widget class="QPushButton" name="snB">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>SN</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="4">
+                       <widget class="QPushButton" name="frB">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>FR</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="5">
+                       <widget class="QPushButton" name="saB">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>SA</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="3">
+                       <widget class="QPushButton" name="thB">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>TH</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="0">
+                       <spacer name="verticalSpacer_4">
                         <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
+                         <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                         <enum>QSizePolicy::Fixed</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                         <size>
+                          <width>20</width>
+                          <height>2</height>
+                         </size>
+                        </property>
+                       </spacer>
+                      </item>
+                      <item row="0" column="1">
+                       <widget class="QPushButton" name="tuB">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>TU</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
                         </property>
                        </widget>
                       </item>
@@ -442,44 +853,17 @@
                     </widget>
                    </widget>
                   </item>
-                  <item row="0" column="2">
-                   <spacer name="horizontalSpacer_5">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QRadioButton" name="OnceWeekRB">
-                    <property name="text">
-                     <string>Once a week</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QRadioButton" name="OnceMonthRB">
-                    <property name="text">
-                     <string>Once a month</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="1">
-                   <widget class="QRadioButton" name="OnceYearRB">
-                    <property name="text">
-                     <string>Once a year</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="2" column="2">
                    <widget class="QTimeEdit" name="timeEdit"/>
                   </item>
                  </layout>
+                </item>
+                <item alignment="Qt::AlignHCenter">
+                 <widget class="QLabel" name="backupTypeL">
+                  <property name="text">
+                   <string>How often do you want to do a backup:</string>
+                  </property>
+                 </widget>
                 </item>
                 <item>
                  <spacer name="verticalSpacer_7">
@@ -525,7 +909,7 @@
                   <item>
                    <widget class="QPushButton" name="createBackupScheduleB">
                     <property name="text">
-                     <string>Create backup schedule</string>
+                     <string>Make a backup</string>
                     </property>
                    </widget>
                   </item>
@@ -554,10 +938,13 @@
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Expanding</enum>
+             </property>
              <property name="sizeHint" stdset="0">
               <size>
                <width>20</width>
-               <height>40</height>
+               <height>20</height>
               </size>
              </property>
             </spacer>

@@ -159,19 +159,28 @@
     height: 47px;
     border: none;
     border-radius: 5px;
-	padding: 0px;
+	border-width: 0px;
+	padding: 2px;	
 }
 QPushButton:hover, QPushButton:checked {
 	background-color: #3A3A3A;
 }
-
 QWidget#sidebarBase {
     background-color: #282828;
 }
 </string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
              <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
               <number>0</number>
              </property>
              <property name="bottomMargin">
@@ -198,14 +207,14 @@ QWidget#sidebarBase {
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>0</width>
-                   <height>0</height>
+                   <width>47</width>
+                   <height>47</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>16777215</width>
-                   <height>16777215</height>
+                   <width>47</width>
+                   <height>47</height>
                   </size>
                  </property>
                  <property name="mouseTracking">
@@ -251,10 +260,22 @@ QWidget#sidebarBase {
                   <bool>true</bool>
                  </property>
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
                  </property>
                  <property name="mouseTracking">
                   <bool>true</bool>
@@ -298,6 +319,18 @@ QWidget#sidebarBase {
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -334,6 +367,18 @@ QWidget#sidebarBase {
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -351,11 +396,29 @@ QWidget#sidebarBase {
                    <height>22</height>
                   </size>
                  </property>
+                 <property name="shortcut">
+                  <string notr="true"/>
+                 </property>
                  <property name="checkable">
                   <bool>true</bool>
                  </property>
+                 <property name="autoRepeat">
+                  <bool>false</bool>
+                 </property>
                  <property name="autoExclusive">
                   <bool>true</bool>
+                 </property>
+                 <property name="autoRepeatDelay">
+                  <number>300</number>
+                 </property>
+                 <property name="autoRepeatInterval">
+                  <number>100</number>
+                 </property>
+                 <property name="autoDefault">
+                  <bool>false</bool>
+                 </property>
+                 <property name="default">
+                  <bool>false</bool>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -370,6 +433,18 @@ QWidget#sidebarBase {
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -383,8 +458,8 @@ QWidget#sidebarBase {
                  </property>
                  <property name="iconSize">
                   <size>
-                   <width>29</width>
-                   <height>25</height>
+                   <width>26</width>
+                   <height>22</height>
                   </size>
                  </property>
                  <property name="checkable">
@@ -422,6 +497,18 @@ QWidget#sidebarBase {
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>47</width>
+                   <height>47</height>
+                  </size>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -435,7 +522,7 @@ QWidget#sidebarBase {
                  </property>
                  <property name="iconSize">
                   <size>
-                   <width>22</width>
+                   <width>23</width>
                    <height>25</height>
                   </size>
                  </property>
