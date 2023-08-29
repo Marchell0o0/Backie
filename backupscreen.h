@@ -11,7 +11,8 @@
 class BackupArgs {
 private:
     BackupType backupType;
-    std::filesystem::path sourceBackupDirPath;
+    std::filesystem::path sourceBackupDirPath = "";
+    ScheduleRecurrence backupRecurrence = ScheduleRecurrence::DAILY;
     std::array<int, 6> dateArgs = {-1, -1, -1, -1, -1, -1};
 
 public:
@@ -26,16 +27,17 @@ public:
 
     void clear();
 
-    void set(DateArgs type, int value);
-    int get(DateArgs type) const;
+    void setDate(DateArgs type, int value);
+    int getDate(DateArgs type) const;
 
     void setPath(const std::filesystem::path& path);
-
     QString getPathQString();
 
     void setBackupType(BackupType type);
     BackupType getBackupType();
 
+    void setBackupRecurrence(ScheduleRecurrence recurrence);
+    ScheduleRecurrence getBackupRecurrence();
 };
 
 namespace Ui {
@@ -67,9 +69,6 @@ private slots:
 private:
     Ui::BackupScreen *ui;
     BackupArgs backupArgs;
-    std::filesystem::path sourceBackupDirPath;
-    ScheduleRecurrence backupRecurrence;
-
 };
 
 #endif // BACKUPSCREEN_H
