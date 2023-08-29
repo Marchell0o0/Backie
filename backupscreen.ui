@@ -350,7 +350,7 @@
                      <number>1</number>
                     </property>
                     <property name="currentIndex">
-                     <number>1</number>
+                     <number>0</number>
                     </property>
                     <widget class="QWidget" name="selectDatePage">
                      <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -998,11 +998,6 @@
                       <item>
                        <property name="text">
                         <string>24</string>
-                       </property>
-                      </item>
-                      <item>
-                       <property name="text">
-                        <string/>
                        </property>
                       </item>
                      </widget>

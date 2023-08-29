@@ -70,7 +70,7 @@ void BackupScreen::browseForSourceFolder() {
         ui->sourceEdit->setText(QString(chosenDir));
         #ifdef _WIN32  // for Windows
         // TODO: write set function
-            sourceBackupDirPath = std::filesystem::path(chosenDir.toStdWString());
+        backupArgs.setPath(std::filesystem::path(chosenDir.toStdWString()));
         #endif
         // later we can add for MacOS or Linux here
         SPDLOG_DEBUG("Directory for backup was chosen successfuly: {}", chosenDir.toStdString());
@@ -82,7 +82,7 @@ void BackupScreen::browseForSourceFolder() {
 
 void BackupScreen::onSourcePathEdited(const QString& newPath){
     #ifdef _WIN32  // for Windows
-        sourceBackupDirPath = std::filesystem::path(newPath.toStdString());
+        backupArgs.setPath(std::filesystem::path(newPath.toStdString()));
     #endif
     SPDLOG_DEBUG("Directory for backup was changed successfuly: {}", newPath.toStdString());
 }
@@ -93,12 +93,12 @@ void BackupScreen::on_selectDateB_clicked()
     if (dialog.exec() == QDialog::Accepted) {
         QDate date = dialog.selectedDate();
 
-        backupArgs.set(BackupArgs::YEAR, date.year());
-        backupArgs.set(BackupArgs::MONTH, date.month());
-        backupArgs.set(BackupArgs::DAYOFMONTH, date.day());
+        backupArgs.setDate(BackupArgs::YEAR, date.year());
+        backupArgs.setDate(BackupArgs::MONTH, date.month());
+        backupArgs.setDate(BackupArgs::DAYOFMONTH, date.day());
 
         // TODO: add selectMonthCB updating for ONCE A YEAR option
-        ui->selectDayCB->setCurrentText(QString::number(backupArgs.get(BackupArgs::DAYOFMONTH)));
+        ui->selectDayCB->setCurrentText(QString::number(backupArgs.getDate(BackupArgs::DAYOFMONTH)));
 
         updateChosenDateLabel(backupArgs);
     }
@@ -116,10 +116,10 @@ void BackupScreen::handleRadioButtonToggle(bool isChecked){
 //    }
     if (button && isChecked) {
 
-        backupRecurrence = static_cast<ScheduleRecurrence>(
-            button->property("type").toInt());
+        backupArgs.setBackupRecurrence(static_cast<ScheduleRecurrence>(
+            button->property("type").toInt()));
 
-        switch (backupRecurrence) {
+        switch (backupArgs.getBackupRecurrence()) {
 
               // NOW TYPE
 
@@ -159,7 +159,7 @@ void BackupScreen::handleRadioButtonToggle(bool isChecked){
                     ui->selectMonthCB->setVisible(!isChecked);
                 }
                 ui->createBackupScheduleB->setText(QString("Create a backup schedule"));
-                backupArgs.set(BackupArgs::DAYOFMONTH, ui->selectDayCB->currentText().toInt());
+                backupArgs.setDate(BackupArgs::DAYOFMONTH, ui->selectDayCB->currentText().toInt());
                 break;
 
 
@@ -173,16 +173,18 @@ void BackupScreen::handleRadioButtonToggle(bool isChecked){
 //                ui->createBackupScheduleB->setText(QString("Create a backup schedule"));
 //                break;
         }
-        backupArgs.set(BackupArgs::HOUR, ui->selectHourCB->currentText().toInt());
-        backupArgs.set(BackupArgs::MINUTE, ui->selectMinuteCB->currentText().toInt());
+        backupArgs.setDate(BackupArgs::HOUR, ui->selectHourCB->currentText().toInt());
+        backupArgs.setDate(BackupArgs::MINUTE, ui->selectMinuteCB->currentText().toInt());
 
         updateChosenDateLabel(backupArgs);
     }
 }
 
 void BackupScreen::handleComboBoxIndexChanged(int index) {
-    if (index < 0) return;  // Invalid index
-
+    if (index < 0) {
+        SPDLOG_ERROR("handleComboBoxIndexChanged() catched invalid index");
+        return;  // Invalid index
+    }
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender());
 
     if (!comboBox) return;
@@ -190,46 +192,45 @@ void BackupScreen::handleComboBoxIndexChanged(int index) {
     BackupArgs::DateArgs argType = static_cast<BackupArgs::DateArgs>(
         comboBox->property("type").toInt());
 
-    backupArgs.set(argType, comboBox->currentText().toInt());
+    backupArgs.setDate(argType, comboBox->currentText().toInt());
 
     updateChosenDateLabel(backupArgs);
 }
 
 void BackupScreen::updateChosenDateLabel(BackupArgs date) {
-    if (date.get(BackupArgs::HOUR) == -1 || date.get(BackupArgs::MINUTE) == -1) {
+    if (date.getDate(BackupArgs::HOUR) == -1 || date.getDate(BackupArgs::MINUTE) == -1) {
         ui->chosenDateL->setText(QString("Chosen date is..."));
     } else {
-        switch (backupRecurrence) {
+        switch (backupArgs.getBackupRecurrence()) {
         case ScheduleRecurrence::ONCE:
-                if(date.get(BackupArgs::YEAR) == -1 ||
-                    date.get(BackupArgs::MONTH) == -1 ||
-                    date.get(BackupArgs::DAYOFMONTH) == -1) {
-                    SPDLOG_DEBUG("It reached -1 condition");
+                if(date.getDate(BackupArgs::YEAR) == -1 ||
+                    date.getDate(BackupArgs::MONTH) == -1 ||
+                    date.getDate(BackupArgs::DAYOFMONTH) == -1) {
                     ui->chosenDateL->setText(QString("Chosen date is..."));
                 } else {
-                    SPDLOG_DEBUG("It didnt reach -1 condition");
                     ui->chosenDateL->setText(QString("Once in %1.%2.%3 at %4:%5")
-                                                 .arg(addZero(date.get(BackupArgs::DAYOFMONTH)))
-                                                 .arg(addZero(date.get(BackupArgs::MONTH)))
-                                                 .arg(date.get(BackupArgs::YEAR))
-                                                 .arg(addZero(date.get(BackupArgs::HOUR)))
-                                                 .arg(addZero(date.get(BackupArgs::MINUTE))));
+                                                 .arg(addZero(date.getDate(BackupArgs::DAYOFMONTH)),
+                                                      addZero(date.getDate(BackupArgs::MONTH)),
+                                                      QString::number(date.getDate(BackupArgs::YEAR)),
+                                                      addZero(date.getDate(BackupArgs::HOUR)),
+                                                      addZero(date.getDate(BackupArgs::MINUTE))));
+
                 }
                 break;
         case ScheduleRecurrence::MONTHLY:
-                if (date.get(BackupArgs::DAYOFMONTH) == -1) {
+                if (date.getDate(BackupArgs::DAYOFMONTH) == -1) {
                     ui->chosenDateL->setText(QString("Chosen date is..."));
                 } else {
                     ui->chosenDateL->setText(QString("Every month in %1 day at %2:%3")
-                                                 .arg(addZero(date.get(BackupArgs::DAYOFMONTH)))
-                                                 .arg(addZero(date.get(BackupArgs::HOUR)))
-                                                 .arg(addZero(date.get(BackupArgs::MINUTE))));
+                                                 .arg(addZero(date.getDate(BackupArgs::DAYOFMONTH)),
+                                                      addZero(date.getDate(BackupArgs::HOUR)),
+                                                      addZero(date.getDate(BackupArgs::MINUTE))));
                 }
 
 
                 break;
         case ScheduleRecurrence::WEEKLY:
-                if (date.get(BackupArgs::DAYOFWEEK) == -1) {
+                if (date.getDate(BackupArgs::DAYOFWEEK) == -1) {
                     ui->chosenDateL->setText(QString("Chosen date is..."));
                 } else {
                     // TODO: handle this case
@@ -237,8 +238,8 @@ void BackupScreen::updateChosenDateLabel(BackupArgs date) {
                 break;
         case ScheduleRecurrence::DAILY:
                 ui->chosenDateL->setText(QString("Every day at %1:%2")
-                                             .arg(addZero(date.get(BackupArgs::HOUR)))
-                                             .arg(addZero(date.get(BackupArgs::MINUTE))));
+                                             .arg(addZero(date.getDate(BackupArgs::HOUR)),
+                                                  addZero(date.getDate(BackupArgs::MINUTE))));
                 break;
         }
     }
@@ -263,14 +264,13 @@ void BackupArgs::clear() {
     for (int &arg : dateArgs) {
         arg = -1;
     }
-    // You might also want to clear or set default values for backupType and sourceBackupDirPath
 }
 
-void BackupArgs::set(DateArgs type, int value) {
+void BackupArgs::setDate(DateArgs type, int value) {
     dateArgs[type] = value;
 }
 
-int BackupArgs::get(DateArgs type) const {
+int BackupArgs::getDate(DateArgs type) const {
     if (type >= 0 && type < dateArgs.size()) {
         return dateArgs[type];
     } else {
@@ -300,4 +300,12 @@ QString BackupScreen::addZero(int number) {
         return QString("%1").arg(number, 2, 10, QChar('0'));
     }
     return QString("%1").arg(number);
+}
+
+void BackupArgs::setBackupRecurrence(ScheduleRecurrence recurrence) {
+    backupRecurrence = recurrence;
+}
+
+ScheduleRecurrence BackupArgs::getBackupRecurrence() {
+    return backupRecurrence;
 }
