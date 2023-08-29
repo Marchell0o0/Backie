@@ -1,0 +1,26 @@
+/*Default state*/
+QPushButton#mnB, QPushButton#tuB, QPushButton#wdB, QPushButton#thB,
+QPushButton#frB, QPushButton#saB, QPushButton#snB {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+    border-color: #3A3A3A;
+    color: #7E7E7E;
+}
+
+/*Hover state*/
+QPushButton#mnB:hover, QPushButton#tuB:hover, QPushButton#wdB:hover, QPushButton#thB:hover,
+QPushButton#frB:hover, QPushButton#saB:hover, QPushButton#snB:hover {
+    background-color: #3A3A3A;
+    border: 1px solid #7E7E7E;
+    color: white;
+}
+
+/*Checked state*/
+QPushButton#mnB:checked, QPushButton#tuB:checked, QPushButton#wdB:checked, QPushButton#thB:checked,
+QPushButton#frB:checked, QPushButton#saB:checked, QPushButton#snB:checked {
+    background-color: #3A3A3A;
+    border: 1px solid #7E7E7E;
+    color: white;
+}

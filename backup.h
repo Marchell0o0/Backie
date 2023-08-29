@@ -30,6 +30,7 @@ public:
 private:
     BackupType type;
     fs::path globalDestination = "W:\\Backie backups\\Dest 1";
+//    fs::path globalDestination = "D:\\Code\\Backie_backups\\Dest_1";
     fs::path directory;
 
     bool fullBackup();

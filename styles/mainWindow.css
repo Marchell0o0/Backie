@@ -47,6 +47,7 @@ QLineEdit {
 QCalendarWidget {
     background-color: default;
 }
+
 /*Hover state*/
 QPushButton:hover, QComboBox:hover, QTimeEdit:hover {
     background-color: #3A3A3A;
@@ -54,7 +55,12 @@ QPushButton:hover, QComboBox:hover, QTimeEdit:hover {
 QLineEdit:hover {
     background-color: #3A3A3A;
 }
+/*Disabled state*/
 QPushButton:disabled {
     background-color: #424242;
     color: #7E7E7E;
 }
+QRadioButton:disabled {
+    color: #7E7E7E;
+}
+/*Checked state*/
