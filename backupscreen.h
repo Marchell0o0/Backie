@@ -10,7 +10,7 @@
 
 class BackupArgs {
 private:
-    BackupType backupType;
+    BackupType backupType = BackupType::FULL;
     std::filesystem::path sourceBackupDirPath = "";
     ScheduleRecurrence backupRecurrence = ScheduleRecurrence::DAILY;
     std::array<int, 6> dateArgs = {-1, -1, -1, -1, -1, -1};
@@ -30,8 +30,10 @@ public:
     void setDate(DateArgs type, int value);
     int getDate(DateArgs type) const;
 
-    void setPath(const std::filesystem::path& path);
-    QString getPathQString();
+    std::array<int, 6> getDateArgs();
+
+    void setSourcePath(const std::filesystem::path& path);
+    std::filesystem::path getSourcePath();
 
     void setBackupType(BackupType type);
     BackupType getBackupType();
@@ -54,21 +56,34 @@ public:
 
 private slots:
 
+    void initRecurrAndDateBtns();
+    void initDaysOfWeekBtns();
+
     void browseForSourceFolder();
     void onSourcePathEdited(const QString& newPath);
 
+    // TODO: resolve "on" error prone in func name
     void on_selectDateB_clicked();
 
     void handleRadioButtonToggle(bool isChecked);
     void handleComboBoxIndexChanged(int index);
 
     void updateChosenDateLabel(BackupArgs date);
-    void printOutDateArgs(std::vector<int> dateArgs);
-    QString addZero(int number);
+
+    void createBackupBclicked();
 
 private:
     Ui::BackupScreen *ui;
+
     BackupArgs backupArgs;
+
+    template <typename T, typename U>
+    void connectRecurrAndDateBtns(const QList<QPair<T*, U>>& mapping);
+
+    int* deleteExtraSymbolsFromDate(BackupArgs date);
+
+    void printOutDateArgs(std::vector<int> dateArgs);
+    QString addZero(int number);
 };
 
 #endif // BACKUPSCREEN_H

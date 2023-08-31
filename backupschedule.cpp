@@ -268,7 +268,9 @@ HRESULT BackupSchedule::addToTaskScheduler(){
 
     std::wstring args = L"/C \"" + exePath.wstring() +
                         L" --backup " + directoryWStr + L" " + typeWStr +
-                        L"\" >W:/Programming/Backie/backie_logs/log.txt 2>&1";
+                        // HARD CODING:
+//                        L"\" >W:/Programming/Backie/backie_logs/log.txt 2>&1";
+                        L"\" >D:/Code/Backie_logs/log.txt 2>&1";
 
 
     pTrigger->put_StartBoundary(bstr_t(startTime.c_str()));
