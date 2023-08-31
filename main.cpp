@@ -21,6 +21,8 @@
 
 #include "utils.h"
 
+#include "settings.h"
+
 //#include "settings.h"
 
 
@@ -105,6 +107,7 @@ int main(int argc, char *argv[]) {
 
         // Backlup Schedule testing
         /*
+        // HARD CODING:
         auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(BackupType::INCREMENTAL, "W:/backup_testing/source", -1, 10, 30);
         if (!backupSchedule_test){
             SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
@@ -119,6 +122,7 @@ int main(int argc, char *argv[]) {
 
         // Full backup testing
         /*
+        // HARD CODING:
         auto backup_test_full = BackupFactory::CreateBackup(BackupType::FULL, "W:\\Src folder 1");
         if(!backup_test_full){
             SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
@@ -132,6 +136,7 @@ int main(int argc, char *argv[]) {
 
         // Incremental backup testing
         /*
+        // HARD CODING:
         auto backup_test_incremental = BackupFactory::CreateBackup(BackupType::INCREMENTAL, "W:\\Src folder 1");
         if(!backup_test_incremental){
             SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
@@ -144,6 +149,9 @@ int main(int argc, char *argv[]) {
         */
 
         SPDLOG_INFO("Drawing gui...");
+        // HARD CODING:
+        Settings settings;
+        settings.set_destination("D:\\Code\\Backie_backups\\Dest_1");
 
         mainWindow.show();
         return app.exec();
@@ -160,6 +168,7 @@ int main(int argc, char *argv[]) {
     /*
     Settings settings;
     settings.read_from_file();
+    // HARD CODING:
     settings.backup_task("W:/backup_testing/1", "scheduled", "18:00");
     settings.set_destination("W:/backup_testing/destination");
     settings.push_changes();

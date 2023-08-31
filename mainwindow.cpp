@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainWindowFile.open(QFile::ReadOnly);
     QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
     qApp->setStyleSheet(mainWindowStyleSheet);
+    mainWindowFile.close();
 
     mainStackedWidget = ui->mainStackedWidget;
     secondaryStackedWidget = ui->secondaryStackedWidget;
