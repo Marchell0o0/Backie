@@ -37,23 +37,23 @@ int backupWorker(int argc, char* argv[]) {
         return 1;
     }
 
-    std::string name = argv[2];
-    BackupType type = typeFromStr(argv[3]);
+//    std::string name = argv[2];
+//    BackupType type = typeFromStr(argv[3]);
 
-    Settings& settings = Settings::getInstance();
-    BackupBuilder builder;
-    auto backup_errand = builder
-                            .setCurrentType(type)
-                            .setDestinations(settings.getBackupDests(name))
-                            .setSources(settings.getBackupSrcs(name))
-                            .buildErrand();
+//    Settings& settings = Settings::getInstance();
+//    BackupBuilder builder;
+//    auto backup_errand = builder
+//                            .setCurrentType(type)
+//                            .setDestinations(settings.getBackupDests(name))
+//                            .setSources(settings.getBackupSrcs(name))
+//                            .buildErrand();
 
-    if (backup_errand) {
-        backup_errand->performBackup();
-    } else {
-        if (connected) { socket.write("Couldn't create backup errand"); }
-        return 1;
-    }
+//    if (backup_errand) {
+//        backup_errand->performBackup();
+//    } else {
+//        if (connected) { socket.write("Couldn't create backup errand"); }
+//        return 1;
+//    }
 
     return 0;
 }
@@ -81,76 +81,71 @@ int guiMain(int argc, char* argv[]) {
     QApplication app(argc, argv);
     MainWindow mainWindow;
 
-    if (IsRunningAsAdmin()){
-        SPDLOG_INFO("Running with admin rights");
-    } else {
-        SPDLOG_INFO("Running without admin rights");
-    }
+//    if (IsRunningAsAdmin()){
+//        SPDLOG_INFO("Running with admin rights");
+//    } else {
+//        SPDLOG_INFO("Running without admin rights");
+//    }
 
+//    Settings& settings = Settings::getInstance();
 
-    Settings& settings = Settings::getInstance();
+//    Destination test_dest1 = { .name = "Default destination", .destinationFolder = "W:/Backie backups/Dest 1"};
+//    settings.addUpdateDest(test_dest1);
 
+//    Destination test_dest2 = { .name = "Default destination 2", .destinationFolder = "W:/Backie backups/Dest 2"};
+//    settings.addUpdateDest(test_dest2);
 
+//    std::shared_ptr<OnceBackupSchedule> once = std::make_shared<OnceBackupSchedule>();
+//    once->type = BackupType::FULL;
+//    once->year = 2020;
+//    once->month = 11;
+//    once->day = 20;
+//    once->hour = 12;
+//    once->minute = 35;
 
-    Destination test_dest1 = { .name = "Default destination", .destinationFolder = "W:/Backie backups/Dest 1"};
-    settings.addUpdateDest(test_dest1);
+//    std::shared_ptr<MonthlyBackupSchedule> monthly = std::make_shared<MonthlyBackupSchedule>();
+//    monthly->type = BackupType::FULL;
+//    monthly->day = 20;
+//    monthly->hour = 9;
+//    monthly->minute = 0;
 
-    Destination test_dest2 = { .name = "Default destination 2", .destinationFolder = "W:/Backie backups/Dest 2"};
-    settings.addUpdateDest(test_dest2);
+//    std::shared_ptr<WeeklyBackupSchedule> weekly = std::make_shared<WeeklyBackupSchedule>();
+//    weekly->type = BackupType::INCREMENTAL;
+//    weekly->day = 5;
+//    weekly->hour = 23;
+//    weekly->minute = 59;
 
+//    std::shared_ptr<DailyBackupSchedule> daily = std::make_shared<DailyBackupSchedule>();
+//    daily->type = BackupType::INCREMENTAL;
+//    daily->hour = 0;
+//    daily->minute = 0;
 
+//    BackupBuilder builder;
 
-    std::shared_ptr<OnceBackupSchedule> once = std::make_shared<OnceBackupSchedule>();
-    once->type = BackupType::FULL;
-    once->year = 2020;
-    once->month = 11;
-    once->day = 20;
-    once->hour = 12;
-    once->minute = 35;
-
-    std::shared_ptr<MonthlyBackupSchedule> monthly = std::make_shared<MonthlyBackupSchedule>();
-    monthly->type = BackupType::FULL;
-    monthly->day = 20;
-    monthly->hour = 9;
-    monthly->minute = 0;
-
-    std::shared_ptr<WeeklyBackupSchedule> weekly = std::make_shared<WeeklyBackupSchedule>();
-    weekly->type = BackupType::INCREMENTAL;
-    weekly->day = 5;
-    weekly->hour = 23;
-    weekly->minute = 59;
-
-    std::shared_ptr<DailyBackupSchedule> daily = std::make_shared<DailyBackupSchedule>();
-    daily->type = BackupType::INCREMENTAL;
-    daily->hour = 0;
-    daily->minute = 0;
-
-    BackupBuilder builder;
-
-    auto test_backup1 = builder
-                            .setName("Minecraft")
-                            .setDestinations({test_dest1.name, test_dest2.name})
-                            .setSources({"W:\\Src folder 1"})
-                            .setSchedules({weekly, daily})
-                            .buildSchedule();
-    auto test_backup2 = builder
-                            .setName("Homework")
-                            .setDestinations({test_dest2.name})
-                            .setSources({"W:\\Src folder 2"})
-                            .setSchedules({once})
-                            .buildSchedule();
-    auto test_backup3 = builder
-                            .setName("Saves")
-                            .setDestinations({test_dest1.name})
-                            .setSources({"W:\\Src folder 3"})
-                            .setSchedules({monthly})
-                            .buildSchedule();
-    auto test_backup4 = builder
-                            .setName("Minecraft 2")
-                            .setDestinations({test_dest1.name, test_dest2.name})
-                            .setSources({"W:\\Src folder 1"})
-                            .setSchedules({daily})
-                            .buildSchedule();
+//    auto test_backup1 = builder
+//                            .setName("Minecraft")
+//                            .setDestinations({test_dest1.name, test_dest2.name})
+//                            .setSources({"W:\\Src folder 1"})
+//                            .setSchedules({weekly, daily})
+//                            .buildSchedule();
+//    auto test_backup2 = builder
+//                            .setName("Homework")
+//                            .setDestinations({test_dest2.name})
+//                            .setSources({"W:\\Src folder 2"})
+//                            .setSchedules({once})
+//                            .buildSchedule();
+//    auto test_backup3 = builder
+//                            .setName("Saves")
+//                            .setDestinations({test_dest1.name})
+//                            .setSources({"W:\\Src folder 3"})
+//                            .setSchedules({monthly})
+//                            .buildSchedule();
+//    auto test_backup4 = builder
+//                            .setName("Minecraft 2")
+//                            .setDestinations({test_dest1.name, test_dest2.name})
+//                            .setSources({"W:\\Src folder 1"})
+//                            .setSchedules({daily})
+//                            .buildSchedule();
 
 //    settings.addUpdateBackup(*test_backup1);
 //    settings.addUpdateBackup(*test_backup2);
@@ -159,23 +154,23 @@ int guiMain(int argc, char* argv[]) {
 
 
 
-    std::vector<Backup> backups = settings.getBackupVec();
+//    std::vector<Backup> backups = settings.getBackupVec();
 
-    for (Backup backup : backups) {
-        SPDLOG_INFO("Name: {}, current type: {}", backup.getName(), strFromType(backup.getCurrentType()));
-        std::cout << "Destinations:" << std::endl;
-        for (auto& destinationName : backup.getDestinations()) {
-            std::cout << destinationName << std::endl;
-        }
-        std::cout << "Sources:" << std::endl;
-        for (fs::path& source : backup.getSources()) {
-            std::cout << source.string() << std::endl;
-        }
-        std::cout << "Schedule types:" << std::endl;
-        for (auto& schedule : backup.getSchedules()) {
-            std::cout << strFromType(schedule->type) << std::endl;
-        }
-    }
+//    for (Backup backup : backups) {
+//        SPDLOG_INFO("Name: {}, current type: {}", backup.getName(), strFromType(backup.getCurrentType()));
+//        std::cout << "Destinations:" << std::endl;
+//        for (auto& destinationName : backup.getDestinations()) {
+//            std::cout << destinationName << std::endl;
+//        }
+//        std::cout << "Sources:" << std::endl;
+//        for (fs::path& source : backup.getSources()) {
+//            std::cout << source.string() << std::endl;
+//        }
+//        std::cout << "Schedule types:" << std::endl;
+//        for (auto& schedule : backup.getSchedules()) {
+//            std::cout << strFromType(schedule->type) << std::endl;
+//        }
+//    }
 
 
 //    if (backups.size() > 0) {
@@ -207,71 +202,6 @@ int guiMain(int argc, char* argv[]) {
 //        SPDLOG_ERROR("Couldn't create test errand backup");
 //    }
 
-
-
-<<<<<<< HEAD
-    // Backlup Schedule testing
-    /*
-=======
-        QApplication app(argc, argv);
-        MainWindow mainWindow;
-
-        // Backlup Schedule testing
-        /*
-        // HARD CODING:
->>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
-        auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(BackupType::INCREMENTAL, "W:/backup_testing/source", -1, 10, 30);
-        if (!backupSchedule_test){
-            SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
-                         BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
-        } else {
-            HRESULT hr = backupSchedule_test->addToTaskScheduler();
-            if (FAILED(hr)){
-                SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
-            }
-        }
-        */
-
-<<<<<<< HEAD
-    // Full backup testing
-    /*
-        auto backup_test_full = BackupFactory::CreateBackup(BackupType::FULL, "W:\\Src folder 1", "W:\\Backie backups\\Dest 1");
-=======
-        // Full backup testing
-        /*
-        // HARD CODING:
-        auto backup_test_full = BackupFactory::CreateBackup(BackupType::FULL, "W:\\Src folder 1");
->>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
-        if(!backup_test_full){
-            SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
-        } else {
-            SPDLOG_INFO("Performing full backup...");
-            if (!backup_test_full->performBackup()) {
-                SPDLOG_ERROR("Couldn't perform the backup");
-            }
-        }
-    */
-
-<<<<<<< HEAD
-    // Incremental backup testing
-    /*
-=======
-        // Incremental backup testing
-        /*
-        // HARD CODING:
->>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
-        auto backup_test_incremental = BackupFactory::CreateBackup(BackupType::INCREMENTAL, "W:\\Src folder 1");
-        if(!backup_test_incremental){
-            SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
-        } else {
-            SPDLOG_INFO("Performing incremental backup...");
-            if (!backup_test_incremental->performBackup()) {
-                SPDLOG_ERROR("Couldn't perform the backup");
-            }
-        }
-        */
-
-<<<<<<< HEAD
     // Destination management
     /*
     Destination test_dest = { .name = "Default destination", .destinationFolder = "W:/Backie backups/Dest 1"};
@@ -286,32 +216,6 @@ int guiMain(int argc, char* argv[]) {
 
     settings.removeDest(test_dest);
     settings.removeDest(test_dest2);
-=======
-        SPDLOG_INFO("Drawing gui...");
-        // HARD CODING:
-        Settings settings;
-        settings.set_destination("D:\\Code\\Backie_backups\\Dest_1");
-
-        mainWindow.show();
-        return app.exec();
-    }
-}
-
-//    if (IsRunningAsAdmin()) {
-//        SPDLOG_INFO("Running program as admin");
-//    } else {
-//        SPDLOG_INFO("Running program as user");
-//    }
-
-    /* Examples of settings.h */
-    /*
-    Settings settings;
-    settings.read_from_file();
-    // HARD CODING:
-    settings.backup_task("W:/backup_testing/1", "scheduled", "18:00");
-    settings.set_destination("W:/backup_testing/destination");
-    settings.push_changes();
->>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
     */
 
     mainWindow.show();
