@@ -3,79 +3,54 @@
 
 #include <fstream>
 #include <mutex>
-#include "nlohmann/json.hpp"
-#include "task.h"
+#include <filesystem>
+#include <optional>
 
+#include "nlohmann/json.hpp"
+
+#include "destination.h"
+#include "backuperrand.h"
 using json = nlohmann::json;
 
-class Settings {
-public:
-    json data;
-    std::string path_to_settings;
-    std::mutex file_mutex;
 
-    Settings() {
-        initialize_settings_path();
+class Settings {
+private:
+    Settings() {}
+public:
+    Settings(Settings &other) = delete;
+    void operator=(const Settings &) = delete;
+
+    static Settings& getInstance() {
+        static Settings instance;
+        return instance;
     }
 
-    void initialize_settings_path();
+    bool initializeSettings();
 
-    /**
-     * @brief Reads the settings data from the file.
-     */
-    void read_from_file();
+    bool addUpdateDest(Destination dest);
+    bool removeDest(Destination dest);
+    std::vector<Destination> getDestVec();
+    Destination getDest(const std::string& name);
 
-    /**
-     * @brief Writes the current settings data back to the file.
-     */
-    void push_changes();
+    bool addUpdateBackup(Backup backup);
+    bool removeBackup(Backup backup);
 
-    /**
-     * @brief Adds or updates a backup task.
-     * @param directory The directory to be backed up.
-     * @param type The type of backup "scheduled"/"watched".
-     * @param time The time to perform the backup, format: xx:xx (needed when scheduled).
-     * @param filter Specific filter criteria for the backup (optional).
-     */
-    void backup_task(const std::string& directory, const std::string& type,
-                     const std::string& time = "", const std::string& filter="");
+    std::vector<Backup> getBackupVec();
 
-    /**
-     * @brief Removes a backup task by its directory.
-     * @param directory The directory of the backup task to be removed.
-     */
-    void remove_backup_task(const std::string& directory);
+    std::vector<std::string> getBackupDests(const std::string& name);
+    std::vector<fs::path> getBackupSrcs(const std::string& name);
 
-    /**
-     * @brief Sets the destination path for backups.
-     * @param path_to_destination The destination path for backups.
-     */
-    void set_destination(const std::string& path_to_destination);
-
-    /**
-     * @brief returns a vector of all the tasks by type
-     * @param "scheduled"/"watched"
-     * @return vector of tasks
-     */
-    std::vector<Task> get_task_list_by_type(const std::string& type);
-
+    std::filesystem::path getPath();
 private:
-    /**
-     * @brief Updates a backup task with new or modified settings.
-     * @param directory The directory to be backed up.
-     * @param type The type of backup "scheduled"/"watched".
-     * @param time The time to perform the backup, format: xx:xx (needed when scheduled).
-     * @param filter Specific filter criteria for the backup (optional).
-     */
-    void update_backup_task(const std::string& directory, const std::string& type,
-                            const std::string& time = "", const std::string& filter="");
+    json data = {
+        {"destinations", json::array()},
+        {"backups", json::array()}
+    };
+    std::filesystem::path path;
 
-    /**
-     * @brief json task template to Task struct
-     * @param json task
-     * @return Task struct
-     */
-    Task task_json_to_struct(json task_json);
+
+    std::vector<std::shared_ptr<BackupSchedule>> getBackupScheds(const std::string& name);
 };
+
 
 #endif // SETTINGS_H

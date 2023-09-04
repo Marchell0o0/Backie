@@ -5,7 +5,6 @@
 #include "backupscreen.h"
 #include "ui_backupscreen.h"
 #include "dialogcalendar.h"
-#include "backupschedule.h"
 
 BackupScreen::BackupScreen(QWidget *parent) :
     QWidget(parent),

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <optional>
 #include <map>
+#include <windows.h>
 
 #include "nlohmann/json.hpp"
 #include "spdlog/spdlog.h"
@@ -30,7 +31,6 @@ static FileMetadata fromJson(const nlohmann::json& j) {
 }
 
 std::optional<std::map<fs::path, FileMetadata>> loadCombinedMdMap(const fs::path& jsonDestination) {
-    // Fetch all backup directories and sort them based on creation date (assuming your naming convention allows this)
     std::vector<fs::directory_entry> backupDirs;
     for (const auto& dirEntry : fs::directory_iterator(jsonDestination)) {
         if (fs::is_directory(dirEntry)) {
@@ -106,6 +106,8 @@ bool saveMdMap(const std::map<fs::path, FileMetadata>& metadata, const fs::path&
     }
 
     outFile << j.dump(4);
+    outFile.close();
+    SetFileAttributes(jsonDestination.c_str(), GetFileAttributes(jsonDestination.c_str()) | FILE_ATTRIBUTE_HIDDEN);
     return true;
 }
 

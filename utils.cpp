@@ -3,7 +3,7 @@
 #include <winnls.h>
 #include <windows.h>
 
-std::wstring stringToWString(const std::string& s) {
+std::wstring strToWStr(const std::string& s) {
     int len;
     int slength = (int)s.length() + 1;
     len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
@@ -46,7 +46,8 @@ const std::string strFromType(const BackupType type){
         return "FULL";
     case BackupType::INCREMENTAL:
         return "INCREMENTAL";
-    default:
-        return "";
+    case BackupType::NONE:
+        return "NONE";
     }
+    return "";
 }

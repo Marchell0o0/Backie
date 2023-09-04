@@ -3,10 +3,6 @@
 
 #include <string>
 
-/**
- * @enum BackupType
- * @brief Types of backups supported by Backie.
- */
 enum class BackupType {
     NONE,           ///< Represents a default value for the type
     FULL,           ///< Represents a full backup.
@@ -18,7 +14,7 @@ BackupType typeFromStr(const std::string& string);
 
 const std::string strFromType(const BackupType type);
 
-std::wstring stringToWString(const std::string& s);
+std::wstring strToWStr(const std::string& s);
 
 bool IsRunningAsAdmin();
 

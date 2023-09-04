@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 struct FileMetadata {
     std::time_t modificationTimestamp;
     uintmax_t fileSize;
-    std::string fileHash;  // TODO: Could be md5, sha256, etc.
+    std::string fileHash;
     bool isDeleted;
 };
 
