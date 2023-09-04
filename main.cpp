@@ -21,8 +21,8 @@
 #include "destination.h"
 #include "backupbuilder.h"
 
-int backupWorker(int argc, char* argv[]) {
 
+int backupWorker(int argc, char* argv[]) {
     QCoreApplication app(argc, argv);
     QLocalSocket socket;
     socket.connectToServer("BackupServer");
@@ -209,8 +209,17 @@ int guiMain(int argc, char* argv[]) {
 
 
 
+<<<<<<< HEAD
     // Backlup Schedule testing
     /*
+=======
+        QApplication app(argc, argv);
+        MainWindow mainWindow;
+
+        // Backlup Schedule testing
+        /*
+        // HARD CODING:
+>>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
         auto backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(BackupType::INCREMENTAL, "W:/backup_testing/source", -1, 10, 30);
         if (!backupSchedule_test){
             SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
@@ -223,9 +232,16 @@ int guiMain(int argc, char* argv[]) {
         }
         */
 
+<<<<<<< HEAD
     // Full backup testing
     /*
         auto backup_test_full = BackupFactory::CreateBackup(BackupType::FULL, "W:\\Src folder 1", "W:\\Backie backups\\Dest 1");
+=======
+        // Full backup testing
+        /*
+        // HARD CODING:
+        auto backup_test_full = BackupFactory::CreateBackup(BackupType::FULL, "W:\\Src folder 1");
+>>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
         if(!backup_test_full){
             SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
         } else {
@@ -236,8 +252,14 @@ int guiMain(int argc, char* argv[]) {
         }
     */
 
+<<<<<<< HEAD
     // Incremental backup testing
     /*
+=======
+        // Incremental backup testing
+        /*
+        // HARD CODING:
+>>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
         auto backup_test_incremental = BackupFactory::CreateBackup(BackupType::INCREMENTAL, "W:\\Src folder 1");
         if(!backup_test_incremental){
             SPDLOG_ERROR("Couldn't create test backup object. Error: {}", BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
@@ -249,6 +271,7 @@ int guiMain(int argc, char* argv[]) {
         }
         */
 
+<<<<<<< HEAD
     // Destination management
     /*
     Destination test_dest = { .name = "Default destination", .destinationFolder = "W:/Backie backups/Dest 1"};
@@ -263,6 +286,32 @@ int guiMain(int argc, char* argv[]) {
 
     settings.removeDest(test_dest);
     settings.removeDest(test_dest2);
+=======
+        SPDLOG_INFO("Drawing gui...");
+        // HARD CODING:
+        Settings settings;
+        settings.set_destination("D:\\Code\\Backie_backups\\Dest_1");
+
+        mainWindow.show();
+        return app.exec();
+    }
+}
+
+//    if (IsRunningAsAdmin()) {
+//        SPDLOG_INFO("Running program as admin");
+//    } else {
+//        SPDLOG_INFO("Running program as user");
+//    }
+
+    /* Examples of settings.h */
+    /*
+    Settings settings;
+    settings.read_from_file();
+    // HARD CODING:
+    settings.backup_task("W:/backup_testing/1", "scheduled", "18:00");
+    settings.set_destination("W:/backup_testing/destination");
+    settings.push_changes();
+>>>>>>> 86ba9bec0c68acb74f92a0c939f07d9e20c15544
     */
 
     mainWindow.show();
