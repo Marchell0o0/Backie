@@ -7,11 +7,10 @@
 #include <optional>
 
 #include "nlohmann/json.hpp"
-
 #include "destination.h"
-#include "backuperrand.h"
-using json = nlohmann::json;
+#include "task.h"
 
+using json = nlohmann::json;
 
 class Settings {
 private:
@@ -27,29 +26,27 @@ public:
 
     bool initializeSettings();
 
-    bool addUpdateDest(Destination dest);
-    bool removeDest(Destination dest);
-    std::vector<Destination> getDestVec();
-    Destination getDest(const std::string& name);
+    bool addUpdate(Destination dest);
+    bool remove(Destination dest);
+    std::vector<Destination> getDestVec() const;
+    Destination getDest(const std::string& key) const;
 
-    bool addUpdateBackup(Backup backup);
-    bool removeBackup(Backup backup);
+    bool addUpdate(Task task);
+    bool remove(Task task);
+    std::vector<Task> getTaskVec() const;
 
-    std::vector<Backup> getBackupVec();
+    std::vector<std::string> getKeyDests(const std::string& key) const;
+    std::vector<fs::path> getKeySrcs(const std::string& key) const;
+    std::vector<std::shared_ptr<Schedule>> getKeyScheds(const std::string& key) const;
 
-    std::vector<std::string> getBackupDests(const std::string& name);
-    std::vector<fs::path> getBackupSrcs(const std::string& name);
-
-    std::filesystem::path getPath();
+    fs::path getPath() const;
 private:
     json data = {
         {"destinations", json::array()},
-        {"backups", json::array()}
+        {"tasks", json::array()}
     };
-    std::filesystem::path path;
+    fs::path path;
 
-
-    std::vector<std::shared_ptr<BackupSchedule>> getBackupScheds(const std::string& name);
 };
 
 

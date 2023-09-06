@@ -6,7 +6,6 @@
 #include <QLocalSocket>
 #include <fstream>
 #include <iostream>
-#include <thread>
 #include <vector>
 #include <unistd.h>
 #include <windows.h>
@@ -15,7 +14,7 @@
 
 #include "mainwindow.h"
 
-#include "backuperrand.h"
+#include "errand.h"
 #include "utils.h"
 #include "settings.h"
 #include "destination.h"
@@ -37,23 +36,22 @@ int backupWorker(int argc, char* argv[]) {
         return 1;
     }
 
-//    std::string name = argv[2];
-//    BackupType type = typeFromStr(argv[3]);
+    std::string key = argv[2];
+    BackupType type = typeFromStr(argv[3]);
 
-//    Settings& settings = Settings::getInstance();
-//    BackupBuilder builder;
-//    auto backup_errand = builder
-//                            .setCurrentType(type)
-//                            .setDestinations(settings.getBackupDests(name))
-//                            .setSources(settings.getBackupSrcs(name))
-//                            .buildErrand();
+    Settings& settings = Settings::getInstance();
+    BackupBuilder builder;
+    auto errand = builder
+                            .setKey(key)
+                            .setCurrentType(type)
+                            .buildErrand();
 
-//    if (backup_errand) {
-//        backup_errand->performBackup();
-//    } else {
-//        if (connected) { socket.write("Couldn't create backup errand"); }
-//        return 1;
-//    }
+    if (errand) {
+        errand->perform();
+    } else {
+        if (connected) { socket.write("Couldn't create backup errand"); }
+        return 1;
+    }
 
     return 0;
 }
@@ -81,142 +79,102 @@ int guiMain(int argc, char* argv[]) {
     QApplication app(argc, argv);
     MainWindow mainWindow;
 
-//    if (IsRunningAsAdmin()){
-//        SPDLOG_INFO("Running with admin rights");
-//    } else {
-//        SPDLOG_INFO("Running without admin rights");
-//    }
+    Settings& settings = Settings::getInstance();
 
-//    Settings& settings = Settings::getInstance();
-
-//    Destination test_dest1 = { .name = "Default destination", .destinationFolder = "W:/Backie backups/Dest 1"};
-//    settings.addUpdateDest(test_dest1);
-
-//    Destination test_dest2 = { .name = "Default destination 2", .destinationFolder = "W:/Backie backups/Dest 2"};
-//    settings.addUpdateDest(test_dest2);
-
-//    std::shared_ptr<OnceBackupSchedule> once = std::make_shared<OnceBackupSchedule>();
-//    once->type = BackupType::FULL;
-//    once->year = 2020;
-//    once->month = 11;
-//    once->day = 20;
-//    once->hour = 12;
-//    once->minute = 35;
-
-//    std::shared_ptr<MonthlyBackupSchedule> monthly = std::make_shared<MonthlyBackupSchedule>();
-//    monthly->type = BackupType::FULL;
-//    monthly->day = 20;
-//    monthly->hour = 9;
-//    monthly->minute = 0;
-
-//    std::shared_ptr<WeeklyBackupSchedule> weekly = std::make_shared<WeeklyBackupSchedule>();
-//    weekly->type = BackupType::INCREMENTAL;
-//    weekly->day = 5;
-//    weekly->hour = 23;
-//    weekly->minute = 59;
-
-//    std::shared_ptr<DailyBackupSchedule> daily = std::make_shared<DailyBackupSchedule>();
-//    daily->type = BackupType::INCREMENTAL;
-//    daily->hour = 0;
-//    daily->minute = 0;
-
-//    BackupBuilder builder;
-
-//    auto test_backup1 = builder
-//                            .setName("Minecraft")
-//                            .setDestinations({test_dest1.name, test_dest2.name})
-//                            .setSources({"W:\\Src folder 1"})
-//                            .setSchedules({weekly, daily})
-//                            .buildSchedule();
-//    auto test_backup2 = builder
-//                            .setName("Homework")
-//                            .setDestinations({test_dest2.name})
-//                            .setSources({"W:\\Src folder 2"})
-//                            .setSchedules({once})
-//                            .buildSchedule();
-//    auto test_backup3 = builder
-//                            .setName("Saves")
-//                            .setDestinations({test_dest1.name})
-//                            .setSources({"W:\\Src folder 3"})
-//                            .setSchedules({monthly})
-//                            .buildSchedule();
-//    auto test_backup4 = builder
-//                            .setName("Minecraft 2")
-//                            .setDestinations({test_dest1.name, test_dest2.name})
-//                            .setSources({"W:\\Src folder 1"})
-//                            .setSchedules({daily})
-//                            .buildSchedule();
-
-//    settings.addUpdateBackup(*test_backup1);
-//    settings.addUpdateBackup(*test_backup2);
-//    settings.addUpdateBackup(*test_backup3);
-//    settings.addUpdateBackup(*test_backup4);
-
-
-
-//    std::vector<Backup> backups = settings.getBackupVec();
-
-//    for (Backup backup : backups) {
-//        SPDLOG_INFO("Name: {}, current type: {}", backup.getName(), strFromType(backup.getCurrentType()));
-//        std::cout << "Destinations:" << std::endl;
-//        for (auto& destinationName : backup.getDestinations()) {
-//            std::cout << destinationName << std::endl;
-//        }
-//        std::cout << "Sources:" << std::endl;
-//        for (fs::path& source : backup.getSources()) {
-//            std::cout << source.string() << std::endl;
-//        }
-//        std::cout << "Schedule types:" << std::endl;
-//        for (auto& schedule : backup.getSchedules()) {
-//            std::cout << strFromType(schedule->type) << std::endl;
-//        }
-//    }
-
-
-//    if (backups.size() > 0) {
-//        auto changed_backup = builder
-//                                        .setChanging(backups[0])
-////                                        .setName("Minecraft")
-//                                        .setDestinations({test_dest})
-//                                        .setSources({"W:\\Src folder 1"})
-//                                        .setSchedules({once})
-//                                        .buildSchedule();
-
-//        if (changed_backup) {
-//            backups[0] = *changed_backup;
-//            SPDLOG_INFO("Created a test schedule backup");
-//        } else {
-//            SPDLOG_ERROR("Couldn't create test schedule backup");
-//        }
-//    }
-
-
-//    auto test_errand_backup = builder
-//                                  .setName("Minecraft")
-//                                  .setCurrentType(BackupType::FULL)
-//                                  .buildErrand();
-
-//    if (test_errand_backup) {
-//        SPDLOG_INFO("Created a test errand backup");
-//    } else {
-//        SPDLOG_ERROR("Couldn't create test errand backup");
-//    }
-
-    // Destination management
-    /*
-    Destination test_dest = { .name = "Default destination", .destinationFolder = "W:/Backie backups/Dest 1"};
-    settings.addUpdateDest(test_dest);
-    Destination test_dest2 = { .name = "Default destination 2", .destinationFolder = "W:/Backie backups/Dest 2"};
-    settings.addUpdateDest(test_dest2);
-
-    std::vector<Destination> destVec = settings.getDestVec();
-    for (auto it : destVec){
-        SPDLOG_INFO("{} {}", it.name, it.destinationFolder.string());
+    SPDLOG_INFO("Deleting tasks");
+    // delete all tasks
+    for (auto& task : settings.getTaskVec()) {
+        task.deleteLocal();
     }
 
-    settings.removeDest(test_dest);
-    settings.removeDest(test_dest2);
-    */
+    SPDLOG_INFO("Deleting destinations");
+    // delete all destinations
+    for (auto& dest : settings.getDestVec()) {
+        settings.remove(dest);
+    }
+
+    Destination test_dest1("Default destination 1", "W:/Backie backups/Dest 1");
+    settings.addUpdate(test_dest1);
+
+    Destination test_dest2("Default destination 2", "W:/Backie backups/Dest 2");
+    settings.addUpdate(test_dest2);
+
+    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
+    once->type = BackupType::FULL;
+    once->year = 2020;
+    once->month = 11;
+    once->day = 20;
+    once->hour = 12;
+    once->minute = 35;
+
+    std::shared_ptr<MonthlySchedule> monthly = std::make_shared<MonthlySchedule>();
+    monthly->type = BackupType::FULL;
+    monthly->day = 20;
+    monthly->hour = 9;
+    monthly->minute = 0;
+
+    std::shared_ptr<WeeklySchedule> weekly = std::make_shared<WeeklySchedule>();
+    weekly->type = BackupType::INCREMENTAL;
+    weekly->day = 5;
+    weekly->hour = 23;
+    weekly->minute = 59;
+
+    std::shared_ptr<DailySchedule> daily = std::make_shared<DailySchedule>();
+    daily->type = BackupType::INCREMENTAL;
+    daily->hour = 0;
+    daily->minute = 0;
+
+    BackupBuilder builder;
+    auto test_task1 = builder
+                            .setName("Minecraft")
+                            .setDestinations({test_dest1, test_dest2})
+                            .setSources({"W:\\Src folder 1"})
+                            .setSchedules({weekly, daily})
+                            .buildTask();
+    auto test_task2 = builder
+                            .setName("Homework")
+                            .setDestinations({test_dest2})
+                            .setSources({"W:\\Src folder 2"})
+                            .setSchedules({once})
+                            .buildTask();
+    auto test_task3 = builder
+                            .setName("Saves")
+                            .setDestinations({test_dest1})
+                            .setSources({"W:\\Src folder 3"})
+                            .setSchedules({monthly})
+                            .buildTask();
+    auto test_task4 = builder
+                            .setName("Minecraft 2")
+                            .setDestinations({test_dest1, test_dest2})
+                            .setSources({"W:\\Src folder 1"})
+                            .setSchedules({daily})
+                            .buildTask();
+
+    test_task1->saveLocal();
+    test_task2->saveLocal();
+    test_task3->saveLocal();
+    test_task4->saveLocal();
+
+
+    std::vector<Task> tasks = settings.getTaskVec();
+    std::vector<Destination> dests = settings.getDestVec();
+
+    std::cout << "Tasks:" << std::endl;
+    for (auto& task : tasks) {
+        std::cout << task << std::endl;
+    }
+
+    std::cout << "Global destinations:" << std::endl;
+    for (auto& dest : dests) {
+        std::cout << dest << std::endl;
+    }
+
+    //    if (IsRunningAsAdmin()){
+    //        SPDLOG_INFO("Running with admin rights");
+    //    } else {
+    //        SPDLOG_INFO("Running without admin rights");
+    //    }
+
 
     mainWindow.show();
     return app.exec();

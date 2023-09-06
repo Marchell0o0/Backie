@@ -42,8 +42,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         assets/icons/sideBar/active/backup_grey.svg assets/icons/sideBar/active/history_grey.svg assets/icons/sideBar/active/home_grey.svg assets/icons/sideBar/active/recover_grey.svg assets/icons/sideBar/active/settings_grey.svg assets/icons/sideBar/iconLicenses/license-56530056-3916611.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917033.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917058.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917296.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917330.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917688.pdf assets/icons/sideBar/notActive/account_white.svg assets/icons/sideBar/notActive/backup_white.svg assets/icons/sideBar/notActive/history_white.svg assets/icons/sideBar/notActive/home_white.svg assets/icons/sideBar/notActive/recover_white.svg assets/icons/sideBar/notActive/settings_white.svg
         styles/backupScreen.css
 
-        backuperrand.h backuperrand.cpp
-        scheduling.cpp
+        errand.h errand.cpp
+
 
         utils.h utils.cpp
         dialogcalendar.h dialogcalendar.cpp dialogcalendar.ui
@@ -53,6 +53,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 
         folderlock.h folderlock.cpp
         backupbuilder.h backupbuilder.cpp
+        schedule.h schedule.cpp
+        task.h task.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

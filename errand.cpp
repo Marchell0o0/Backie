@@ -1,4 +1,4 @@
-#include "backuperrand.h"
+#include "errand.h"
 
 #include <optional>
 #include <string>
@@ -14,26 +14,22 @@
 #include "utils.h"
 #include "metadata.h"
 
-std::string Backup::getName()  {
-    return this->name;
+std::string Errand::getKey() const {
+    return this->key;
 }
 
-BackupType Backup::getCurrentType() const {
+BackupType Errand::getCurrentType() const {
     return this->currentType;
 }
 
-std::vector<std::string> Backup::getDestinations() const {
+std::vector<std::string> Errand::getDestinations() const {
     return this->destinations;
 }
-std::vector<fs::path> Backup::getSources() const {
+std::vector<fs::path> Errand::getSources() const {
     return this->sources;
 }
 
-std::vector<std::shared_ptr<BackupSchedule>> Backup::getSchedules() const {
-    return this->schedules;
-}
-
-std::string Backup::formatBackupFolderName(){
+static std::string formatDirName(BackupType type){
     auto now = std::chrono::system_clock::now();
     std::time_t now_time = std::chrono::system_clock::to_time_t(now);
     std::tm buf;
@@ -41,21 +37,10 @@ std::string Backup::formatBackupFolderName(){
     std::ostringstream oss;
     oss << std::put_time(&buf, "[%d-%m-%Y %H.%M]");
 
-    return strFromType(this->currentType) + " " + oss.str();
+    return strFromType(type) + " " + oss.str();
 }
 
-bool Backup::performBackup() {
-    if (this->currentType == BackupType::FULL) {
-        return fullBackup();
-    } else if (this->currentType == BackupType::INCREMENTAL) {
-        return incrementalBackup();
-    } else {
-        SPDLOG_ERROR("No current type specified");
-        return false;
-    }
-}
-
-bool Backup::backup(const fs::path file, const fs::path backupFolder, const fs::path sourcePath) {
+static bool copy(const fs::path file, const fs::path backupFolder, const fs::path sourcePath) {
     fs::path relativePath = fs::relative(file, sourcePath);
     fs::path destPath = backupFolder / relativePath;
     fs::create_directories(destPath.parent_path());
@@ -96,11 +81,24 @@ static bool shouldBackup(const fs::path& file, const std::map<fs::path, FileMeta
     return false;
 }
 
+bool Errand::perform() const{
+    if (this->currentType == BackupType::FULL) {
+        return full();
+    } else if (this->currentType == BackupType::INCREMENTAL) {
+        return incremental();
+    } else {
+        SPDLOG_ERROR("No current type specified");
+        return false;
+    }
+}
+
+
 //TODO: Check if the destination exists
-bool Backup::fullBackup() {
+bool Errand::full() const {
     Settings& settings = Settings::getInstance();
     for (const auto& destinationName : this->destinations) {
-        fs::path backupFolder = settings.getDest(destinationName).destinationFolder / this->name / formatBackupFolderName();
+        fs::path destFolder = settings.getDest(destinationName).destinationFolder;
+        fs::path backupFolder = destFolder / this->key / formatDirName(this->currentType);
 
         if (fs::exists(backupFolder)){
             SPDLOG_WARN("Backup folder with name: {}, already exists", backupFolder.u8string());
@@ -114,7 +112,7 @@ bool Backup::fullBackup() {
             fs::create_directory(backupFolder / source.string());
             for (const auto& file : fs::recursive_directory_iterator(source)) {
                 if (file.is_regular_file()) {
-                    if (backup(file.path(), backupFolder, source)){
+                    if (copy(file.path(), backupFolder, source)){
                         metadata[file.path()] = MdFromFile(file.path());
                     } else {
                         return false;
@@ -129,7 +127,7 @@ bool Backup::fullBackup() {
     return true;
 }
 
-bool Backup::incrementalBackup() {
+bool Errand::incremental() const {
     Settings& settings = Settings::getInstance();
     for (const auto& destinationName : this->destinations){
         // Combined data from the last FULL backup and all subsequent backups
@@ -140,7 +138,7 @@ bool Backup::incrementalBackup() {
         }
 
 
-        fs::path backupFolder = destFolder / this->name / formatBackupFolderName();
+        fs::path backupFolder = destFolder / this->key / formatDirName(this->currentType);
         if (fs::exists(backupFolder)){
             SPDLOG_WARN("Backup folder with name: {}, already exists", backupFolder.u8string());
             return false;
@@ -154,7 +152,7 @@ bool Backup::incrementalBackup() {
             fs::create_directory(backupFolder / source.string());
             for (const auto& file : fs::recursive_directory_iterator(source)) {
                 if (file.is_regular_file() && shouldBackup(file.path(), *combinedMetadata)) {
-                    if (backup(file.path(), backupFolder, source)){
+                    if (copy(file.path(), backupFolder, source)){
                         newMetadata[file.path()] = MdFromFile(file.path());
                     } else {
                         return false;
