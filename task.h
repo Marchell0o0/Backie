@@ -11,7 +11,6 @@ public:
     bool deleteLocal() const;
 
     std::vector<std::shared_ptr<Schedule> > getSchedules() const;
-    std::string getName() const;
 
     friend std::ostream & operator << (std::ostream &out, const Task &task);
 protected:
@@ -21,10 +20,9 @@ protected:
          std::vector<std::string> dests,
          std::vector<fs::path> srcs,
         std::vector<std::shared_ptr<Schedule>> scheds)
-        : Errand{key, type, dests, srcs}, schedules{scheds}, name{name} {};
+        : Errand{key, name, type, dests, srcs}, schedules{scheds} {};
 
     std::vector<std::shared_ptr<Schedule>> schedules;
-    std::string name;
 
 private:
     HRESULT saveTaskScheduler(Schedule& schedule) const;

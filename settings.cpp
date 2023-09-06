@@ -161,24 +161,23 @@ std::vector<Destination> Settings::getDestVec() const {
 }
 
 //TODO: That's why that constructor was needed
-Destination Settings::getDest(const std::string& key) const {
-    Destination dest;
+std::optional<Destination> Settings::getDest(const std::string& key) const {
     if (data.find("destinations") == data.end()) {
         SPDLOG_WARN("No destinations found");
-        return dest;
+        return std::nullopt;
     }
 
     for (auto& destination : data["destinations"]) {
         if (destination["key"] == key){
             std::string name = destination["name"];
             std::filesystem::path destFldr = destination["destinationFolder"].get<std::string>();
-            Destination truedest(name, destFldr);
-            return truedest;
+            Destination dest(name, destFldr);
+            return dest;
         }
 
     }
     SPDLOG_ERROR("Couldn't find destination with key: {}", key);
-    return dest;
+    return std::nullopt;
 }
 
 bool Settings::addUpdate(Task task) {
@@ -256,7 +255,7 @@ std::vector<Task> Settings::getTaskVec() const {
 
         if(!taskObj) {
             SPDLOG_ERROR("Couldn't get a task from settings");
-            return tasks;
+//            return tasks;
         } else {
             tasks.push_back(*taskObj);
         }
@@ -265,6 +264,20 @@ std::vector<Task> Settings::getTaskVec() const {
 
     return tasks;
 }
+
+bool Settings::isTaskKeyInSettings(const std::string& key) const {
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_WARN("No tasks found");
+        return false;
+    }
+    for (auto& task : data["tasks"]) {
+        if (task["key"] == key) {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 std::vector<std::shared_ptr<Schedule>> Settings::getKeyScheds(const std::string& key) const {
     std::vector<std::shared_ptr<Schedule>> scheds;
@@ -363,6 +376,24 @@ std::vector<std::string> Settings::getKeyDests(const std::string& key) const {
 
     SPDLOG_ERROR("Task not found");
     return dests;
+}
+
+std::string Settings::getKeyName(const std::string& key) const {
+    std::string name = "";
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_ERROR("No tasks found");
+        return name;
+    }
+
+    for (auto& task : data["tasks"]) {
+        if (task["key"] == key) {
+            name = task["name"];
+            return name;
+        }
+    }
+
+    SPDLOG_ERROR("Task not found");
+    return name;
 }
 
 bool Settings::remove(Task task) {

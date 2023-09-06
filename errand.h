@@ -15,14 +15,17 @@ public:
     BackupType getCurrentType() const;
     std::vector<std::string> getDestinations() const;
     std::vector<fs::path> getSources() const;
+    std::string getName() const;
 protected:
     Errand(std::string& key,
+           std::string& name,
            BackupType type,
            std::vector<std::string> dests,
            std::vector<fs::path> srcs)
-        : key{key}, currentType{type}, destinations{dests}, sources{srcs} {};
+        : key{key}, name{name}, currentType{type}, destinations{dests}, sources{srcs} {};
 
     std::string key;
+    std::string name;
     BackupType currentType;
     std::vector<std::string> destinations;
     std::vector<fs::path> sources;

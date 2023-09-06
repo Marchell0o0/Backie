@@ -20,17 +20,15 @@ std::vector<std::shared_ptr<Schedule>> Task::getSchedules() const {
     return this->schedules;
 }
 
-std::string Task::getName() const {
-    return this->name;
-}
-
 std::ostream & operator << (std::ostream &out, const Task &task) {
     out << "Name: " << task.name << ", current type: " << strFromType(task.getCurrentType()) << ", key: " << task.key << std::endl;
     Settings& settings = Settings::getInstance();
     out << "Destinations:" << std::endl;
     for (auto& destinationKey : task.destinations) {
-        Destination dest = settings.getDest(destinationKey);
-        out << dest << std::endl;
+        auto dest = settings.getDest(destinationKey);
+        if (dest) {
+            out << *dest << std::endl;
+        }
     }
     out << "Sources: ";
     for (auto& source : task.sources) {

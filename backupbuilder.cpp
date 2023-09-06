@@ -60,15 +60,20 @@ std::optional<Errand> BackupBuilder::buildErrand() {
         return std::nullopt;
     }
 
-    //TODO: Key not in settings
     if (this->key == "") {
         SPDLOG_ERROR("Key not specified");
         return std::nullopt;
     }
 
     Settings& settings = Settings::getInstance();
+    if (!settings.isTaskKeyInSettings(key)) {
+        SPDLOG_ERROR("Specified key isn't in settings");
+        return std::nullopt;
+    }
+
     this->destinationsKeys = settings.getKeyDests(key);
     this->sources = settings.getKeySrcs(key);
+    this->name = settings.getKeyName(key);
 
     if (this->destinationsKeys.empty()){
         SPDLOG_ERROR("No destinations found for this key");
@@ -78,14 +83,20 @@ std::optional<Errand> BackupBuilder::buildErrand() {
         SPDLOG_ERROR("No sources found for this key");
         return std::nullopt;
     }
+    //TODO:
+    if (this->name.size() < 3) {
+        SPDLOG_ERROR("Name is too small");
+        return std::nullopt;
+    }
 
     //TODO: Just remove any bad sources and destiantions
     // and if at least one left - proceed
-    for (auto& destination : settings.getDestVec()) {
-        if (!fs::exists(destination.destinationFolder) ||
-            !fs::is_directory(destination.destinationFolder)) {
+    for (auto& destinationKey : this->destinationsKeys) {
+        auto dest = settings.getDest(destinationKey);
+        if (!dest || !fs::exists(dest->destinationFolder) ||
+            !fs::is_directory(dest->destinationFolder)) {
             SPDLOG_ERROR("Destination folder doesn't exist");
-            return std::nullopt;
+//            return std::nullopt;
         }
     }
     for (auto& source : this->sources) {
@@ -95,7 +106,7 @@ std::optional<Errand> BackupBuilder::buildErrand() {
         }
     }
 
-    Errand errand(key, currentType, destinationsKeys, sources);
+    Errand errand(key, name, currentType, destinationsKeys, sources);
 
     this->reset();
 
@@ -129,11 +140,12 @@ std::optional<Task> BackupBuilder::buildTask() {
     //TODO: Just remove any bad sources, destiantions and schedules
     // and if at least one left - proceed
     Settings& settings = Settings::getInstance();
-    for (auto& destination : settings.getDestVec()) {
-        if (!fs::exists(destination.destinationFolder) ||
-            !fs::is_directory(destination.destinationFolder)) {
+    for (auto& destinationKey : this->destinationsKeys) {
+        auto dest = settings.getDest(destinationKey);
+        if (!dest || !fs::exists(dest->destinationFolder) ||
+            !fs::is_directory(dest->destinationFolder)) {
             SPDLOG_ERROR("Destination folder doesn't exist");
-            return std::nullopt;
+//            return std::nullopt;
         }
     }
     for (auto& source : this->sources) {

@@ -29,15 +29,17 @@ public:
     bool addUpdate(Destination dest);
     bool remove(Destination dest);
     std::vector<Destination> getDestVec() const;
-    Destination getDest(const std::string& key) const;
+    std::optional<Destination> getDest(const std::string& key) const;
 
     bool addUpdate(Task task);
     bool remove(Task task);
     std::vector<Task> getTaskVec() const;
+    bool isTaskKeyInSettings(const std::string& key) const;
 
     std::vector<std::string> getKeyDests(const std::string& key) const;
     std::vector<fs::path> getKeySrcs(const std::string& key) const;
     std::vector<std::shared_ptr<Schedule>> getKeyScheds(const std::string& key) const;
+    std::string getKeyName(const std::string& key) const;
 
     fs::path getPath() const;
 private:

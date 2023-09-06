@@ -28,6 +28,10 @@ std::vector<std::string> Errand::getDestinations() const {
 std::vector<fs::path> Errand::getSources() const {
     return this->sources;
 }
+std::string Errand::getName() const {
+    return this->name;
+}
+
 
 static std::string formatDirName(BackupType type){
     auto now = std::chrono::system_clock::now();
@@ -96,15 +100,19 @@ bool Errand::perform() const{
 //TODO: Check if the destination exists
 bool Errand::full() const {
     Settings& settings = Settings::getInstance();
-    for (const auto& destinationName : this->destinations) {
-        fs::path destFolder = settings.getDest(destinationName).destinationFolder;
-        fs::path backupFolder = destFolder / this->key / formatDirName(this->currentType);
+    for (const auto& destinationKey : this->destinations) {
+        auto dest = settings.getDest(destinationKey);
+        if (!dest) {
+            SPDLOG_WARN("One of the destinations doesn't exist");
+            continue;
+        }
+        fs::path backupFolder = dest->destinationFolder / this->name / formatDirName(this->currentType);
 
         if (fs::exists(backupFolder)){
             SPDLOG_WARN("Backup folder with name: {}, already exists", backupFolder.u8string());
             return false;
         } else {
-            fs::create_directory(backupFolder);
+            fs::create_directories(backupFolder);
         }
 
         std::map<fs::path, FileMetadata> metadata;
@@ -129,21 +137,26 @@ bool Errand::full() const {
 
 bool Errand::incremental() const {
     Settings& settings = Settings::getInstance();
-    for (const auto& destinationName : this->destinations){
+    for (const auto& destinationKey : this->destinations){
         // Combined data from the last FULL backup and all subsequent backups
-        fs::path destFolder = settings.getDest(destinationName).destinationFolder;
-        std::optional<std::map<fs::path, FileMetadata>> combinedMetadata = loadCombinedMdMap(destFolder);
+        auto dest = settings.getDest(destinationKey);
+        if (!dest) {
+            SPDLOG_WARN("One of the destinations doesn't exist");
+            continue;
+        }
+
+        std::optional<std::map<fs::path, FileMetadata>> combinedMetadata = loadCombinedMdMap(dest->destinationFolder);
         if (!combinedMetadata){
             return false;
         }
 
 
-        fs::path backupFolder = destFolder / this->key / formatDirName(this->currentType);
+        fs::path backupFolder = dest->destinationFolder / this->name / formatDirName(this->currentType);
         if (fs::exists(backupFolder)){
             SPDLOG_WARN("Backup folder with name: {}, already exists", backupFolder.u8string());
             return false;
         } else {
-            fs::create_directory(backupFolder);
+            fs::create_directories(backupFolder);
         }
 
         // Backup changed files

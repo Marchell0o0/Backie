@@ -39,7 +39,6 @@ int backupWorker(int argc, char* argv[]) {
     std::string key = argv[2];
     BackupType type = typeFromStr(argv[3]);
 
-    Settings& settings = Settings::getInstance();
     BackupBuilder builder;
     auto errand = builder
                             .setKey(key)
@@ -79,6 +78,22 @@ int guiMain(int argc, char* argv[]) {
     QApplication app(argc, argv);
     MainWindow mainWindow;
 
+
+    BackupBuilder builder;
+    auto errand = builder
+                      .setKey("1d16ce4f-e996-429b-a3c9-bcb1222f1d14")
+                      .setCurrentType(BackupType::FULL)
+                      .buildErrand();
+
+    if (errand) {
+        errand->perform();
+        SPDLOG_INFO("Performed a backup");
+    } else {
+        SPDLOG_ERROR("Error");
+    }
+
+    /*
+
     Settings& settings = Settings::getInstance();
 
     SPDLOG_INFO("Deleting tasks");
@@ -86,17 +101,16 @@ int guiMain(int argc, char* argv[]) {
     for (auto& task : settings.getTaskVec()) {
         task.deleteLocal();
     }
-
     SPDLOG_INFO("Deleting destinations");
     // delete all destinations
     for (auto& dest : settings.getDestVec()) {
         settings.remove(dest);
     }
 
-    Destination test_dest1("Default destination 1", "W:/Backie backups/Dest 1");
+    Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
     settings.addUpdate(test_dest1);
 
-    Destination test_dest2("Default destination 2", "W:/Backie backups/Dest 2");
+    Destination test_dest2("Default destination 2", "W:\\Backie backups\\Dest 2");
     settings.addUpdate(test_dest2);
 
     std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
@@ -168,6 +182,7 @@ int guiMain(int argc, char* argv[]) {
     for (auto& dest : dests) {
         std::cout << dest << std::endl;
     }
+    */
 
     //    if (IsRunningAsAdmin()){
     //        SPDLOG_INFO("Running with admin rights");
