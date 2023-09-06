@@ -55,6 +55,100 @@ int backupWorker(int argc, char* argv[]) {
     return 0;
 }
 
+namespace Test {
+    void cleanSettings() {
+        Settings& settings = Settings::getInstance();
+
+        // delete all tasks
+        for (auto& task : settings.getTaskVec()) {
+            task.deleteLocal();
+        }
+        // delete all destinations
+        for (auto& dest : settings.getDestVec()) {
+            settings.remove(dest);
+        }
+    }
+    void populateSettings() {
+        Settings& settings = Settings::getInstance();
+        Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
+        settings.addUpdate(test_dest1);
+
+        Destination test_dest2("Default destination 2", "W:\\Backie backups\\Dest 2");
+        settings.addUpdate(test_dest2);
+
+        std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
+        once->type = BackupType::FULL;
+        once->year = 2020;
+        once->month = 11;
+        once->day = 20;
+        once->hour = 12;
+        once->minute = 35;
+
+        std::shared_ptr<MonthlySchedule> monthly = std::make_shared<MonthlySchedule>();
+        monthly->type = BackupType::FULL;
+        monthly->day = 20;
+        monthly->hour = 9;
+        monthly->minute = 0;
+
+        std::shared_ptr<WeeklySchedule> weekly = std::make_shared<WeeklySchedule>();
+        weekly->type = BackupType::INCREMENTAL;
+        weekly->day = 5;
+        weekly->hour = 23;
+        weekly->minute = 59;
+
+        std::shared_ptr<DailySchedule> daily = std::make_shared<DailySchedule>();
+        daily->type = BackupType::INCREMENTAL;
+        daily->hour = 0;
+        daily->minute = 0;
+
+        BackupBuilder builder;
+        auto test_task1 = builder
+                              .setName("Minecraft")
+                              .setDestinations({test_dest1, test_dest2})
+                              .setSources({"W:\\Src folder 1"})
+                              .setSchedules({weekly, daily})
+                              .buildTask();
+        auto test_task2 = builder
+                              .setName("Homework")
+                              .setDestinations({test_dest2})
+                              .setSources({"W:\\Src folder 2"})
+                              .setSchedules({once})
+                              .buildTask();
+        auto test_task3 = builder
+                              .setName("Saves")
+                              .setDestinations({test_dest1})
+                              .setSources({"W:\\Src folder 3"})
+                              .setSchedules({monthly})
+                              .buildTask();
+        auto test_task4 = builder
+                              .setName("Minecraft 2")
+                              .setDestinations({test_dest1, test_dest2})
+                              .setSources({"W:\\Src folder 1"})
+                              .setSchedules({daily})
+                              .buildTask();
+
+        test_task1->saveLocal();
+        test_task2->saveLocal();
+        test_task3->saveLocal();
+        test_task4->saveLocal();
+    }
+    void getPrintSettings() {
+        Settings& settings = Settings::getInstance();
+        std::vector<Task> tasks = settings.getTaskVec();
+        std::vector<Destination> dests = settings.getDestVec();
+
+        std::cout << "Tasks:" << std::endl;
+        for (auto& task : tasks) {
+            std::cout << task << std::endl;
+        }
+
+        std::cout << "Global destinations:" << std::endl;
+        for (auto& dest : dests) {
+            std::cout << dest << std::endl;
+        }
+    }
+}
+
 int guiMain(int argc, char* argv[]) {
     SPDLOG_INFO("Drawing gui...");
 
@@ -79,116 +173,26 @@ int guiMain(int argc, char* argv[]) {
     MainWindow mainWindow;
 
 
-    BackupBuilder builder;
-    auto errand = builder
-                      .setKey("1d16ce4f-e996-429b-a3c9-bcb1222f1d14")
-                      .setCurrentType(BackupType::FULL)
-                      .buildErrand();
+//    BackupBuilder builder;
+//    auto errand = builder
+//                      .setKey("1d16ce4f-e996-429b-a3c9-bcb1222f1d14")
+//                      .setCurrentType(BackupType::FULL)
+//                      .buildErrand();
 
-    if (errand) {
-        errand->perform();
-        SPDLOG_INFO("Performed a backup");
-    } else {
-        SPDLOG_ERROR("Error");
-    }
+//    if (errand) {
+//        errand->perform();
+//        SPDLOG_INFO("Performed a backup");
+//    } else {
+//        SPDLOG_ERROR("Error");
+//    }
 
-    /*
+    Test::cleanSettings();
 
-    Settings& settings = Settings::getInstance();
+//    Test::populateSettings();
 
-    SPDLOG_INFO("Deleting tasks");
-    // delete all tasks
-    for (auto& task : settings.getTaskVec()) {
-        task.deleteLocal();
-    }
-    SPDLOG_INFO("Deleting destinations");
-    // delete all destinations
-    for (auto& dest : settings.getDestVec()) {
-        settings.remove(dest);
-    }
-
-    Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
-    settings.addUpdate(test_dest1);
-
-    Destination test_dest2("Default destination 2", "W:\\Backie backups\\Dest 2");
-    settings.addUpdate(test_dest2);
-
-    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
-    once->type = BackupType::FULL;
-    once->year = 2020;
-    once->month = 11;
-    once->day = 20;
-    once->hour = 12;
-    once->minute = 35;
-
-    std::shared_ptr<MonthlySchedule> monthly = std::make_shared<MonthlySchedule>();
-    monthly->type = BackupType::FULL;
-    monthly->day = 20;
-    monthly->hour = 9;
-    monthly->minute = 0;
-
-    std::shared_ptr<WeeklySchedule> weekly = std::make_shared<WeeklySchedule>();
-    weekly->type = BackupType::INCREMENTAL;
-    weekly->day = 5;
-    weekly->hour = 23;
-    weekly->minute = 59;
-
-    std::shared_ptr<DailySchedule> daily = std::make_shared<DailySchedule>();
-    daily->type = BackupType::INCREMENTAL;
-    daily->hour = 0;
-    daily->minute = 0;
-
-    BackupBuilder builder;
-    auto test_task1 = builder
-                            .setName("Minecraft")
-                            .setDestinations({test_dest1, test_dest2})
-                            .setSources({"W:\\Src folder 1"})
-                            .setSchedules({weekly, daily})
-                            .buildTask();
-    auto test_task2 = builder
-                            .setName("Homework")
-                            .setDestinations({test_dest2})
-                            .setSources({"W:\\Src folder 2"})
-                            .setSchedules({once})
-                            .buildTask();
-    auto test_task3 = builder
-                            .setName("Saves")
-                            .setDestinations({test_dest1})
-                            .setSources({"W:\\Src folder 3"})
-                            .setSchedules({monthly})
-                            .buildTask();
-    auto test_task4 = builder
-                            .setName("Minecraft 2")
-                            .setDestinations({test_dest1, test_dest2})
-                            .setSources({"W:\\Src folder 1"})
-                            .setSchedules({daily})
-                            .buildTask();
-
-    test_task1->saveLocal();
-    test_task2->saveLocal();
-    test_task3->saveLocal();
-    test_task4->saveLocal();
+//    Test::getPrintSettings();
 
 
-    std::vector<Task> tasks = settings.getTaskVec();
-    std::vector<Destination> dests = settings.getDestVec();
-
-    std::cout << "Tasks:" << std::endl;
-    for (auto& task : tasks) {
-        std::cout << task << std::endl;
-    }
-
-    std::cout << "Global destinations:" << std::endl;
-    for (auto& dest : dests) {
-        std::cout << dest << std::endl;
-    }
-    */
-
-    //    if (IsRunningAsAdmin()){
-    //        SPDLOG_INFO("Running with admin rights");
-    //    } else {
-    //        SPDLOG_INFO("Running without admin rights");
-    //    }
 
 
     mainWindow.show();
@@ -197,6 +201,12 @@ int guiMain(int argc, char* argv[]) {
 
 int main(int argc, char *argv[]) {
     spdlog::set_level(spdlog::level::trace);
+
+    //    if (IsRunningAsAdmin()){
+    //        SPDLOG_INFO("Running with admin rights");
+    //    } else {
+    //        SPDLOG_INFO("Running without admin rights");
+    //    }
 
     Settings& settings = Settings::getInstance();
     if (!settings.initializeSettings()) {
