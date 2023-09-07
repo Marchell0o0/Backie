@@ -6,9 +6,6 @@
 #include "backupscreen.h"
 #include "ui_backupscreen.h"
 #include "dialogcalendar.h"
-#include "backupschedule.h"
-#include "backupfactory.h"
-#include "utils.h"
 
 BackupScreen::BackupScreen(QWidget *parent) :
     QWidget(parent),
@@ -318,45 +315,45 @@ void BackupScreen::updateChosenDateLabel() {
 
 
 void BackupScreen::createBackupBclicked() {
-    auto type = backupArgs.getBackupType();
-    auto sourcePath = backupArgs.getSourcePath();
-    auto year = backupArgs.getDate(BackupArgs::YEAR);
-    auto month = backupArgs.getDate(BackupArgs::MONTH);
-    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
-    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
-    auto hour = backupArgs.getDate(BackupArgs::HOUR);
-    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
+//    auto type = backupArgs.getBackupType();
+//    auto sourcePath = backupArgs.getSourcePath();
+//    auto year = backupArgs.getDate(BackupArgs::YEAR);
+//    auto month = backupArgs.getDate(BackupArgs::MONTH);
+//    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
+//    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
+//    auto hour = backupArgs.getDate(BackupArgs::HOUR);
+//    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
 
-    std::optional<BackupSchedule> backupSchedule_test;
+//    std::optional<BackupSchedule> backupSchedule_test;
 
-    switch(backupArgs.getBackupRecurrence()){
-    case ScheduleRecurrence::ONCE:
-        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::ONCE>(
-            type, sourcePath, year, month, dayOfMonth, hour, minute);
-        break;
-    case ScheduleRecurrence::MONTHLY:
-        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(
-            type, sourcePath, dayOfMonth, hour, minute);
-        break;
-    case ScheduleRecurrence::WEEKLY:
-        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::WEEKLY>(
-            type, sourcePath, dayOfWeek, hour, minute);
-        break;
-    case ScheduleRecurrence::DAILY:
-        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(
-            type, sourcePath, hour, minute);
-        break;
-    }
-    if (!backupSchedule_test){
-        SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
-                     BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
-    } else {
-        HRESULT hr = backupSchedule_test->addToTaskScheduler();
-        qDebug() << "Added to Task Scheduler [BackupScreen]";
-        if (FAILED(hr)){
-            SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
-        }
-    }
+//    switch(backupArgs.getBackupRecurrence()){
+//    case ScheduleRecurrence::ONCE:
+//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::ONCE>(
+//            type, sourcePath, year, month, dayOfMonth, hour, minute);
+//        break;
+//    case ScheduleRecurrence::MONTHLY:
+//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(
+//            type, sourcePath, dayOfMonth, hour, minute);
+//        break;
+//    case ScheduleRecurrence::WEEKLY:
+//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::WEEKLY>(
+//            type, sourcePath, dayOfWeek, hour, minute);
+//        break;
+//    case ScheduleRecurrence::DAILY:
+//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(
+//            type, sourcePath, hour, minute);
+//        break;
+//    }
+//    if (!backupSchedule_test){
+//        SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
+//                     BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
+//    } else {
+//        HRESULT hr = backupSchedule_test->addToTaskScheduler();
+//        qDebug() << "Added to Task Scheduler [BackupScreen]";
+//        if (FAILED(hr)){
+//            SPDLOG_ERROR("Couldn't add backupSchedule_test task. Error code: {}", hr);
+//        }
+//    }
 }
 
 void BackupArgs::clear() {

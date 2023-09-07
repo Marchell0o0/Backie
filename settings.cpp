@@ -2,157 +2,429 @@
 #include <ShlObj.h>
 #include <vector>
 
-#include "settings.h"
 #include "spdlog/spdlog.h"
 
-void Settings::initialize_settings_path() {
-    char path[MAX_PATH];
-    if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_APPDATA, NULL, 0, path))) {
-        // Form the path to the Backie folder in AppData
-        std::string backieFolderPath = std::string(path) + "\\Backie";
-        // Check if the directory exists and if not, create it
+#include "backupbuilder.h"
+#include "settings.h"
+#include "utils.h"
+
+bool Settings::initializeSettings() {
+    char pathToAppData[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_APPDATA, NULL, 0, pathToAppData))) {
+        std::string backieFolderPath = std::string(pathToAppData) + "\\Backie";
         if (GetFileAttributesA(backieFolderPath.c_str()) == INVALID_FILE_ATTRIBUTES) {
             CreateDirectoryA(backieFolderPath.c_str(), NULL);
         }
-        path_to_settings = backieFolderPath + "\\settings.json";
+        path = backieFolderPath + "\\settings.json";
     } else {
-        // Default to relative path if we can't get appdata
-        path_to_settings = "./settings.json";
-
+        // TODO: Couldn't find appdata (crossplatform)
+        SPDLOG_ERROR("Couldn't find appdata");
+        return false;
     }
-    SPDLOG_INFO("Path to settings {}", path_to_settings);
-    std::ifstream file(path_to_settings);
-    if(!file.is_open()){
+    SPDLOG_INFO("Path to settings {}", path.string());
+
+    std::ifstream file(path);
+    if (!file.is_open()) {
         SPDLOG_WARN("Creating new settings file");
-        std::ofstream fout(path_to_settings);
+        std::ofstream fout(path);
         if (fout.is_open()) {
             fout << data.dump(4);
+            fout.close();
         } else {
-            SPDLOG_ERROR("Could not create the file");
+            SPDLOG_ERROR("Could not create new settings file");
+            return false;
+        }
+    } else {
+        try {
+            data = json::parse(file);
+        } catch (const json::parse_error& e) {
+            SPDLOG_ERROR("Failed to parse settings: {}", e.what());
+            return false;
         }
     }
 
+    return true;
 }
 
-void Settings::read_from_file(){
-    std::lock_guard<std::mutex> lock(file_mutex);
-    std::ifstream file(path_to_settings);
-    if (file.is_open()) {
-        data = json::parse(file);
+fs::path Settings::getPath() const {
+    return path;
+}
+
+bool Settings::addUpdate(Destination dest) {
+    // Check if destinationFolder exists
+    if (!fs::exists(dest.destinationFolder)) {
+        SPDLOG_ERROR("New destination folder doesn't exist");
+        return false;
+    }
+
+    if (data.find("destinations") == data.end()) {
+        SPDLOG_WARN("No destinations found");
+        return false;
+    }
+
+    // Loop through the existing destinations to see if one with the same name already exists.
+    bool same_key = false;
+    bool same_name = false;
+    bool same_folder = false;
+
+    for (auto& destination : data["destinations"]) {
+        if (destination["key"] == dest.getKey()) {
+            same_key = true;
+        }
+        if (destination["name"] == dest.name) {
+            //exists something with different key but the same name
+            same_name = true;
+        }
+        if (destination["destinationFolder"] == dest.destinationFolder.string()) {
+            same_folder = true;
+        }
+    }
+    if ((same_folder || same_name) && !same_key) {
+        //exists something with the same name or folder
+        SPDLOG_ERROR("Name or folder already taken");
+        return false;
+    } else if (same_key){
+        // change existing destination
+        for (auto& destination : data["destinations"]) {
+            destination["name"] = dest.name;
+            destination["destinationFolder"] = dest.destinationFolder.string();
+        }
+    } else if (!same_folder && !same_name && !same_key) {
+        // everything is new
+        nlohmann::json newDest;
+        newDest["key"] = dest.getKey();
+        newDest["name"] = dest.name;
+        newDest["destinationFolder"] = dest.destinationFolder.string();
+        data["destinations"].push_back(newDest);
+    }
+
+    std::ofstream outFile(path);
+    if (!outFile.is_open()){
+        SPDLOG_ERROR("Couldn't open settings file");
     } else {
-        SPDLOG_ERROR("No settings file to read from");
+        outFile << data.dump(4);
+    }
+
+    return true;
+}
+
+bool Settings::remove(Destination dest) {
+    if (data.find("destinations") == data.end()) {
+        SPDLOG_ERROR("No destinations to remove from");
+        return false;
+    }
+
+    size_t index_to_remove = -1;
+    size_t i = 0;
+    for (const auto& destJson : data["destinations"]) {
+        if (destJson["key"] == dest.getKey()) {
+            index_to_remove = i;
+            break;
+        }
+        ++i;
+    }
+
+    if (index_to_remove != -1) {
+        data["destinations"].erase(index_to_remove);
+
+        std::ofstream outFile(path);
+        if (!outFile.is_open()) {
+            SPDLOG_ERROR("Couldn't open settings file");
+            return false;
+        } else {
+            outFile << data.dump(4);
+        }
+        return true;
+    } else {
+        SPDLOG_ERROR("Destination not found");
+        return false;
     }
 }
 
-void Settings::push_changes(){
-    std::lock_guard<std::mutex> lock(file_mutex);
-    std::ofstream fout(path_to_settings);
-    if (fout.is_open()) {
-        fout << data.dump(4);
-    } else {
-        SPDLOG_ERROR("Could not open the file for writing");
+std::vector<Destination> Settings::getDestVec() const {
+    std::vector<Destination> destinations;
+    if (data.find("destinations") == data.end()) {
+        SPDLOG_WARN("No destinations found");
+        return destinations;
     }
+
+    for (const auto& destination : data["destinations"]) {
+        std::string name = destination["name"];
+        std::filesystem::path destFldr = destination["destinationFolder"].get<std::string>();
+        std::string key = destination["key"];
+
+        Destination dest(name, destFldr, key);
+        destinations.push_back(dest);
+    }
+
+    return destinations;
 }
 
-std::vector<Task> Settings::get_task_list_by_type(const std::string& type){
+//TODO: That's why that constructor was needed
+std::optional<Destination> Settings::getDest(const std::string& key) const {
+    if (data.find("destinations") == data.end()) {
+        SPDLOG_WARN("No destinations found");
+        return std::nullopt;
+    }
+
+    for (auto& destination : data["destinations"]) {
+        if (destination["key"] == key){
+            std::string name = destination["name"];
+            std::filesystem::path destFldr = destination["destinationFolder"].get<std::string>();
+            Destination dest(name, destFldr);
+            return dest;
+        }
+
+    }
+    SPDLOG_ERROR("Couldn't find destination with key: {}", key);
+    return std::nullopt;
+}
+
+bool Settings::addUpdate(Task task) {
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_WARN("No tasks found");
+        return false;
+    }
+
+    std::vector<std::string> destinationsStr;
+    for (auto& destinationName : task.getDestinations()){
+        destinationsStr.push_back(destinationName);
+    }
+    std::vector<std::string> sourcesStr;
+    for (auto& source : task.getSources()){
+        sourcesStr.push_back(source.string());
+    }
+    std::vector<nlohmann::json> schedsJson;
+    for (auto& schedule : task.getSchedules()) {
+        schedsJson.push_back(schedule->toJson());
+    }
+
+    bool exists = false;
+    for (auto& existingTask : data["tasks"]) {
+        if (existingTask["key"] == task.getKey()) {
+            existingTask["name"] = task.getName();
+            existingTask["destinations"] = destinationsStr;
+            existingTask["sources"] = sourcesStr;
+            existingTask["schedules"] = schedsJson;
+            exists = true;
+            break;
+        }
+    }
+
+    if (!exists) {
+        nlohmann::json newTask;
+        newTask["key"] = task.getKey();
+        newTask["name"] = task.getName();
+        newTask["destinations"] = destinationsStr;
+        newTask["sources"] = sourcesStr;
+        newTask["schedules"] = schedsJson;
+        data["tasks"].push_back(newTask);
+    }
+
+    std::ofstream outFile(path);
+    if (!outFile.is_open()){
+        SPDLOG_ERROR("Couldn't open settings file");
+    } else {
+        outFile << data.dump(4);
+    }
+
+    return true;
+}
+
+std::vector<Task> Settings::getTaskVec() const {
     std::vector<Task> tasks;
-
-    if (type != "scheduled" && type != "watched"){
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_WARN("No tasks found");
         return tasks;
     }
 
-    for (const json& task_json : data["tasks"]){
-        if (task_json["type"] == type){
+    for (const auto& task : data["tasks"]) {
+        BackupBuilder builder;
+        std::vector<std::string> dests = getKeyDests(task["key"]);
+        std::vector<fs::path> sources = getKeySrcs(task["key"]);
+        std::vector<std::shared_ptr<Schedule>> scheds = getKeyScheds(task["key"]);
 
-            tasks.push_back(task_json_to_struct(task_json));
+        auto taskObj = builder
+                        .setNoNewKey()
+                        .setKey(task["key"])
+                        .setName(task["name"])
+                        .setDestinations(dests)
+                        .setSources(sources)
+                        .setSchedules(scheds)
+                        .buildTask();
+
+        if(!taskObj) {
+            SPDLOG_ERROR("Couldn't get a task from settings");
+//            return tasks;
+        } else {
+            tasks.push_back(*taskObj);
         }
+
     }
+
     return tasks;
 }
 
-Task Settings::task_json_to_struct(json task_json){
-    Task task;
-    task.directory = task_json["directory"];
-    task.type = task_json["type"];
-    task.time = task_json["time"];
-    task.filter = task_json["filter"];
-    return task;
+bool Settings::isTaskKeyInSettings(const std::string& key) const {
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_WARN("No tasks found");
+        return false;
+    }
+    for (auto& task : data["tasks"]) {
+        if (task["key"] == key) {
+            return true;
+        }
+    }
+    return false;
 }
 
-void Settings::backup_task(const std::string& directory, const std::string& type, const std::string& time, const std::string& filter){
-    // Check if a task with the same directory already exists
-    for (const json& task : data["tasks"]) {
-        if (task["directory"] == directory) {
-            SPDLOG_DEBUG("Task with directory {} already exists", directory);
-            update_backup_task(directory, type, time, filter);
-            return;
+
+std::vector<std::shared_ptr<Schedule>> Settings::getKeyScheds(const std::string& key) const {
+    std::vector<std::shared_ptr<Schedule>> scheds;
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_WARN("No tasks found");
+        return scheds;
+    }
+
+    for (auto& task : data["tasks"]) {
+        if (task["key"] == key) {
+            for (auto& schedule : task["schedules"]) {
+                std::shared_ptr<Schedule> scheduleObj;
+
+                if (schedule["recurrence"] == ScheduleRecurrence::ONCE) {
+                    std::shared_ptr<OnceSchedule> obj = std::make_shared<OnceSchedule>();
+                    obj->type = schedule["type"];
+                    obj->year = schedule["year"];
+                    obj->month = schedule["month"];
+                    obj->day = schedule["day"];
+                    obj->hour = schedule["hour"];
+                    obj->minute = schedule["minute"];
+                    scheduleObj = obj;
+                } else if (schedule["recurrence"] == ScheduleRecurrence::MONTHLY) {
+                    std::shared_ptr<MonthlySchedule> obj = std::make_shared<MonthlySchedule>();
+                    obj->type = schedule["type"];
+                    obj->day = schedule["day"];
+                    obj->hour = schedule["hour"];
+                    obj->minute = schedule["minute"];
+                    scheduleObj = obj;
+                } else if (schedule["recurrence"] == ScheduleRecurrence::WEEKLY) {
+                    std::shared_ptr<WeeklySchedule> obj = std::make_shared<WeeklySchedule>();
+                    obj->type = schedule["type"];
+                    obj->day = schedule["day"];
+                    obj->hour = schedule["hour"];
+                    obj->minute = schedule["minute"];
+                    scheduleObj = obj;
+                } else if (schedule["recurrence"] == ScheduleRecurrence::DAILY) {
+                    std::shared_ptr<DailySchedule> obj = std::make_shared<DailySchedule>();
+                    obj->type = schedule["type"];
+                    obj->hour = schedule["hour"];
+                    obj->minute = schedule["minute"];
+                    scheduleObj = obj;
+                }
+
+                if (scheduleObj) {
+                    scheds.push_back(scheduleObj);
+                }
+            }
+            return scheds;
         }
     }
 
-    if(type == "scheduled" && time.length() != 5){
-        SPDLOG_WARN("Wrong time {}, directory {} won't be added", time, directory);
-        return;
-    } else if ( type == "watched" && time != ""){
-        SPDLOG_WARN("Time is set but task type is watched, directory {}", directory);
-    }
+    SPDLOG_ERROR("Task not found");
 
-    json task;
-    task["directory"] = directory;
-    task["type"] = type; // "scheduled" or "watched"
-    task["filter"] = filter; // File extension or name filter
-
-    if (type == "watched") {
-        task["time"] = "";
-    } else {
-        task["time"] = time;
-    }
-
-    data["tasks"].push_back(task); // Add the task to the "tasks" array
-    SPDLOG_DEBUG("Added a task for {}", directory);
+    return scheds;
 }
 
-// Update an existing backup task by directory
-void Settings::update_backup_task(const std::string& directory, const std::string& type,
-                        const std::string& time, const std::string& filter) {
-
-    if(type == "scheduled" && time.length() != 5){
-        SPDLOG_WARN("Wrong time {}, directory {} time won't be changed", time, directory);
-    } else if ( type == "watched" && time != ""){
-        SPDLOG_WARN("Time is set but task type is watched, directory {}");
+std::vector<fs::path> Settings::getKeySrcs(const std::string& key) const {
+    std::vector<fs::path> srcs;
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_ERROR("No tasks found");
+        return srcs;
     }
 
-    for (json& task : data["tasks"]) {
-        if (task["directory"] == directory) {
-            task["type"] = type;
-            task["filter"] = filter;
-
-            if (type == "scheduled" && time.length() == 5) {
-                task["time"] = time;
-            } else {
-                task["time"] = "";
+    for (auto& task : data["tasks"]) {
+        if (task["key"] == key) {
+            for (auto& source : task["sources"]) {
+                fs::path srcPath = source.get<std::string>();
+                srcs.push_back(srcPath);
             }
 
-            SPDLOG_DEBUG("Updated a task for {}", directory);
-            return;
+            return srcs;
         }
     }
 
-    SPDLOG_ERROR("Task with directory {} not found", directory);
+    SPDLOG_ERROR("Task not found");
+    return srcs;
 }
 
-void Settings::remove_backup_task(const std::string& directory) {
-    for (auto it = data["tasks"].begin(); it != data["tasks"].end(); ++it) {
-        if ((*it)["directory"] == directory) {
-            data["tasks"].erase(it);
-            SPDLOG_DEBUG("Removed a task for {}", directory);
-            return;
+std::vector<std::string> Settings::getKeyDests(const std::string& key) const {
+    std::vector<std::string> dests;
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_ERROR("No tasks found");
+        return dests;
+    }
+
+    for (auto& task : data["tasks"]) {
+        if (task["key"] == key) {
+            for (auto& destination : task["destinations"]) {
+                dests.push_back(destination);
+            }
+
+            return dests;
         }
     }
 
-    SPDLOG_ERROR("Task with directory {} not found", directory);
-
+    SPDLOG_ERROR("Task not found");
+    return dests;
 }
 
-void Settings::set_destination(const std::string& path_to_destination){
-    data["destination"] = path_to_destination;
+std::string Settings::getKeyName(const std::string& key) const {
+    std::string name = "";
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_ERROR("No tasks found");
+        return name;
+    }
+
+    for (auto& task : data["tasks"]) {
+        if (task["key"] == key) {
+            name = task["name"];
+            return name;
+        }
+    }
+
+    SPDLOG_ERROR("Task not found");
+    return name;
+}
+
+bool Settings::remove(Task task) {
+    if (data.find("tasks") == data.end()) {
+        SPDLOG_WARN("No tasks found");
+        return false;
+    }
+
+    size_t index_to_remove = -1;
+    size_t i = 0;
+    for (const auto& taskJson : data["tasks"]) {
+        if (taskJson["key"] == task.getKey()) {
+            index_to_remove = i;
+            break;
+        }
+        ++i;
+    }
+
+    if (index_to_remove != -1) {
+        data["tasks"].erase(index_to_remove);
+
+        std::ofstream outFile(path);
+        if (!outFile.is_open()) {
+            SPDLOG_ERROR("Couldn't open settings file");
+            return false;
+        } else {
+            outFile << data.dump(4);
+        }
+        return true;
+    } else {
+        SPDLOG_ERROR("Task not found");
+        return false;
+    }
 }

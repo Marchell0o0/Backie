@@ -8,7 +8,7 @@
 #include <winnls.h>
 #include <windows.h>
 
-std::wstring stringToWString(const std::string& s) {
+std::wstring strToWStr(const std::string& s) {
     int len;
     int slength = (int)s.length() + 1;
     len = MultiByteToWideChar(CP_ACP, 0, s.c_str(), slength, 0, 0);
@@ -51,9 +51,10 @@ const std::string strFromType(const BackupType type){
         return "FULL";
     case BackupType::INCREMENTAL:
         return "INCREMENTAL";
-    default:
-        return "";
+    case BackupType::NONE:
+        return "NONE";
     }
+    return "";
 }
 
 void loadStyleSheet(const QString& stylePath, QWidget* widget) {
@@ -76,4 +77,36 @@ void loadStyleSheet(const QString& stylePath, QWidget* widget) {
     } else {
         SPDLOG_ERROR("Could not open styles for widget: {}", widget ? widget->objectName().toStdString() : "null");
     }
+}
+
+std::string generate_uuid_v4() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 15);
+    std::uniform_int_distribution<> dis2(8, 11);
+
+    std::stringstream ss;
+    int i;
+    ss << std::hex;
+    for (i = 0; i < 8; i++) {
+        ss << dis(gen);
+    }
+    ss << "-";
+    for (i = 0; i < 4; i++) {
+        ss << dis(gen);
+    }
+    ss << "-4";
+    for (i = 0; i < 3; i++) {
+        ss << dis(gen);
+    }
+    ss << "-";
+    ss << dis2(gen);
+    for (i = 0; i < 3; i++) {
+        ss << dis(gen);
+    }
+    ss << "-";
+    for (i = 0; i < 12; i++) {
+        ss << dis(gen);
+    };
+    return ss.str();
 }
