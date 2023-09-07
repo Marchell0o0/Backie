@@ -21,9 +21,8 @@
 
 #include "utils.h"
 
-#include "settings.h"
-
 //#include "settings.h"
+
 
 
 int main(int argc, char *argv[]) {
@@ -33,6 +32,9 @@ int main(int argc, char *argv[]) {
     MainWindow mainWindow;
 
 //    Settings settings;
+//    settings.initialize_settings_path();
+    // HARD CODING:
+//    settings.set_destination("D:/Code/Backie_backups/Dest_1");
 //    settings.read_from_file();
     if (argc > 1 && strcmp(argv[1], "--backup") == 0) {
         QLocalSocket socket;
@@ -149,9 +151,6 @@ int main(int argc, char *argv[]) {
         */
 
         SPDLOG_INFO("Drawing gui...");
-        // HARD CODING:
-        Settings settings;
-        settings.set_destination("D:\\Code\\Backie_backups\\Dest_1");
 
         mainWindow.show();
         return app.exec();

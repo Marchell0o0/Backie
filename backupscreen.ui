@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>557</height>
+    <height>577</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -231,6 +231,9 @@
                    <layout class="QHBoxLayout" name="horizontalLayout_3">
                     <item>
                      <widget class="QLineEdit" name="destEdit">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="inputMask">
                        <string/>
                       </property>
@@ -241,6 +244,9 @@
                     </item>
                     <item>
                      <widget class="QPushButton" name="browseDestB">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="text">
                        <string>Browse...</string>
                       </property>
@@ -1130,30 +1136,8 @@
                       <property name="verticalSpacing">
                        <number>6</number>
                       </property>
-                      <item row="0" column="2">
-                       <widget class="QPushButton" name="wdB">
-                        <property name="minimumSize">
-                         <size>
-                          <width>31</width>
-                          <height>35</height>
-                         </size>
-                        </property>
-                        <property name="mouseTracking">
-                         <bool>true</bool>
-                        </property>
-                        <property name="text">
-                         <string>WD</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                        <property name="autoExclusive">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="0" alignment="Qt::AlignHCenter">
-                       <widget class="QPushButton" name="mnB">
+                      <item row="0" column="0">
+                       <widget class="QPushButton" name="dayOfWeekB1">
                         <property name="minimumSize">
                          <size>
                           <width>31</width>
@@ -1170,95 +1154,7 @@
                          <bool>true</bool>
                         </property>
                         <property name="checked">
-                         <bool>true</bool>
-                        </property>
-                        <property name="autoExclusive">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="6">
-                       <widget class="QPushButton" name="snB">
-                        <property name="minimumSize">
-                         <size>
-                          <width>31</width>
-                          <height>35</height>
-                         </size>
-                        </property>
-                        <property name="mouseTracking">
-                         <bool>true</bool>
-                        </property>
-                        <property name="text">
-                         <string>SN</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                        <property name="autoExclusive">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="4">
-                       <widget class="QPushButton" name="frB">
-                        <property name="minimumSize">
-                         <size>
-                          <width>31</width>
-                          <height>35</height>
-                         </size>
-                        </property>
-                        <property name="mouseTracking">
-                         <bool>true</bool>
-                        </property>
-                        <property name="text">
-                         <string>FR</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                        <property name="autoExclusive">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="5">
-                       <widget class="QPushButton" name="saB">
-                        <property name="minimumSize">
-                         <size>
-                          <width>31</width>
-                          <height>35</height>
-                         </size>
-                        </property>
-                        <property name="mouseTracking">
-                         <bool>true</bool>
-                        </property>
-                        <property name="text">
-                         <string>SA</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
-                        </property>
-                        <property name="autoExclusive">
-                         <bool>true</bool>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="3">
-                       <widget class="QPushButton" name="thB">
-                        <property name="minimumSize">
-                         <size>
-                          <width>31</width>
-                          <height>35</height>
-                         </size>
-                        </property>
-                        <property name="mouseTracking">
-                         <bool>true</bool>
-                        </property>
-                        <property name="text">
-                         <string>TH</string>
-                        </property>
-                        <property name="checkable">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                         <property name="autoExclusive">
                          <bool>true</bool>
@@ -1281,8 +1177,118 @@
                         </property>
                        </spacer>
                       </item>
+                      <item row="0" column="5">
+                       <widget class="QPushButton" name="dayOfWeekB3">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>WD</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="10">
+                       <widget class="QPushButton" name="dayOfWeekB7">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>SN</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="8">
+                       <widget class="QPushButton" name="dayOfWeekB6">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>SA</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="6">
+                       <widget class="QPushButton" name="dayOfWeekB4">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>TH</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="7">
+                       <widget class="QPushButton" name="dayOfWeekB5">
+                        <property name="minimumSize">
+                         <size>
+                          <width>31</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="mouseTracking">
+                         <bool>true</bool>
+                        </property>
+                        <property name="text">
+                         <string>FR</string>
+                        </property>
+                        <property name="checkable">
+                         <bool>true</bool>
+                        </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
+                       </widget>
+                      </item>
                       <item row="0" column="1">
-                       <widget class="QPushButton" name="tuB">
+                       <widget class="QPushButton" name="dayOfWeekB2">
                         <property name="minimumSize">
                          <size>
                           <width>31</width>
@@ -1304,6 +1310,14 @@
                        </widget>
                       </item>
                      </layout>
+                     <zorder>dayOfWeekB6</zorder>
+                     <zorder>dayOfWeekB1</zorder>
+                     <zorder>dayOfWeekB7</zorder>
+                     <zorder>dayOfWeekB3</zorder>
+                     <zorder>dayOfWeekB2</zorder>
+                     <zorder>dayOfWeekB4</zorder>
+                     <zorder>dayOfWeekB5</zorder>
+                     <zorder>verticalSpacer_4</zorder>
                     </widget>
                    </widget>
                   </item>

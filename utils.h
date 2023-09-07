@@ -2,6 +2,8 @@
 #define UTILS_H
 
 #include <string>
+#include <QString>
+#include <QWidget>
 
 /**
  * @enum BackupType
@@ -21,5 +23,7 @@ const std::string strFromType(const BackupType type);
 std::wstring stringToWString(const std::string& s);
 
 bool IsRunningAsAdmin();
+
+void loadStyleSheet(const QString& stylePath, QWidget* widget);
 
 #endif // UTILS_H

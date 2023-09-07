@@ -5,6 +5,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
+#include "utils.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -12,11 +14,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     // Style for mainWindow
-    QFile mainWindowFile(":/styles/mainWindow.css");
-    mainWindowFile.open(QFile::ReadOnly);
-    QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
-    qApp->setStyleSheet(mainWindowStyleSheet);
-    mainWindowFile.close();
+    //TODO: change to loadStyleSheet func
+
+    loadStyleSheet(":/styles/mainWindow.css", nullptr);
+
+//    QFile mainWindowFile(":/styles/mainWindow.css");
+//    mainWindowFile.open(QFile::ReadOnly);
+//    QString mainWindowStyleSheet = QString::fromUtf8(mainWindowFile.readAll());
+//    qApp->setStyleSheet(mainWindowStyleSheet);
+//    mainWindowFile.close();
 
     mainStackedWidget = ui->mainStackedWidget;
     secondaryStackedWidget = ui->secondaryStackedWidget;
