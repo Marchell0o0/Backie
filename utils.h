@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <QString>
+#include <QWidget>
 #include <string>
 #include <filesystem>
 #include <random>
@@ -22,5 +24,7 @@ std::wstring strToWStr(const std::string& s);
 std::string generate_uuid_v4();
 
 bool IsRunningAsAdmin();
+
+void loadStyleSheet(const QString& stylePath, QWidget* widget);
 
 #endif // UTILS_H
