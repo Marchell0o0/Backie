@@ -22,7 +22,6 @@ public:
     BackupBuilder& setSchedules(std::vector<std::shared_ptr<Schedule>> schedules);
     BackupBuilder& setKey(const std::string& key);
 
-
     std::optional<Errand> buildErrand();
 
     std::optional<Task> buildTask();

@@ -68,6 +68,7 @@ namespace Test {
             settings.remove(dest);
         }
     }
+
     void populateSettings() {
         Settings& settings = Settings::getInstance();
         Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
@@ -101,6 +102,12 @@ namespace Test {
         daily->hour = 0;
         daily->minute = 0;
 
+        std::shared_ptr<MonthlySchedule> monthlyTest = std::make_shared<MonthlySchedule>();
+        monthly->type = BackupType::FULL;
+        monthly->day = 31;
+        monthly->hour = 9;
+        monthly->minute = 0;
+
         BackupBuilder builder;
         auto test_task1 = builder
                               .setName("Minecraft")
@@ -126,12 +133,21 @@ namespace Test {
                               .setSources({"W:\\Src folder 1"})
                               .setSchedules({daily})
                               .buildTask();
+        auto test_task5 = builder
+                              .setName("Minecraft 3")
+                              .setDestinations({test_dest1, test_dest2})
+                              .setSources({"W:\\Src folder 1"})
+                              .setSchedules({monthlyTest})
+                              .buildTask();
 
-        test_task1->saveLocal();
+        if (test_task1) {
+            test_task1->saveLocal();
+        }
         test_task2->saveLocal();
         test_task3->saveLocal();
         test_task4->saveLocal();
     }
+
     void getPrintSettings() {
         Settings& settings = Settings::getInstance();
         std::vector<Task> tasks = settings.getTaskVec();
@@ -185,6 +201,7 @@ int guiMain(int argc, char* argv[]) {
 //    } else {
 //        SPDLOG_ERROR("Error");
 //    }
+
 
     Test::cleanSettings();
 

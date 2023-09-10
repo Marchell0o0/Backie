@@ -321,26 +321,38 @@ void BackupScreen::createBackupBclicked() {
 //    auto hour = backupArgs.getDate(BackupArgs::HOUR);
 //    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
 
-//    std::optional<BackupSchedule> backupSchedule_test;
+////    std::optional<BackupSchedule> backupSchedule_test;
 
-//    switch(backupArgs.getBackupRecurrence()){
-//    case ScheduleRecurrence::ONCE:
-//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::ONCE>(
-//            type, sourcePath, year, month, dayOfMonth, hour, minute);
-//        break;
-//    case ScheduleRecurrence::MONTHLY:
-//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(
-//            type, sourcePath, dayOfMonth, hour, minute);
-//        break;
-//    case ScheduleRecurrence::WEEKLY:
-//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::WEEKLY>(
-//            type, sourcePath, dayOfWeek, hour, minute);
-//        break;
-//    case ScheduleRecurrence::DAILY:
-//        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(
-//            type, sourcePath, hour, minute);
-//        break;
-//    }
+//    std::shared_ptr<Schedule> schedule;
+//    std::vector<std::shared_ptr<Schedule>> schedules;
+////    switch(backupArgs.getBackupRecurrence()){
+////    case ScheduleRecurrence::ONCE:
+//    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
+//    once->type = BackupType::FULL;
+//    once->year = 2020;
+//    once->month = 11;
+//    once->day = 20;
+//    once->hour = 12;
+//    once->minute = 35;
+//    schedule = once;
+
+//    builder.setSchedules(this->schedules);
+////    case ScheduleRecurrence::MONTHLY:
+////        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::MONTHLY>(
+////            type, sourcePath, dayOfMonth, hour, minute);
+////        break;
+////    case ScheduleRecurrence::WEEKLY:
+////        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::WEEKLY>(
+////            type, sourcePath, dayOfWeek, hour, minute);
+////        break;
+////    case ScheduleRecurrence::DAILY:
+////        backupSchedule_test = BackupFactory::CreateBackupSchedule<ScheduleRecurrence::DAILY>(
+////            type, sourcePath, hour, minute);
+////        break;
+////    }
+
+//    schedules.push_back(schedule);
+
 //    if (!backupSchedule_test){
 //        SPDLOG_ERROR("Couldn't create backupShedule_test. Error: {}",
 //                     BackupFactory::ErrorCodeToString(BackupFactory::GetLastCreationError()));
@@ -415,7 +427,7 @@ QString BackupScreen::addZero(int number) {
 }
 
 void BackupArgs::setBackupRecurrence(ScheduleRecurrence recurrence) {
-    backupRecurrence = recurrence;
+    this->backupRecurrence = recurrence;
 }
 
 ScheduleRecurrence BackupArgs::getBackupRecurrence() {
