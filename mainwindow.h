@@ -23,18 +23,11 @@ public:
 
 private slots:
 
-//    void on_backupScreenB_clicked();
-
-//    void on_accountScreenB_clicked();
-
     void showMainScreen();
-
-//    void on_recoverScreenB_clicked();
 
     void on_backupScreenB_toggled(bool checked);
 
     void on_recoverScreenB_toggled(bool checked);
-
 
     void on_accountScreenB_toggled(bool checked);
 

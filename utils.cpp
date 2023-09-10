@@ -1,3 +1,8 @@
+#include <QApplication>
+#include <QWidget>
+#include <QFile>
+
+#include "spdlog/spdlog.h"
 #include "utils.h"
 
 #include <winnls.h>
@@ -52,6 +57,28 @@ const std::string strFromType(const BackupType type){
     return "";
 }
 
+void loadStyleSheet(const QString& stylePath, QWidget* widget) {
+    QFile styleFile(stylePath);
+    if (styleFile.open(QFile::ReadOnly)) {
+        QString screenStyleSheet = QString::fromUtf8(styleFile.readAll());
+
+        if (widget != nullptr) {
+            if (widget->window() != nullptr && widget->isEnabled()) {
+                widget->setStyleSheet(screenStyleSheet);
+            } else {
+                SPDLOG_WARN(
+                    "Widget is either orphan or disabled."
+                    " Stylesheet might not be applied as expected for widget: {}",
+                    widget ? widget->objectName().toStdString() : "null");
+            }
+        } else {
+            qApp->setStyleSheet(screenStyleSheet);
+        }
+    } else {
+        SPDLOG_ERROR("Could not open styles for widget: {}", widget ? widget->objectName().toStdString() : "null");
+    }
+}
+
 std::string generate_uuid_v4() {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -83,4 +110,3 @@ std::string generate_uuid_v4() {
     };
     return ss.str();
 }
-

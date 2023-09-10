@@ -13,12 +13,22 @@ BackupScreen::BackupScreen(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    // Style for backupScreen
-    QFile backupScreenFile(":/styles/backupScreen.css");
-    backupScreenFile.open(QFile::ReadOnly);
-    QString backupScreenStyleSheet = QString::fromUtf8(backupScreenFile.readAll());
-    ui->stackedWidget->setStyleSheet(backupScreenStyleSheet);
-    backupScreenFile.close();
+    dayOfWeekMap = {
+        {1, "Monday"},
+        {2, "Tuesday"},
+        {3, "Wednesday"},
+        {4, "Thursday"},
+        {5, "Friday"},
+        {6, "Saturday"},
+        {7, "Sunday"}
+    };
+
+    qDebug() << "Map contents:";
+    for(auto it = dayOfWeekMap.cbegin(); it != dayOfWeekMap.cend(); ++it) {
+        qDebug() << it.key() << ": " << it.value();
+    }
+
+    loadStyleSheet(":/styles/backupScreen.css", ui->stackedWidget);
 
     connect(ui->browseSourceB, &QPushButton::clicked, this, &BackupScreen::browseForSourceFolder);
 
@@ -26,13 +36,6 @@ BackupScreen::BackupScreen(QWidget *parent) :
     initDaysOfWeekBtns();
 
     connect(ui->createBackupB, &QPushButton::clicked, this, &BackupScreen::createBackupBclicked);
-
-    // TODO: Delete
-//    connect(ui->createBackupB, &QPushButton::clicked, this, [=]() {
-//        createBackupBclicked(backupArgs);
-//    });
-
-
 }
 
 BackupScreen::~BackupScreen()
@@ -78,17 +81,20 @@ void BackupScreen::connectRecurrAndDateBtns(const QList<QPair<T*, U>>& mapping) 
 }
 
 void BackupScreen::initDaysOfWeekBtns() {
-    QButtonGroup* daysOfWeekBtnGroup = new QButtonGroup(this);
+    daysOfWeekBtnGroup = new QButtonGroup(this);
 
     QWidget* daysOfWeekWidget = this->findChild<QWidget*>("selectWeekPage");
     if (daysOfWeekWidget) {
         QList<QPushButton*> buttons = daysOfWeekWidget->findChildren<QPushButton*>();
+        std::sort(buttons.begin(), buttons.end(), [](QPushButton* a, QPushButton* b) {
+            return a->objectName() < b->objectName();
+        });
 
         for (int i = 0; i < buttons.size(); ++i) {
             daysOfWeekBtnGroup->addButton(buttons[i], i);
         }
     }
-    connect(daysOfWeekBtnGroup, SIGNAL(buttonClicked(int)), this, SLOT(handleDayOfWeekButtonClicked(int)));
+    connect(daysOfWeekBtnGroup, SIGNAL(buttonToggled(QAbstractButton*,bool)), this, SLOT(handleDayOfWeekButtonClicked(QAbstractButton*, bool)));
 }
 
 void BackupScreen::browseForSourceFolder() {
@@ -129,7 +135,7 @@ void BackupScreen::on_selectDateB_clicked()
         // TODO: add selectMonthCB updating for ONCE A YEAR option
         ui->selectDayCB->setCurrentText(QString::number(backupArgs.getDate(BackupArgs::DAYOFMONTH)));
 
-        updateChosenDateLabel(backupArgs);
+        updateChosenDateLabel();
     }
     else {
         SPDLOG_DEBUG("Date not accepted");
@@ -208,7 +214,7 @@ void BackupScreen::handleRadioButtonToggle(bool isChecked){
         backupArgs.setDate(BackupArgs::HOUR, ui->selectHourCB->currentText().toInt());
         backupArgs.setDate(BackupArgs::MINUTE, ui->selectMinuteCB->currentText().toInt());
 
-        updateChosenDateLabel(backupArgs);
+        updateChosenDateLabel();
     }
 }
 
@@ -226,90 +232,87 @@ void BackupScreen::handleComboBoxIndexChanged(int index) {
 
     backupArgs.setDate(argType, comboBox->currentText().toInt());
 
-    updateChosenDateLabel(backupArgs);
+    updateChosenDateLabel();
 }
 
-void BackupScreen::updateChosenDateLabel(BackupArgs date) {
-    if (date.getDate(BackupArgs::HOUR) == -1 || date.getDate(BackupArgs::MINUTE) == -1) {
-        ui->chosenDateL->setText(QString("Chosen date is..."));
-    } else {
-        switch (backupArgs.getBackupRecurrence()) {
-        case ScheduleRecurrence::ONCE:
-                if(date.getDate(BackupArgs::YEAR) == -1 ||
-                    date.getDate(BackupArgs::MONTH) == -1 ||
-                    date.getDate(BackupArgs::DAYOFMONTH) == -1) {
-                    ui->chosenDateL->setText(QString("Chosen date is..."));
-                } else {
-                    ui->chosenDateL->setText(QString("Once in %1.%2.%3 at %4:%5")
-                                                 .arg(addZero(date.getDate(BackupArgs::DAYOFMONTH)),
-                                                      addZero(date.getDate(BackupArgs::MONTH)),
-                                                      QString::number(date.getDate(BackupArgs::YEAR)),
-                                                      addZero(date.getDate(BackupArgs::HOUR)),
-                                                      addZero(date.getDate(BackupArgs::MINUTE))));
-
-                }
-                break;
-        case ScheduleRecurrence::MONTHLY:
-                if (date.getDate(BackupArgs::DAYOFMONTH) == -1) {
-                    ui->chosenDateL->setText(QString("Chosen date is..."));
-                } else {
-                    ui->chosenDateL->setText(QString("Every month in %1 day at %2:%3")
-                                                 .arg(addZero(date.getDate(BackupArgs::DAYOFMONTH)),
-                                                      addZero(date.getDate(BackupArgs::HOUR)),
-                                                      addZero(date.getDate(BackupArgs::MINUTE))));
-                }
-
-
-                break;
-        case ScheduleRecurrence::WEEKLY:
-                if (date.getDate(BackupArgs::DAYOFWEEK) == -1) {
-                    ui->chosenDateL->setText(QString("Chosen date is..."));
-                } else {
-                    // TODO: handle this case
-                }
-                break;
-        case ScheduleRecurrence::DAILY:
-                ui->chosenDateL->setText(QString("Every day at %1:%2")
-                                             .arg(addZero(date.getDate(BackupArgs::HOUR)),
-                                                  addZero(date.getDate(BackupArgs::MINUTE))));
-                break;
-        // TODO: maybe implement error handling here
-        }
+void BackupScreen::handleDayOfWeekButtonClicked(QAbstractButton* button, bool isChecked) {
+     int dayOfWeek = daysOfWeekBtnGroup->id(button);
+    if (isChecked) {
+        //dayOfWeek: 0...6, dayOfWeek + 1: -> 1...7
+        backupArgs.setDate(BackupArgs::DAYOFWEEK, dayOfWeek + 1);
     }
+    updateChosenDateLabel();
 }
 
-int* BackupScreen::deleteExtraSymbolsFromDate(BackupArgs date) {
-    std::vector<int> backupDate;
+QString BackupScreen::formatDate(int day, int month, int year, int hour, int minute) {
+    return QString("%1.%2.%3 at %4:%5")
+        .arg(addZero(day),
+             addZero(month),
+             QString::number(year),
+             addZero(hour),
+             addZero(minute));
+}
 
-    switch(date.getBackupRecurrence()){
+QString BackupScreen::getTimeString(int hour, int minute) {
+    return QString("%1:%2")
+        .arg(addZero(hour), addZero(minute));
+}
+
+void BackupScreen::updateChosenDateLabel() {
+    auto date = backupArgs;
+
+    if (date.getDate(BackupArgs::HOUR) == -1 || date.getDate(BackupArgs::MINUTE) == -1) {
+        ui->chosenDateL->setText("Chosen date is...");
+        return;
+    }
+
+    QString displayText;
+    switch (backupArgs.getBackupRecurrence()) {
     case ScheduleRecurrence::ONCE:
-        backupDate.push_back(date.getDate(BackupArgs::YEAR));
-        backupDate.push_back(date.getDate(BackupArgs::MONTH));
-        backupDate.push_back(date.getDate(BackupArgs::DAYOFMONTH));
+        if (date.isDateComplete()) {
+                displayText = "Once in " + formatDate(date.getDate(BackupArgs::DAYOFMONTH),
+                                                      date.getDate(BackupArgs::MONTH),
+                                                      date.getDate(BackupArgs::YEAR),
+                                                      date.getDate(BackupArgs::HOUR),
+                                                      date.getDate(BackupArgs::MINUTE));
+        }
         break;
     case ScheduleRecurrence::MONTHLY:
-        backupDate.push_back(date.getDate(BackupArgs::DAYOFMONTH));
+        if (date.getDate(BackupArgs::DAYOFMONTH) != -1) {
+                displayText = QString("Every month in %1 day at %2")
+                                  .arg(addZero(date.getDate(BackupArgs::DAYOFMONTH)),
+                                       getTimeString(date.getDate(BackupArgs::HOUR),
+                                                     date.getDate(BackupArgs::MINUTE)));
+        }
         break;
-    case ScheduleRecurrence::WEEKLY:
-        backupDate.push_back(date.getDate(BackupArgs::DAYOFWEEK));
+    case ScheduleRecurrence::WEEKLY: {
+        int dayValue = date.getDate(BackupArgs::DAYOFWEEK);
+        const QString& dayName = dayOfWeekMap.value(dayValue, "");
+        if (!dayName.isEmpty()) {
+                displayText = QString("Every %1 at %2").arg(dayName,
+                                                            getTimeString(date.getDate(BackupArgs::HOUR),
+                                                                          date.getDate(BackupArgs::MINUTE)));
+        } else {
+                // TODO: handle error
+        }
         break;
+    }
     case ScheduleRecurrence::DAILY:
+        displayText = QString("Every day at %1").arg(getTimeString(date.getDate(BackupArgs::HOUR),
+                                                                   date.getDate(BackupArgs::MINUTE)));
         break;
     default:
-        SPDLOG_ERROR("Unknown recurrence of backup. Converting date from ARRAY to STD::VECTOR FAILED");
-    }
-    backupDate.push_back(date.getDate(BackupArgs::HOUR));
-    backupDate.push_back(date.getDate(BackupArgs::MINUTE));
-    // error handling
-    int* arr = new int[backupDate.size()];  // dynamically allocate an array
-
-    for (size_t i = 0; i < backupDate.size(); ++i) {
-        arr[i] = backupDate[i];
+        // TODO: Handle this case as you find appropriate
+        break;
     }
 
-    //TODO:!!!     delete[] arr;
-    return arr;
+    if (displayText.isEmpty()) {
+        ui->chosenDateL->setText("Chosen date is...");
+    } else {
+        ui->chosenDateL->setText(displayText);
+    }
 }
+
 
 void BackupScreen::createBackupBclicked() {
 //    auto type = backupArgs.getBackupType();
@@ -365,25 +368,14 @@ void BackupScreen::createBackupBclicked() {
 //    }
 }
 
-void BackupScreen::printOutDateArgs(std::vector<int> dateArgs) {
-    QString componentsStr;
-
-    for (int value : dateArgs) {
-        componentsStr.append(QString::number(value) + ", ");
-    }
-
-    // Removing the trailing comma and space
-    if (!componentsStr.isEmpty()) {
-        componentsStr.chop(2);
-    }
-
-    SPDLOG_INFO("DateComponents: {}", componentsStr.toStdString());
-}
-
 void BackupArgs::clear() {
     for (int &arg : dateArgs) {
         arg = -1;
     }
+}
+
+bool BackupArgs::isDateComplete() {
+    return dateArgs[YEAR] != -1 && dateArgs[MONTH] != -1 && dateArgs[DAYOFMONTH] != -1;
 }
 
 void BackupArgs::setDate(DateArgs type, int value) {
@@ -397,10 +389,6 @@ int BackupArgs::getDate(DateArgs type) const {
         SPDLOG_ERROR("Incorrect date is chosen");
         return -1; // or some default/invalid value
     }
-}
-
-std::array<int, 6> BackupArgs::getDateArgs(){
-    return dateArgs;
 }
 
 void BackupArgs::setSourcePath(const std::filesystem::path& path) {
@@ -419,13 +407,6 @@ BackupType BackupArgs::getBackupType() {
     return backupType;
 }
 
-QString BackupScreen::addZero(int number) {
-    if (number >= 0 && number <= 9) {
-        return QString("%1").arg(number, 2, 10, QChar('0'));
-    }
-    return QString("%1").arg(number);
-}
-
 void BackupArgs::setBackupRecurrence(ScheduleRecurrence recurrence) {
     this->backupRecurrence = recurrence;
 }
@@ -433,3 +414,11 @@ void BackupArgs::setBackupRecurrence(ScheduleRecurrence recurrence) {
 ScheduleRecurrence BackupArgs::getBackupRecurrence() {
     return backupRecurrence;
 }
+
+QString BackupScreen::addZero(int number) {
+    if (number >= 0 && number <= 9) {
+        return QString("%1").arg(number, 2, 10, QChar('0'));
+    }
+    return QString("%1").arg(number);
+}
+
