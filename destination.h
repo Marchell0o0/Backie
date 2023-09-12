@@ -7,8 +7,6 @@
 class Destination
 {
 public:
-    //TODO: This construcor shouldn't be here
-    Destination() {};
     Destination(std::string n, std::filesystem::path destFldr)
         : name{n}, destinationFolder{destFldr}, key{generate_uuid_v4()} {}
     Destination(std::string n, std::filesystem::path destFldr, std::string k)

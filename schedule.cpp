@@ -44,8 +44,8 @@ nlohmann::json MonthlySchedule::toJson() const {
     };
 }
 bool MonthlySchedule::verify() const {
-    return !(hour < 0 || hour > 23 || minute < 0 || minute > 59 ||
-            !(day == -1 || day > 0) || day > 31);
+    return !(hour < 0 || hour > 23 || minute < 0 || minute > 59 || day > 31)
+           && (day == -1 || day > 0);
 }
 
 nlohmann::json WeeklySchedule::toJson() const  {

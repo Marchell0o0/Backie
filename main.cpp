@@ -46,7 +46,8 @@ int backupWorker(int argc, char* argv[]) {
                             .buildErrand();
 
     if (errand) {
-        errand->perform();
+        if (connected && errand->perform())
+        { socket.write("Performed a backup"); }
     } else {
         if (connected) { socket.write("Couldn't create backup errand"); }
         return 1;
@@ -103,10 +104,10 @@ namespace Test {
         daily->minute = 0;
 
         std::shared_ptr<MonthlySchedule> monthlyTest = std::make_shared<MonthlySchedule>();
-        monthly->type = BackupType::FULL;
-        monthly->day = 31;
-        monthly->hour = 9;
-        monthly->minute = 0;
+        monthlyTest->type = BackupType::FULL;
+        monthlyTest->day = 31;
+        monthlyTest->hour = 9;
+        monthlyTest->minute = 0;
 
         BackupBuilder builder;
         auto test_task1 = builder
@@ -146,6 +147,7 @@ namespace Test {
         test_task2->saveLocal();
         test_task3->saveLocal();
         test_task4->saveLocal();
+        test_task5->saveLocal();
     }
 
     void getPrintSettings() {
@@ -188,22 +190,46 @@ int guiMain(int argc, char* argv[]) {
     QApplication app(argc, argv);
     MainWindow mainWindow;
 
+//    Test::cleanSettings();
+
+//    const std::time_t now = time(0);
+//    const std::tm time = *std::localtime(std::addressof(now));
+
+//    std::shared_ptr<OnceSchedule> onceFull = std::make_shared<OnceSchedule>();
+//    onceFull->type = BackupType::FULL;
+//    onceFull->year = 2023;
+//    onceFull->month = 9;
+//    onceFull->day = 10;
+//    onceFull->hour = time.tm_hour;
+//    onceFull->minute = time.tm_min + 1;
+
+//    std::shared_ptr<OnceSchedule> onceIncremental = std::make_shared<OnceSchedule>();
+//    onceIncremental->type = BackupType::INCREMENTAL;
+//    onceIncremental->year = 2023;
+//    onceIncremental->month = 9;
+//    onceIncremental->day = 10;
+//    onceIncremental->hour = time.tm_hour;
+//    onceIncremental->minute = time.tm_min + 2;
+
+//    Settings& settings = Settings::getInstance();
+//    Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
+//    settings.addUpdate(test_dest1);
 
 //    BackupBuilder builder;
-//    auto errand = builder
-//                      .setKey("1d16ce4f-e996-429b-a3c9-bcb1222f1d14")
-//                      .setCurrentType(BackupType::FULL)
-//                      .buildErrand();
+//    auto test_task = builder
+//                    .setName("Current test")
+//                    .setSchedules({onceFull, onceIncremental})
+//                    .setDestinations({test_dest1})
+//                    .setSources({"W:\\Src folder 1"})
+//                    .buildTask();
 
-//    if (errand) {
-//        errand->perform();
-//        SPDLOG_INFO("Performed a backup");
+//    if (test_task) {
+//        test_task->saveLocal();
 //    } else {
-//        SPDLOG_ERROR("Error");
+//        SPDLOG_ERROR("Couldn't create the task");
 //    }
 
 
-    Test::cleanSettings();
 
 //    Test::populateSettings();
 

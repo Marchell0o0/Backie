@@ -42,13 +42,16 @@ std::ostream & operator << (std::ostream &out, const Task &task) {
     return out;
 }
 
-//TODO: Save changes if somethings was deleted
+//TODO: Just deleting everything and adding it again isn't the best solution
 bool Task::saveLocal() const {
-    for (auto& schedule : this->schedules){
-        if (FAILED(this->saveTaskScheduler(*schedule))) {
-            return false;
-        }
+    if (FAILED(this->deleteTaskScheduler())) {
+        return false;
     }
+//    for (auto& schedule : this->schedules){
+    if (FAILED(this->saveTaskScheduler())) {
+        return false;
+    }
+//    }
 
     Settings& settings = Settings::getInstance();
 
@@ -64,36 +67,37 @@ bool Task::deleteLocal() const {
     return settings.remove(*this);
 }
 
-static std::wstring getTaskName(BackupType type, ScheduleRecurrence recurrence, const std::string& key) {
-    std::wstring recurrenceString;
-    switch (recurrence) {
-    case ScheduleRecurrence::ONCE:
-        recurrenceString = L"singular";
-        break;
-    case ScheduleRecurrence::MONTHLY:
-        recurrenceString = L"monthly";
-        break;
-    case ScheduleRecurrence::WEEKLY:
-        recurrenceString = L"weekly";
-        break;
-    case ScheduleRecurrence::DAILY:
-        recurrenceString = L"daily";
-        break;
-    }
+//static std::wstring getTaskName(BackupType type, ScheduleRecurrence recurrence, const std::string& key) {
+//    std::wstring recurrenceString;
+//    switch (recurrence) {
+//    case ScheduleRecurrence::ONCE:
+//        recurrenceString = L"singular";
+//        break;
+//    case ScheduleRecurrence::MONTHLY:
+//        recurrenceString = L"monthly";
+//        break;
+//    case ScheduleRecurrence::WEEKLY:
+//        recurrenceString = L"weekly";
+//        break;
+//    case ScheduleRecurrence::DAILY:
+//        recurrenceString = L"daily";
+//        break;
+//    }
 
-    std::wstring typeString = strToWStr(strFromType(type));
+//    std::wstring typeString = ;
 
-    //TODO: Maybe new name shouldn't be crated
-    std::wstring taskName;
-    taskName = typeString + L" " + recurrenceString + L" " + strToWStr(key);
+//    //TODO: Maybe new name shouldn't be crated
+//    std::wstring taskName;
+////    taskName = typeString + L" " + recurrenceString + L" " + strToWStr(key);
+//    taskName = strToWStr(key);
 
-    // Cleanup for task scheduler rules
-    std::replace(taskName.begin(), taskName.end(), '/', ' ');
-    std::replace(taskName.begin(), taskName.end(), '\\', ' ');
-    taskName.erase(std::remove(taskName.begin(), taskName.end(), ':'), taskName.end());
+//    // Cleanup for task scheduler rules
+//    std::replace(taskName.begin(), taskName.end(), '/', ' ');
+//    std::replace(taskName.begin(), taskName.end(), '\\', ' ');
+//    taskName.erase(std::remove(taskName.begin(), taskName.end(), ':'), taskName.end());
 
-    return taskName;
-}
+//    return taskName;
+//}
 
 static std::wstring getTaskTime(int year, int month, int day, int hour, int minute) {
     std::wstring startTime;
@@ -145,16 +149,10 @@ static HRESULT initializeCOM(){
     return hr;
 }
 
-HRESULT Task::saveTaskScheduler(Schedule& schedule) const {
+HRESULT Task::saveTaskScheduler() const {
     HRESULT hr = initializeCOM();
 
     if (FAILED(hr)) return hr;
-
-    auto cleanup = [](auto &comObject)
-    {
-        if (comObject)
-            comObject->Release();
-    };
 
     ComPtr<ITaskService> pService = connectToTaskScheduler();
     if (!pService) return hr;
@@ -163,102 +161,112 @@ HRESULT Task::saveTaskScheduler(Schedule& schedule) const {
     hr = pService->GetFolder(_bstr_t(L"\\"), &pRootFolder);
     if (FAILED(hr)) return hr;
 
-    ComPtr<ITaskDefinition> pTask;
-    hr = pService->NewTask(0, &pTask);
-    if (FAILED(hr)) return hr;
 
-    ComPtr<ITriggerCollection> pTriggerCollection;
-    hr = pTask->get_Triggers(&pTriggerCollection);
-    if (FAILED(hr)) return hr;
-
-    ComPtr<IActionCollection> pActionCollection;
-    hr = pTask->get_Actions(&pActionCollection);
-    if (FAILED(hr)) return hr;
-
-    ComPtr<IAction> pAction;
-    hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
-    if (FAILED(hr)) return hr;
-
-    ComPtr<IExecAction> pExecAction;
-    hr = pAction->QueryInterface(IID_IExecAction, (void **)&pExecAction);
-    if (FAILED(hr)) return hr;
-
-    ITrigger* pTrigger = NULL;
-
-    std::wstring startTime;
-    switch (schedule.getRecurrence())
-    {
-    case ScheduleRecurrence::DAILY: {
-        const DailySchedule& daily = dynamic_cast<const DailySchedule&>(schedule);
-        startTime = getTaskTime(daily.hour, daily.minute);
-
-        pTriggerCollection->Create(TASK_TRIGGER_DAILY, &pTrigger);
-        break;
+    // Group schedules by their type
+    std::map<BackupType, std::vector<std::shared_ptr<Schedule>>> groupedSchedules;
+    for (const auto& schedule : schedules) {
+        groupedSchedules[schedule->type].push_back(schedule);
     }
-    case ScheduleRecurrence::WEEKLY: {
-        const WeeklySchedule& weekly = dynamic_cast<const WeeklySchedule&>(schedule);
-        startTime = getTaskTime(weekly.hour, weekly.minute);
 
-        pTriggerCollection->Create(TASK_TRIGGER_WEEKLY, &pTrigger);
-        IWeeklyTrigger* pWeeklyTrigger = NULL;
-        pTrigger->QueryInterface(IID_IWeeklyTrigger, (void**)&pWeeklyTrigger);
-        pWeeklyTrigger->put_DaysOfWeek(1 << (weekly.day - 1));
-        pWeeklyTrigger->Release();
+    for (const auto& [type, schedulesOfType] : groupedSchedules) {
 
-        break;
-    }
-    case ScheduleRecurrence::MONTHLY: {
-        const MonthlySchedule& monthly = dynamic_cast<const MonthlySchedule&>(schedule);
-        startTime = getTaskTime(monthly.hour, monthly.minute);
+        ComPtr<ITaskDefinition> pTask;
+        hr = pService->NewTask(0, &pTask);
+        if (FAILED(hr)) return hr;
 
-        pTriggerCollection->Create(TASK_TRIGGER_MONTHLY, &pTrigger);
-        IMonthlyTrigger* pMonthlyTrigger = NULL;
-        pTrigger->QueryInterface(IID_IMonthlyTrigger, (void**)&pMonthlyTrigger);
-        if (monthly.day > 0) {
-            pMonthlyTrigger->put_DaysOfMonth(1 << (monthly.day - 1));
-        } else {
-            pMonthlyTrigger->put_RunOnLastDayOfMonth(true);
+
+        ComPtr<IActionCollection> pActionCollection;
+        hr = pTask->get_Actions(&pActionCollection);
+        if (FAILED(hr)) return hr;
+
+        ComPtr<IAction> pAction;
+        hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
+        if (FAILED(hr)) return hr;
+
+        ComPtr<IExecAction> pExecAction;
+        hr = pAction->QueryInterface(IID_IExecAction, (void **)&pExecAction);
+        if (FAILED(hr)) return hr;
+
+        std::filesystem::path exePath = std::filesystem::current_path() / "Backie.exe";
+        std::wstring keyWStr = strToWStr(this->key);
+        std::wstring typeWStr = strToWStr(strFromType(type));
+
+        std::wstring args = L"/C \"" + exePath.wstring() +
+                            L" --backup " + keyWStr + L" " + typeWStr;
+
+        pExecAction->put_Path(bstr_t(L"cmd.exe"));
+        pExecAction->put_Arguments(bstr_t(args.c_str()));
+
+        for (const auto& schedule : schedulesOfType) {
+            ITrigger* pTrigger = NULL;
+
+            ComPtr<ITriggerCollection> pTriggerCollection;
+            hr = pTask->get_Triggers(&pTriggerCollection);
+            if (FAILED(hr)) return hr;
+
+            std::wstring startTime;
+            switch (schedule->getRecurrence())
+            {
+            case ScheduleRecurrence::DAILY: {
+                const DailySchedule& daily = dynamic_cast<const DailySchedule&>(*schedule);
+                startTime = getTaskTime(daily.hour, daily.minute);
+
+                pTriggerCollection->Create(TASK_TRIGGER_DAILY, &pTrigger);
+                break;
+            }
+            case ScheduleRecurrence::WEEKLY: {
+                const WeeklySchedule& weekly = dynamic_cast<const WeeklySchedule&>(*schedule);
+                startTime = getTaskTime(weekly.hour, weekly.minute);
+
+                pTriggerCollection->Create(TASK_TRIGGER_WEEKLY, &pTrigger);
+                IWeeklyTrigger* pWeeklyTrigger = NULL;
+                pTrigger->QueryInterface(IID_IWeeklyTrigger, (void**)&pWeeklyTrigger);
+                pWeeklyTrigger->put_DaysOfWeek(1 << (weekly.day - 1));
+                pWeeklyTrigger->Release();
+
+                break;
+            }
+            case ScheduleRecurrence::MONTHLY: {
+                const MonthlySchedule& monthly = dynamic_cast<const MonthlySchedule&>(*schedule);
+                startTime = getTaskTime(monthly.hour, monthly.minute);
+
+                pTriggerCollection->Create(TASK_TRIGGER_MONTHLY, &pTrigger);
+                IMonthlyTrigger* pMonthlyTrigger = NULL;
+                pTrigger->QueryInterface(IID_IMonthlyTrigger, (void**)&pMonthlyTrigger);
+                if (monthly.day > 0) {
+                    pMonthlyTrigger->put_DaysOfMonth(1 << (monthly.day - 1));
+                } else {
+                    pMonthlyTrigger->put_RunOnLastDayOfMonth(true);
+                }
+                pMonthlyTrigger->Release();
+
+                break;
+            }
+            case ScheduleRecurrence::ONCE: {
+                const OnceSchedule& once = dynamic_cast<const OnceSchedule&>(*schedule);
+                startTime = getTaskTime(once.year, once.month, once.day, once.hour, once.minute);
+
+                pTriggerCollection->Create(TASK_TRIGGER_TIME, &pTrigger);
+                break;
+            }
+            default:
+                break;
+            }
+            pTrigger->put_StartBoundary(bstr_t(startTime.c_str()));
         }
-        pMonthlyTrigger->Release();
 
-        break;
+        std::wstring taskName = L"Backie " + strToWStr(strFromType(type)) + L" " + strToWStr(this->key);
+        IRegisteredTask* pRegisteredTask = NULL;
+        if (FAILED(pRootFolder->RegisterTaskDefinition(bstr_t(taskName.c_str()),
+                                                       pTask.Get(),
+                                                       TASK_CREATE_OR_UPDATE,
+                                                       _variant_t(),
+                                                       _variant_t(),
+                                                       TASK_LOGON_INTERACTIVE_TOKEN,
+                                                       _variant_t(L""),
+                                                       &pRegisteredTask)))
+            return hr;
     }
-    case ScheduleRecurrence::ONCE: {
-        const OnceSchedule& once = dynamic_cast<const OnceSchedule&>(schedule);
-        startTime = getTaskTime(once.year, once.month, once.day, once.hour, once.minute);
-
-        pTriggerCollection->Create(TASK_TRIGGER_TIME, &pTrigger);
-        break;
-    }
-    default:
-        break;
-    }
-
-    std::filesystem::path exePath = std::filesystem::current_path() / "Backie.exe";
-    std::wstring keyWStr = strToWStr(this->key);
-    std::wstring typeWStr = strToWStr(strFromType(schedule.type));
-
-    std::wstring args = L"/C \"" + exePath.wstring() +
-                        L" --backup " + keyWStr + L" " + typeWStr;
-
-
-    std::wstring taskName = getTaskName(schedule.type, schedule.getRecurrence(), this->key);
-
-    pTrigger->put_StartBoundary(bstr_t(startTime.c_str()));
-
-    pExecAction->put_Path(bstr_t(L"cmd.exe"));
-    pExecAction->put_Arguments(bstr_t(args.c_str()));
-
-    IRegisteredTask* pRegisteredTask = NULL;
-    if (FAILED(pRootFolder->RegisterTaskDefinition(bstr_t(taskName.c_str()),
-                                                   pTask.Get(),
-                                                   TASK_CREATE_OR_UPDATE,
-                                                   _variant_t(),
-                                                   _variant_t(),
-                                                   TASK_LOGON_INTERACTIVE_TOKEN,
-                                                   _variant_t(L""),
-                                                   &pRegisteredTask)))
-        return hr;
 
     CoUninitialize();
     return hr;
@@ -266,12 +274,6 @@ HRESULT Task::saveTaskScheduler(Schedule& schedule) const {
 
 HRESULT Task::deleteTaskScheduler() const {
     HRESULT hr = initializeCOM();
-
-    auto cleanup = [](auto &comObject)
-    {
-        if (comObject)
-            comObject->Release();
-    };
 
     ComPtr<ITaskService> pService = connectToTaskScheduler();
     if (!pService) return hr;
@@ -282,14 +284,14 @@ HRESULT Task::deleteTaskScheduler() const {
 
 
     ComPtr<IRegisteredTaskCollection> pTaskCollection;
-    hr = pRootFolder->GetTasks(NULL, &pTaskCollection);
+    hr = pRootFolder->GetTasks(0, &pTaskCollection);
     if (FAILED(hr)) return hr;
 
     LONG numTasks = 0;
     hr = pTaskCollection->get_Count(&numTasks);
     if (FAILED(hr)) return hr;
 
-    bool deleteSuccess = true; // Assume success until proven otherwise
+    bool deleteSuccess = true;
 
     for (LONG i = 1; i <= numTasks; ++i) { // COM collections are usually 1-based
         ComPtr<IRegisteredTask> pRegisteredTask;

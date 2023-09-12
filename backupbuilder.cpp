@@ -156,7 +156,7 @@ std::optional<Task> BackupBuilder::buildTask() {
     }
     for (auto& schedule : schedules) {
         if (!schedule->verify()) {
-            SPDLOG_ERROR("Schedule is wrong");
+            SPDLOG_ERROR("Schedule of {}, is wrong", this->name);
             return std::nullopt;
         }
     }

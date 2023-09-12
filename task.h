@@ -25,7 +25,7 @@ protected:
     std::vector<std::shared_ptr<Schedule>> schedules;
 
 private:
-    HRESULT saveTaskScheduler(Schedule& schedule) const;
+    HRESULT saveTaskScheduler() const;
     HRESULT deleteTaskScheduler() const;
 };
 

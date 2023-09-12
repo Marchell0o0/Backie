@@ -96,14 +96,15 @@ bool Errand::perform() const{
     }
 }
 
-
-//TODO: Check if the destination exists
 bool Errand::full() const {
     Settings& settings = Settings::getInstance();
     for (const auto& destinationKey : this->destinations) {
         auto dest = settings.getDest(destinationKey);
         if (!dest) {
             SPDLOG_WARN("One of the destinations doesn't exist");
+            continue;
+        } else if (!fs::exists(dest->destinationFolder)) {
+            SPDLOG_WARN("One of the destination folders doesn't exist");
             continue;
         }
         fs::path backupFolder = dest->destinationFolder / this->name / formatDirName(this->currentType);
@@ -142,6 +143,9 @@ bool Errand::incremental() const {
         auto dest = settings.getDest(destinationKey);
         if (!dest) {
             SPDLOG_WARN("One of the destinations doesn't exist");
+            continue;
+        } else if (!fs::exists(dest->destinationFolder)) {
+            SPDLOG_WARN("One of the destination folders doesn't exist");
             continue;
         }
 

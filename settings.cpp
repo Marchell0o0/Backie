@@ -160,7 +160,6 @@ std::vector<Destination> Settings::getDestVec() const {
     return destinations;
 }
 
-//TODO: That's why that constructor was needed
 std::optional<Destination> Settings::getDest(const std::string& key) const {
     if (data.find("destinations") == data.end()) {
         SPDLOG_WARN("No destinations found");
