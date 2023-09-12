@@ -2,6 +2,8 @@
 #include <QFileDialog>
 #include <QButtonGroup>
 
+#include "backupbuilder.h"
+#include "settings.h"
 #include "spdlog/spdlog.h"
 #include "backupscreen.h"
 #include "ui_backupscreen.h"
@@ -22,11 +24,6 @@ BackupScreen::BackupScreen(QWidget *parent) :
         {6, "Saturday"},
         {7, "Sunday"}
     };
-
-    qDebug() << "Map contents:";
-    for(auto it = dayOfWeekMap.cbegin(); it != dayOfWeekMap.cend(); ++it) {
-        qDebug() << it.key() << ": " << it.value();
-    }
 
     loadStyleSheet(":/styles/backupScreen.css", ui->stackedWidget);
 
@@ -315,14 +312,36 @@ void BackupScreen::updateChosenDateLabel() {
 
 
 void BackupScreen::createBackupBclicked() {
-//    auto type = backupArgs.getBackupType();
-//    auto sourcePath = backupArgs.getSourcePath();
-//    auto year = backupArgs.getDate(BackupArgs::YEAR);
-//    auto month = backupArgs.getDate(BackupArgs::MONTH);
-//    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
-//    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
-//    auto hour = backupArgs.getDate(BackupArgs::HOUR);
-//    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
+    auto type = backupArgs.getBackupType();
+    auto sourcePath = backupArgs.getSourcePath();
+    auto year = backupArgs.getDate(BackupArgs::YEAR);
+    auto month = backupArgs.getDate(BackupArgs::MONTH);
+    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
+    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
+    auto hour = backupArgs.getDate(BackupArgs::HOUR);
+    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
+
+    Settings& settings = Settings::getInstance();
+    Destination test_dest1("DefaultDest", "D:\\Code\\sidebarcicons");
+    settings.addUpdate(test_dest1);
+
+    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
+    once->type = type;
+    once->year = year;
+    once->month = month;
+    once->day = dayOfMonth;
+    once->hour = hour;
+    once->minute = minute;
+
+    BackupBuilder builder;
+    auto test_task1 = builder
+                          .setName("Gallery")
+                          .setDestinations({test_dest1})
+                          .setSources({sourcePath})
+                          .setSchedules({once})
+                          .buildTask();
+
+    test_task1->saveLocal();
 
 ////    std::optional<BackupSchedule> backupSchedule_test;
 
