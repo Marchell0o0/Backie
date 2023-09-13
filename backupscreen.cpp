@@ -1,6 +1,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QButtonGroup>
+#include <iostream>
 
 #include "backupbuilder.h"
 #include "settings.h"
@@ -8,6 +9,7 @@
 #include "backupscreen.h"
 #include "ui_backupscreen.h"
 #include "dialogcalendar.h"
+
 
 BackupScreen::BackupScreen(QWidget *parent) :
     QWidget(parent),
@@ -322,26 +324,57 @@ void BackupScreen::createBackupBclicked() {
     auto minute = backupArgs.getDate(BackupArgs::MINUTE);
 
     Settings& settings = Settings::getInstance();
-    Destination test_dest1("DefaultDest", "D:\\Code\\sidebarcicons");
+
+     // delete all tasks
+    for (auto& task : settings.getTaskVec()) {
+        task.deleteLocal();
+    }
+    // delete all destinations
+    for (auto& dest : settings.getDestVec()) {
+        settings.remove(dest);
+    }
+
+    Destination test_dest1("DefaultDest", "D:\\Code\\sidebaricons");
+    std::cout << test_dest1;
     settings.addUpdate(test_dest1);
 
     std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
-    once->type = type;
-    once->year = year;
-    once->month = month;
-    once->day = dayOfMonth;
-    once->hour = hour;
-    once->minute = minute;
+    once->type = BackupType::FULL;
+    once->year = 2023;
+    once->month = 9;
+    once->day = 13;
+    once->hour = 21;
+    once->minute = 58;
 
     BackupBuilder builder;
     auto test_task1 = builder
                           .setName("Gallery")
                           .setDestinations({test_dest1})
-                          .setSources({sourcePath})
+                          .setSources({"D:\\Gallery\\backgrounds"})
                           .setSchedules({once})
+//                          .setCurrentType(BackupType::FULL)
                           .buildTask();
 
-    test_task1->saveLocal();
+    if (test_task1) {
+        test_task1->saveLocal();
+
+    } else {
+        qDebug() << "Didnt perform saveLocal";
+    }
+//    test_task1->perform();
+
+    std::vector<Task> tasks = settings.getTaskVec();
+    std::vector<Destination> dests = settings.getDestVec();
+
+    std::cout << "Tasks:" << std::endl;
+    for (auto& task : tasks) {
+        std::cout << task << std::endl;
+    }
+
+    std::cout << "Global destinations:" << std::endl;
+    for (auto& dest : dests) {
+        std::cout << dest << std::endl;
+    }
 
 ////    std::optional<BackupSchedule> backupSchedule_test;
 
