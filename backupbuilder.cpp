@@ -5,16 +5,21 @@
 
 void BackupBuilder::reset() {
     this->name = "";
+//    this->latestId = "";
     this->currentType = BackupType::NONE;
     this->destinationsKeys.clear();
     this->sources.clear();
     this->schedules.clear();
 }
 
-BackupBuilder& BackupBuilder::setName(const std::string &name) {
+BackupBuilder& BackupBuilder::setName(const std::string& name) {
     this->name = name;
     return *this;
 }
+
+//BackupBuilder& BackupBuilder::setLatestId(const std::string& id) {
+//    this->latestId = id;
+//}
 
 BackupBuilder& BackupBuilder::setCurrentType(const BackupType currentType) {
     this->currentType = currentType;
@@ -66,7 +71,7 @@ std::optional<Errand> BackupBuilder::buildErrand() {
     }
 
     Settings& settings = Settings::getInstance();
-    if (!settings.isTaskKeyInSettings(key)) {
+    if (!settings.taskKeyInSettings(key)) {
         SPDLOG_ERROR("Specified key isn't in settings");
         return std::nullopt;
     }
@@ -75,19 +80,7 @@ std::optional<Errand> BackupBuilder::buildErrand() {
     this->sources = settings.getKeySrcs(key);
     this->name = settings.getKeyName(key);
 
-    if (this->destinationsKeys.empty()){
-        SPDLOG_ERROR("No destinations found for this key");
-        return std::nullopt;
-    }
-    if (this->sources.empty()){
-        SPDLOG_ERROR("No sources found for this key");
-        return std::nullopt;
-    }
-    //TODO:
-    if (this->name.size() < 3) {
-        SPDLOG_ERROR("Name is too small");
-        return std::nullopt;
-    }
+
 
     //TODO: Just remove any bad sources and destiantions
     // and if at least one left - proceed
@@ -105,8 +98,8 @@ std::optional<Errand> BackupBuilder::buildErrand() {
             return std::nullopt;
         }
     }
-
-    Errand errand(key, name, currentType, destinationsKeys, sources);
+    this->latestId = settings.getKeyLatestId(key);
+    Errand errand(key, latestId, name, currentType, destinationsKeys, sources);
 
     this->reset();
 
@@ -115,9 +108,14 @@ std::optional<Errand> BackupBuilder::buildErrand() {
 
 
 std::optional<Task> BackupBuilder::buildTask() {
+    Settings& settings = Settings::getInstance();
     if (!this->noNewKey){
         this->key = generate_uuid_v4();
+    } else {
+        this->latestId = settings.getKeyLatestId(key);
     }
+
+    SPDLOG_INFO("Creating a task with this latest id: {}", latestId);
 
     //TODO: other name checks
     if (this->name == "") {
@@ -139,7 +137,6 @@ std::optional<Task> BackupBuilder::buildTask() {
 
     //TODO: Just remove any bad sources, destiantions and schedules
     // and if at least one left - proceed
-    Settings& settings = Settings::getInstance();
     for (auto& destinationKey : this->destinationsKeys) {
         auto dest = settings.getDest(destinationKey);
         if (!dest || !fs::exists(dest->destinationFolder) ||
@@ -161,7 +158,7 @@ std::optional<Task> BackupBuilder::buildTask() {
         }
     }
 
-    Task task(key, name, currentType, destinationsKeys, sources, schedules);
+    Task task(key, latestId, name, currentType, destinationsKeys, sources, schedules);
 
     this->reset();
 

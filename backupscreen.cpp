@@ -312,36 +312,36 @@ void BackupScreen::updateChosenDateLabel() {
 
 
 void BackupScreen::createBackupBclicked() {
-    auto type = backupArgs.getBackupType();
-    auto sourcePath = backupArgs.getSourcePath();
-    auto year = backupArgs.getDate(BackupArgs::YEAR);
-    auto month = backupArgs.getDate(BackupArgs::MONTH);
-    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
-    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
-    auto hour = backupArgs.getDate(BackupArgs::HOUR);
-    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
+//    auto type = backupArgs.getBackupType();
+//    auto sourcePath = backupArgs.getSourcePath();
+//    auto year = backupArgs.getDate(BackupArgs::YEAR);
+//    auto month = backupArgs.getDate(BackupArgs::MONTH);
+//    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
+//    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
+//    auto hour = backupArgs.getDate(BackupArgs::HOUR);
+//    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
 
-    Settings& settings = Settings::getInstance();
-    Destination test_dest1("DefaultDest", "D:\\Code\\sidebarcicons");
-    settings.addUpdate(test_dest1);
+//    Settings& settings = Settings::getInstance();
+//    Destination test_dest1("DefaultDest", "D:\\Code\\sidebarcicons");
+//    settings.addUpdate(test_dest1);
 
-    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
-    once->type = type;
-    once->year = year;
-    once->month = month;
-    once->day = dayOfMonth;
-    once->hour = hour;
-    once->minute = minute;
+//    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
+//    once->type = type;
+//    once->year = year;
+//    once->month = month;
+//    once->day = dayOfMonth;
+//    once->hour = hour;
+//    once->minute = minute;
 
-    BackupBuilder builder;
-    auto test_task1 = builder
-                          .setName("Gallery")
-                          .setDestinations({test_dest1})
-                          .setSources({sourcePath})
-                          .setSchedules({once})
-                          .buildTask();
+//    BackupBuilder builder;
+//    auto test_task1 = builder
+//                          .setName("Gallery")
+//                          .setDestinations({test_dest1})
+//                          .setSources({sourcePath})
+//                          .setSchedules({once})
+//                          .buildTask();
 
-    test_task1->saveLocal();
+//    test_task1->saveLocal();
 
 ////    std::optional<BackupSchedule> backupSchedule_test;
 

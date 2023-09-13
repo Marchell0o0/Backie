@@ -10,7 +10,6 @@
 
 namespace fs = std::filesystem;
 
-// Convert FileMetadata to JSON
 static nlohmann::json toJson(FileMetadata meta){
     return {
         {"modificationTimestamp", meta.modificationTimestamp},
@@ -20,7 +19,6 @@ static nlohmann::json toJson(FileMetadata meta){
     };
 }
 
-// Fetch FileMetadata from JSON
 static FileMetadata fromJson(const nlohmann::json& j) {
     FileMetadata metadata;
     metadata.modificationTimestamp = j.at("modificationTimestamp").get<std::time_t>();
@@ -30,9 +28,11 @@ static FileMetadata fromJson(const nlohmann::json& j) {
     return metadata;
 }
 
-std::optional<std::map<fs::path, FileMetadata>> loadCombinedMdMap(const fs::path& jsonDestination) {
+
+//TODO: load by parent backups until it's a full one
+std::optional<std::map<fs::path, FileMetadata>> Metadata::loadCombinedMdMap(const fs::path& destination, const std::string& name) {
     std::vector<fs::directory_entry> backupDirs;
-    for (const auto& dirEntry : fs::directory_iterator(jsonDestination)) {
+    for (const auto& dirEntry : fs::directory_iterator(destination / name)) {
         if (fs::is_directory(dirEntry)) {
             backupDirs.push_back(dirEntry);
         }
@@ -82,7 +82,44 @@ std::optional<std::map<fs::path, FileMetadata>> loadCombinedMdMap(const fs::path
     return combinedMetadata;
 }
 
-FileMetadata MdFromFile(const fs::path& file){
+void Metadata::addFile(const fs::path& file) {
+    map[file] = MdFromFile(file);
+}
+
+void Metadata::initAllFiles(const std::vector<fs::path>& sources) {
+    for (const auto& source : sources) {
+        for (const auto& file : fs::recursive_directory_iterator(source)) {
+            if (file.is_regular_file()) {
+                addFile(file.path());
+            }
+        }
+    }
+}
+
+void Metadata::initJson(const std::string& Id, const std::string& parentId) {
+    for (const auto& [path, meta] : map) {
+        MdJson[path.string()] = toJson(meta);
+    }
+    MdJson["parentID"] = parentId;
+    MdJson["ID"] = Id;
+}
+
+void Metadata::initChangedFiles(const std::vector<fs::path>& sources,
+                                const fs::path& destination,
+                                const std::string& name) {
+    this->combinedOldMap = *loadCombinedMdMap(destination, name);
+
+    // Check for deleted files
+    for (const auto& [path, meta] : this->combinedOldMap) {
+        if (!fs::exists(path) && !meta.isDeleted) {
+            FileMetadata deletedMeta = meta;
+            deletedMeta.isDeleted = true;
+            this->map[path] = deletedMeta;
+        }
+    }
+}
+
+FileMetadata Metadata::MdFromFile(const fs::path& file){
     FileMetadata meta;
     meta.modificationTimestamp = fs::last_write_time(file).time_since_epoch().count();
     meta.fileSize = fs::file_size(file);
@@ -91,27 +128,50 @@ FileMetadata MdFromFile(const fs::path& file){
     return meta;
 }
 
-bool saveMdMap(const std::map<fs::path, FileMetadata>& metadata, const fs::path& jsonDestination) {
-    nlohmann::json j;
+bool Metadata::changed(const fs::path& file) {
+    auto it = this->combinedOldMap.find(file);
 
-    for (const auto& [path, meta] : metadata) {
-        j[path.string()] = toJson(meta);
+    if (it == this->combinedOldMap.end()) {
+        return true;
+    } else {
+        const FileMetadata& oldMeta = it->second;
+
+        FileMetadata tempMeta;
+        tempMeta.modificationTimestamp = fs::last_write_time(file).time_since_epoch().count();
+        tempMeta.fileSize = fs::file_size(file);
+        tempMeta.fileHash = std::to_string(tempMeta.modificationTimestamp); // TODO: Pseudo-hash
+        tempMeta.isDeleted = false;
+
+        if (tempMeta.modificationTimestamp != oldMeta.modificationTimestamp ||
+            tempMeta.fileSize != oldMeta.fileSize ||
+            tempMeta.fileHash != oldMeta.fileHash ||
+            tempMeta.isDeleted != oldMeta.isDeleted) {
+            return true;
+        }
     }
 
-    // Write the JSON to a file
+    return false;
+}
+
+bool Metadata::save(const fs::path& jsonDestination) {
     std::ofstream outFile(jsonDestination);
     if (!outFile) {
         SPDLOG_ERROR("Failed to open metadata file for writing");
         return false;
     }
 
-    outFile << j.dump(4);
+    if (MdJson.empty()) {
+        SPDLOG_WARN("Json that is saved is empty");
+    }
+
+    outFile << this->MdJson.dump(4);
     outFile.close();
+    //TODO: Add other attributes
     SetFileAttributes(jsonDestination.c_str(), GetFileAttributes(jsonDestination.c_str()) | FILE_ATTRIBUTE_HIDDEN);
     return true;
 }
 
-std::map<fs::path, FileMetadata> loadMdMap(const fs::path& jsonDestination) {
+std::map<fs::path, FileMetadata> Metadata::loadMdMap(const fs::path& jsonDestination) {
     nlohmann::json j;
     std::ifstream inFile(jsonDestination);
 
@@ -123,7 +183,13 @@ std::map<fs::path, FileMetadata> loadMdMap(const fs::path& jsonDestination) {
 
     std::map<fs::path, FileMetadata> metadata;
     for (const auto& item : j.items()) {
-        metadata[fs::path(item.key())] = fromJson(item.value());
+        if (item.key() == "parentID") {
+            continue;
+        } else if (item.key() == "ID") {
+            continue;
+        } else {
+            metadata[fs::path(item.key())] = fromJson(item.value());
+        }
     }
 
     return metadata;

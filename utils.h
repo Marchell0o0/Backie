@@ -8,9 +8,9 @@
 #include <random>
 
 enum class BackupType {
-    NONE,           ///< Represents a default value for the type
     FULL,           ///< Represents a full backup.
-    INCREMENTAL     ///< Represents an incremental backup only of the files that have changed since full backup.
+    INCREMENTAL,     ///< Represents an incremental backup only of the files that have changed since full backup.
+    NONE           ///< Represents a default value for the type
     // DIFFERENTIAL  // Future extension
 };
 namespace fs = std::filesystem;

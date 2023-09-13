@@ -1,6 +1,7 @@
 #ifndef METADATA_H
 #define METADATA_H
 
+#include "nlohmann/json.hpp"
 #include <string>
 #include <map>
 #include <filesystem>
@@ -15,12 +16,29 @@ struct FileMetadata {
     bool isDeleted;
 };
 
-std::map<fs::path, FileMetadata> loadMdMap(const fs::path& jsonDestination);
+class Metadata {
+public:
+    Metadata(){};
 
-bool saveMdMap(const std::map<fs::path, FileMetadata>& metadata, const fs::path& jsonDestination);
+    //TODO: Revise how paths are recorded
+    void initAllFiles(const std::vector<fs::path>& sources);
+    void initChangedFiles(const std::vector<fs::path>& sources,
+                          const fs::path& destination,
+                          const std::string& name);
+    void initJson(const std::string& Id, const std::string& parentId);
 
-FileMetadata MdFromFile(const fs::path& file);
+    bool changed(const fs::path& file);
+    void addFile(const fs::path& file);
+    bool save(const fs::path& jsonDestination);
+    std::map<fs::path, FileMetadata> map;
+private:
+    std::map<fs::path, FileMetadata> combinedOldMap;
+    nlohmann::json MdJson;
 
-std::optional<std::map<fs::path, FileMetadata>> loadCombinedMdMap(const fs::path& jsonDestination);
+    FileMetadata MdFromFile(const fs::path& file);
+    std::map<fs::path, FileMetadata> loadMdMap(const fs::path& jsonDestination);
+    std::optional<std::map<fs::path, FileMetadata>> loadCombinedMdMap(const fs::path& jsonDestination, const std::string& name);
+};
+
 
 #endif // METADATA_H
