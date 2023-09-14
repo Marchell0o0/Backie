@@ -314,6 +314,7 @@ void BackupScreen::updateChosenDateLabel() {
 
 
 void BackupScreen::createBackupBclicked() {
+<<<<<<< HEAD
     auto type = backupArgs.getBackupType();
     auto sourcePath = backupArgs.getSourcePath();
     auto year = backupArgs.getDate(BackupArgs::YEAR);
@@ -375,6 +376,38 @@ void BackupScreen::createBackupBclicked() {
     for (auto& dest : dests) {
         std::cout << dest << std::endl;
     }
+=======
+//    auto type = backupArgs.getBackupType();
+//    auto sourcePath = backupArgs.getSourcePath();
+//    auto year = backupArgs.getDate(BackupArgs::YEAR);
+//    auto month = backupArgs.getDate(BackupArgs::MONTH);
+//    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
+//    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
+//    auto hour = backupArgs.getDate(BackupArgs::HOUR);
+//    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
+
+//    Settings& settings = Settings::getInstance();
+//    Destination test_dest1("DefaultDest", "D:\\Code\\sidebarcicons");
+//    settings.addUpdate(test_dest1);
+
+//    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
+//    once->type = type;
+//    once->year = year;
+//    once->month = month;
+//    once->day = dayOfMonth;
+//    once->hour = hour;
+//    once->minute = minute;
+
+//    BackupBuilder builder;
+//    auto test_task1 = builder
+//                          .setName("Gallery")
+//                          .setDestinations({test_dest1})
+//                          .setSources({sourcePath})
+//                          .setSchedules({once})
+//                          .buildTask();
+
+//    test_task1->saveLocal();
+>>>>>>> dc05fbab2fd8f7d1e01f35a57d48a56780684f01
 
 ////    std::optional<BackupSchedule> backupSchedule_test;
 

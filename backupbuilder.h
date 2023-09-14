@@ -15,6 +15,7 @@ class BackupBuilder
     friend class Settings;
 public:
     BackupBuilder& setName(const std::string& name);
+//    BackupBuilder& setLatestId(const std::string& id);
     BackupBuilder& setCurrentType(const BackupType currentType);
     BackupBuilder& setDestinations(const std::vector<Destination> destinations);
     BackupBuilder& setDestinations(const std::vector<std::string> destinationsKeys);
@@ -27,6 +28,7 @@ public:
     std::optional<Task> buildTask();
 private:
     std::string key = "";
+    std::string latestId = "";
     bool noNewKey = false;
     std::string name = "";
     BackupType currentType = BackupType::NONE;

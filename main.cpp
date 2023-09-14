@@ -56,6 +56,7 @@ int backupWorker(int argc, char* argv[]) {
     return 0;
 }
 
+<<<<<<< HEAD
 //namespace Test {
 //    void cleanSettings() {
 //        Settings& settings = Settings::getInstance();
@@ -69,6 +70,23 @@ int backupWorker(int argc, char* argv[]) {
 //            settings.remove(dest);
 //        }
 //    }
+=======
+namespace Test {
+    void cleanSettings() {
+        Settings& settings = Settings::getInstance();
+
+        // delete all tasks
+        for (auto& task : settings.getTaskVec()) {
+//            SPDLOG_INFO("Removing task with key: {}", task.getKey());
+            task.deleteLocal();
+        }
+        // delete all destinations
+        for (auto& dest : settings.getDestVec()) {
+//            SPDLOG_INFO("Removing dest with key: {}", dessssazst.getKey());
+            settings.remove(dest);
+        }
+    }
+>>>>>>> dc05fbab2fd8f7d1e01f35a57d48a56780684f01
 
 //    void populateSettings() {
 //        Settings& settings = Settings::getInstance();
@@ -192,51 +210,57 @@ int guiMain(int argc, char* argv[]) {
 
 //    Test::cleanSettings();
 
-//    const std::time_t now = time(0);
-//    const std::tm time = *std::localtime(std::addressof(now));
-
-//    std::shared_ptr<OnceSchedule> onceFull = std::make_shared<OnceSchedule>();
-//    onceFull->type = BackupType::FULL;
-//    onceFull->year = 2023;
-//    onceFull->month = 9;
-//    onceFull->day = 10;
-//    onceFull->hour = time.tm_hour;
-//    onceFull->minute = time.tm_min + 1;
-
-//    std::shared_ptr<OnceSchedule> onceIncremental = std::make_shared<OnceSchedule>();
-//    onceIncremental->type = BackupType::INCREMENTAL;
-//    onceIncremental->year = 2023;
-//    onceIncremental->month = 9;
-//    onceIncremental->day = 10;
-//    onceIncremental->hour = time.tm_hour;
-//    onceIncremental->minute = time.tm_min + 2;
-
-//    Settings& settings = Settings::getInstance();
-//    Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
-//    settings.addUpdate(test_dest1);
-
-//    BackupBuilder builder;
-//    auto test_task = builder
-//                    .setName("Current test")
-//                    .setSchedules({onceFull, onceIncremental})
-//                    .setDestinations({test_dest1})
-//                    .setSources({"W:\\Src folder 1"})
-//                    .buildTask();
-
-//    if (test_task) {
-//        test_task->saveLocal();
-//    } else {
-//        SPDLOG_ERROR("Couldn't create the task");
-//    }
-
-
-
 //    Test::populateSettings();
 
 //    Test::getPrintSettings();
 
 
+    Settings& settings = Settings::getInstance();
+//    if (settings.getTaskVec().empty()){
+//        SPDLOG_INFO("Task vector is empty, creating new task");
+        const std::time_t now = time(0);
+        const std::tm time = *std::localtime(std::addressof(now));
 
+        std::shared_ptr<OnceSchedule> onceFull = std::make_shared<OnceSchedule>();
+        onceFull->type = BackupType::FULL;
+        onceFull->year = 2023;
+        onceFull->month = time.tm_mon;
+        onceFull->day = time.tm_mday;
+        onceFull->hour = time.tm_hour;
+        onceFull->minute = time.tm_min + 2;
+
+////        std::shared_ptr<OnceSchedule> onceIncremental = std::make_shared<OnceSchedule>();
+////        onceIncremental->type = BackupType::INCREMENTAL;
+////        onceIncremental->year = 2023;
+////        onceIncremental->month = 9;
+////        onceIncremental->day = 10;
+////        onceIncremental->hour = time.tm_hour;
+////        onceIncremental->minute = time.tm_min + 2;
+
+//        Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
+//        settings.addUpdate(test_dest1);
+
+//        BackupBuilder builder;
+//        auto test_task = builder
+//                        .setName("Current test")
+//                        .setSchedules({onceFull})
+//                        .setDestinations({test_dest1})
+//                        .setSources({"W:\\Src folder 1"})
+//                        .buildTask();
+
+//        test_task->saveLocal();
+//    }
+
+    std::vector<Task> tasks = settings.getTaskVec();
+
+    if (!tasks.empty()) {
+        if (argc > 1) {
+            tasks[0].setCurrentType(static_cast<BackupType>(atoi(argv[1])));
+            tasks[0].perform();
+        }
+    } else {
+        SPDLOG_ERROR("Couldn't get the task");
+    }
 
     mainWindow.show();
     return app.exec();

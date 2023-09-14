@@ -33,22 +33,24 @@ public:
 
     bool addUpdate(Task task);
     bool remove(Task task);
+    bool setLatestId(const std::string& key, const std::string& id);
     std::vector<Task> getTaskVec() const;
-    bool isTaskKeyInSettings(const std::string& key) const;
+    bool taskKeyInSettings(const std::string& key) const;
 
     std::vector<std::string> getKeyDests(const std::string& key) const;
     std::vector<fs::path> getKeySrcs(const std::string& key) const;
     std::vector<std::shared_ptr<Schedule>> getKeyScheds(const std::string& key) const;
     std::string getKeyName(const std::string& key) const;
-
+    std::string getKeyLatestId(const std::string& key) const;
     fs::path getPath() const;
 private:
     json data = {
-        {"destinations", json::array()},
-        {"tasks", json::array()}
+        {"destinations", json::object()},
+        {"tasks", json::object()}
     };
     fs::path path;
 
+    void saveToFile() const;
 };
 
 
