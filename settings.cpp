@@ -6,7 +6,6 @@
 
 #include "backupbuilder.h"
 #include "settings.h"
-#include "utils.h"
 
 void Settings::saveToFile() const {
     std::ofstream outFile(path);
@@ -131,6 +130,7 @@ std::optional<Destination> Settings::getDest(const std::string& key) const {
     return std::nullopt;
 }
 
+
 bool Settings::addUpdate(Task task) {
 
     std::vector<std::string> destinationsStr = task.getDestinations();
@@ -188,7 +188,6 @@ bool Settings::remove(Task task) {
     return true;
 }
 
-
 std::vector<Task> Settings::getTaskVec() const {
     std::vector<Task> tasks;
     for (const auto& [key, task] : data["tasks"].items()) {
@@ -236,7 +235,6 @@ bool Settings::setLatestId(const std::string& key, const std::string& id) {
     return true;
 }
 
-
 bool Settings::taskKeyInSettings(const std::string& key) const {
     return data["tasks"].find(key) != data["tasks"].end();
 }
@@ -248,7 +246,7 @@ std::vector<std::shared_ptr<Schedule>> Settings::getKeyScheds(const std::string&
 
         if (schedule["recurrence"] == ScheduleRecurrence::ONCE) {
             std::shared_ptr<OnceSchedule> obj = std::make_shared<OnceSchedule>();
-            obj->type = schedule["type"];
+//            obj->type = schedule["type"];
             obj->year = schedule["year"];
             obj->month = schedule["month"];
             obj->day = schedule["day"];
@@ -257,21 +255,21 @@ std::vector<std::shared_ptr<Schedule>> Settings::getKeyScheds(const std::string&
             scheduleObj = obj;
         } else if (schedule["recurrence"] == ScheduleRecurrence::MONTHLY) {
             std::shared_ptr<MonthlySchedule> obj = std::make_shared<MonthlySchedule>();
-            obj->type = schedule["type"];
+//            obj->type = schedule["type"];
             obj->day = schedule["day"];
             obj->hour = schedule["hour"];
             obj->minute = schedule["minute"];
             scheduleObj = obj;
         } else if (schedule["recurrence"] == ScheduleRecurrence::WEEKLY) {
             std::shared_ptr<WeeklySchedule> obj = std::make_shared<WeeklySchedule>();
-            obj->type = schedule["type"];
+//            obj->type = schedule["type"];
             obj->day = schedule["day"];
             obj->hour = schedule["hour"];
             obj->minute = schedule["minute"];
             scheduleObj = obj;
         } else if (schedule["recurrence"] == ScheduleRecurrence::DAILY) {
             std::shared_ptr<DailySchedule> obj = std::make_shared<DailySchedule>();
-            obj->type = schedule["type"];
+//            obj->type = schedule["type"];
             obj->hour = schedule["hour"];
             obj->minute = schedule["minute"];
             scheduleObj = obj;

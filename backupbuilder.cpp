@@ -6,7 +6,7 @@
 void BackupBuilder::reset() {
     this->name = "";
 //    this->latestId = "";
-    this->currentType = BackupType::NONE;
+//    this->currentType = BackupType::NONE;
     this->destinationsKeys.clear();
     this->sources.clear();
     this->schedules.clear();
@@ -21,10 +21,10 @@ BackupBuilder& BackupBuilder::setName(const std::string& name) {
 //    this->latestId = id;
 //}
 
-BackupBuilder& BackupBuilder::setCurrentType(const BackupType currentType) {
-    this->currentType = currentType;
-    return *this;
-}
+//BackupBuilder& BackupBuilder::setCurrentType(const BackupType currentType) {
+//    this->currentType = currentType;
+//    return *this;
+//}
 
 BackupBuilder& BackupBuilder::setDestinations(const std::vector<Destination> destinations) {
     for (auto& destination : destinations) {
@@ -60,10 +60,10 @@ BackupBuilder& BackupBuilder::setNoNewKey() {
 
 std::optional<Errand> BackupBuilder::buildErrand() {
 
-    if (this->currentType == BackupType::NONE) {
-        SPDLOG_ERROR("No current type specified");
-        return std::nullopt;
-    }
+//    if (this->currentType == BackupType::NONE) {
+//        SPDLOG_ERROR("No current type specified");
+//        return std::nullopt;
+//    }
 
     if (this->key == "") {
         SPDLOG_ERROR("Key not specified");
@@ -99,7 +99,7 @@ std::optional<Errand> BackupBuilder::buildErrand() {
         }
     }
     this->latestId = settings.getKeyLatestId(key);
-    Errand errand(key, latestId, name, currentType, destinationsKeys, sources);
+    Errand errand(key, latestId, name, destinationsKeys, sources);
 
     this->reset();
 
@@ -158,7 +158,7 @@ std::optional<Task> BackupBuilder::buildTask() {
         }
     }
 
-    Task task(key, latestId, name, currentType, destinationsKeys, sources, schedules);
+    Task task(key, latestId, name, destinationsKeys, sources, schedules);
 
     this->reset();
 

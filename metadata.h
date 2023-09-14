@@ -20,7 +20,6 @@ class Metadata {
 public:
     Metadata(){};
 
-    //TODO: Revise how paths are recorded
     void initAllFiles(const std::vector<fs::path>& sources);
     void initChangedFiles(const std::vector<fs::path>& sources,
                           const fs::path& destination,

@@ -484,13 +484,13 @@ std::filesystem::path BackupArgs::getSourcePath() {
     return sourceBackupDirPath;
 }
 
-void BackupArgs::setBackupType(BackupType type) {
-    backupType = type;
-}
+//void BackupArgs::setBackupType(BackupType type) {
+//    backupType = type;
+//}
 
-BackupType BackupArgs::getBackupType() {
-    return backupType;
-}
+//BackupType BackupArgs::getBackupType() {
+//    return backupType;
+//}
 
 void BackupArgs::setBackupRecurrence(ScheduleRecurrence recurrence) {
     this->backupRecurrence = recurrence;

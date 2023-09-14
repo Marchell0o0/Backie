@@ -33,29 +33,29 @@ bool IsRunningAsAdmin() {
     return isRunAsAdmin;
 }
 
-BackupType typeFromStr(const std::string& string){
-    BackupType type;
-    if (string == "FULL"){
-        type = BackupType::FULL;
-    } else if (string == "INCREMENTAL") {
-        type = BackupType::INCREMENTAL;
-    } else {
-        type = BackupType::NONE;
-    }
-    return type;
-}
+//BackupType typeFromStr(const std::string& string){
+//    BackupType type;
+//    if (string == "FULL"){
+//        type = BackupType::FULL;
+//    } else if (string == "INCREMENTAL") {
+//        type = BackupType::INCREMENTAL;
+//    } else {
+//        type = BackupType::NONE;
+//    }
+//    return type;
+//}
 
-const std::string strFromType(const BackupType type){
-    switch (type) {
-    case BackupType::FULL:
-        return "FULL";
-    case BackupType::INCREMENTAL:
-        return "INCREMENTAL";
-    case BackupType::NONE:
-        return "NONE";
-    }
-    return "";
-}
+//const std::string strFromType(const BackupType type){
+//    switch (type) {
+//    case BackupType::FULL:
+//        return "FULL";
+//    case BackupType::INCREMENTAL:
+//        return "INCREMENTAL";
+//    case BackupType::NONE:
+//        return "NONE";
+//    }
+//    return "";
+//}
 
 void loadStyleSheet(const QString& stylePath, QWidget* widget) {
     QFile styleFile(stylePath);
