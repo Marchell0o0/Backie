@@ -1,6 +1,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QButtonGroup>
+#include <iostream>
 
 #include "backupbuilder.h"
 #include "settings.h"
@@ -8,6 +9,7 @@
 #include "backupscreen.h"
 #include "ui_backupscreen.h"
 #include "dialogcalendar.h"
+
 
 BackupScreen::BackupScreen(QWidget *parent) :
     QWidget(parent),
@@ -312,6 +314,69 @@ void BackupScreen::updateChosenDateLabel() {
 
 
 void BackupScreen::createBackupBclicked() {
+<<<<<<< HEAD
+    auto type = backupArgs.getBackupType();
+    auto sourcePath = backupArgs.getSourcePath();
+    auto year = backupArgs.getDate(BackupArgs::YEAR);
+    auto month = backupArgs.getDate(BackupArgs::MONTH);
+    auto dayOfMonth = backupArgs.getDate(BackupArgs::DAYOFMONTH);
+    auto dayOfWeek = backupArgs.getDate(BackupArgs::DAYOFWEEK);
+    auto hour = backupArgs.getDate(BackupArgs::HOUR);
+    auto minute = backupArgs.getDate(BackupArgs::MINUTE);
+
+    Settings& settings = Settings::getInstance();
+
+     // delete all tasks
+    for (auto& task : settings.getTaskVec()) {
+        task.deleteLocal();
+    }
+    // delete all destinations
+    for (auto& dest : settings.getDestVec()) {
+        settings.remove(dest);
+    }
+
+    Destination test_dest1("DefaultDest", "D:\\Code\\sidebaricons");
+    std::cout << test_dest1;
+    settings.addUpdate(test_dest1);
+
+    std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
+    once->type = BackupType::FULL;
+    once->year = 2023;
+    once->month = 9;
+    once->day = 13;
+    once->hour = 21;
+    once->minute = 58;
+
+    BackupBuilder builder;
+    auto test_task1 = builder
+                          .setName("Gallery")
+                          .setDestinations({test_dest1})
+                          .setSources({"D:\\Gallery\\backgrounds"})
+                          .setSchedules({once})
+//                          .setCurrentType(BackupType::FULL)
+                          .buildTask();
+
+    if (test_task1) {
+        test_task1->saveLocal();
+
+    } else {
+        qDebug() << "Didnt perform saveLocal";
+    }
+//    test_task1->perform();
+
+    std::vector<Task> tasks = settings.getTaskVec();
+    std::vector<Destination> dests = settings.getDestVec();
+
+    std::cout << "Tasks:" << std::endl;
+    for (auto& task : tasks) {
+        std::cout << task << std::endl;
+    }
+
+    std::cout << "Global destinations:" << std::endl;
+    for (auto& dest : dests) {
+        std::cout << dest << std::endl;
+    }
+=======
 //    auto type = backupArgs.getBackupType();
 //    auto sourcePath = backupArgs.getSourcePath();
 //    auto year = backupArgs.getDate(BackupArgs::YEAR);
@@ -342,6 +407,7 @@ void BackupScreen::createBackupBclicked() {
 //                          .buildTask();
 
 //    test_task1->saveLocal();
+>>>>>>> dc05fbab2fd8f7d1e01f35a57d48a56780684f01
 
 ////    std::optional<BackupSchedule> backupSchedule_test;
 

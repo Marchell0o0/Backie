@@ -70,7 +70,6 @@ namespace Test {
             settings.remove(dest);
         }
     }
-
     void populateSettings() {
         Settings& settings = Settings::getInstance();
         Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
@@ -146,21 +145,21 @@ namespace Test {
         test_task5->saveLocal();
     }
 
-    void getPrintSettings() {
-        Settings& settings = Settings::getInstance();
-        std::vector<Task> tasks = settings.getTaskVec();
-        std::vector<Destination> dests = settings.getDestVec();
+//    void getPrintSettings() {
+//        Settings& settings = Settings::getInstance();
+//        std::vector<Task> tasks = settings.getTaskVec();
+//        std::vector<Destination> dests = settings.getDestVec();
 
-        std::cout << "Tasks:" << std::endl;
-        for (auto& task : tasks) {
-            std::cout << task << std::endl;
-        }
+//        std::cout << "Tasks:" << std::endl;
+//        for (auto& task : tasks) {
+//            std::cout << task << std::endl;
+//        }
 
-        std::cout << "Global destinations:" << std::endl;
-        for (auto& dest : dests) {
-            std::cout << dest << std::endl;
-        }
-    }
+//        std::cout << "Global destinations:" << std::endl;
+//        for (auto& dest : dests) {
+//            std::cout << dest << std::endl;
+//        }
+//    }
 }
 
 int guiMain(int argc, char* argv[]) {
