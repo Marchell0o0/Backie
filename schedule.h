@@ -2,7 +2,6 @@
 #define SCHEDULE_H
 
 #include "nlohmann/json.hpp"
-#include "utils.h"
 
 enum class ScheduleRecurrence {
     DAILY,
@@ -17,7 +16,7 @@ public:
     virtual nlohmann::json toJson() const = 0;
     virtual ScheduleRecurrence getRecurrence() const = 0;
     virtual bool verify() const =0;
-    BackupType type;
+//    BackupType type;
 };
 
 class OnceSchedule : public Schedule {

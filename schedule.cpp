@@ -3,7 +3,7 @@
 nlohmann::json OnceSchedule::toJson() const {
     return nlohmann::json{
         {"recurrence", recurrence},
-        {"type", type},
+//        {"type", type},
         {"year", year},
         {"month", month},
         {"day", day},
@@ -37,7 +37,7 @@ bool OnceSchedule::verify() const {
 nlohmann::json MonthlySchedule::toJson() const {
     return nlohmann::json{
         {"recurrence", recurrence},
-        {"type", type},
+//        {"type", type},
         {"day", day},
         {"hour", hour},
         {"minute", minute}
@@ -51,7 +51,7 @@ bool MonthlySchedule::verify() const {
 nlohmann::json WeeklySchedule::toJson() const  {
     return nlohmann::json{
         {"recurrence", recurrence},
-        {"type", type},
+//        {"type", type},
         {"day", day},
         {"hour", hour},
         {"minute", minute}
@@ -66,7 +66,7 @@ bool WeeklySchedule::verify() const  {
 nlohmann::json DailySchedule::toJson() const {
     return nlohmann::json{
         {"recurrence", recurrence},
-        {"type", type},
+//        {"type", type},
         {"hour", hour},
         {"minute", minute}
     };

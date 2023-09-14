@@ -19,7 +19,7 @@
  */
 class BackupArgs {
 private:
-    BackupType backupType = BackupType::FULL;             ///< Specifies the type of backup (e.g., Full, Incremental, etc.)
+//    BackupType backupType = BackupType::FULL;             ///< Specifies the type of backup (e.g., Full, Incremental, etc.)
     std::filesystem::path sourceBackupDirPath = ""; ///< Path to the source directory to be backed up
     ScheduleRecurrence backupRecurrence = ScheduleRecurrence::DAILY; ///< Specifies the backup schedule recurrence (e.g., Daily, Weekly, etc.)
     std::array<int, 6> dateArgs = {-1, -1, -1, -1, -1, -1};       ///< Date and time arguments for the backup
@@ -47,13 +47,13 @@ public:
 
     //Setter methods for backup arguments
     void setBackupRecurrence(ScheduleRecurrence recurrence);
-    void setBackupType(BackupType type);
+//    void setBackupType(BackupType type);
      void setSourcePath(const std::filesystem::path& path);
     void setDate(DateArgs type, int value);
 
     //Getter methods for backup arguments
     ScheduleRecurrence getBackupRecurrence();
-    BackupType getBackupType();
+//    BackupType getBackupType();
     std::filesystem::path getSourcePath();
     int getDate(DateArgs type) const;
 };

@@ -18,9 +18,9 @@ std::string Errand::getKey() const {
     return this->key;
 }
 
-BackupType Errand::getCurrentType() const {
-    return this->currentType;
-}
+//BackupType Errand::getCurrentType() const {
+//    return this->currentType;
+//}
 
 std::vector<std::string> Errand::getDestinations() const {
     return this->destinations;
@@ -32,12 +32,12 @@ std::string Errand::getName() const {
     return this->name;
 }
 
-void Errand::setCurrentType(BackupType type) {
-    this->currentType = type;
-    return;
-}
+//void Errand::setCurrentType(BackupType type) {
+//    this->currentType = type;
+//    return;
+//}
 
-static std::string formatDirName(BackupType type){
+static std::string formatDirName(){
     auto now = std::chrono::system_clock::now();
     std::time_t now_time = std::chrono::system_clock::to_time_t(now);
     std::tm buf;
@@ -45,7 +45,8 @@ static std::string formatDirName(BackupType type){
     std::ostringstream oss;
     oss << std::put_time(&buf, "[%d-%m-%Y %H.%M]");
 
-    return strFromType(type) + " " + oss.str();
+//    return strFromType(type) + " " + oss.str();
+    return oss.str();
 }
 
 static bool copy(const fs::path file, const fs::path backupFolder, const fs::path sourcePath) {
@@ -64,65 +65,15 @@ static bool copy(const fs::path file, const fs::path backupFolder, const fs::pat
 
 
 bool Errand::perform() {
-    if (this->currentType == BackupType::NONE) {
-        SPDLOG_ERROR("No current type specified");
-        return false;
-    }
+//    if (this->currentType == BackupType::NONE) {
+//        SPDLOG_ERROR("No current type specified");
+//        return false;
+//    }
 
     this->Id = generate_uuid_v4();
     Settings& settings = Settings::getInstance();
     settings.setLatestId(this->key, this->Id);
 
-    switch (this->currentType) {
-    case BackupType::FULL:
-        return full();
-    case BackupType::INCREMENTAL:
-        return incremental();
-    default:
-        return false;
-    }
-}
-
-//TODO: Count successful backups
-bool Errand::full() {
-    Metadata metadata;
-    metadata.initAllFiles(this->sources);
-    metadata.initJson(this->Id, this->parentId);
-
-    Settings& settings = Settings::getInstance();
-    for (const auto& destinationKey : this->destinations) {
-        auto dest = settings.getDest(destinationKey);
-        if (!dest) {
-            SPDLOG_WARN("One of the destinations doesn't exist");
-            continue;
-        } else if (!fs::exists(dest->destinationFolder)) {
-            SPDLOG_WARN("One of the destination folders doesn't exist");
-            continue;
-        }
-
-        fs::path backupFolder = dest->destinationFolder / this->name / formatDirName(this->currentType);
-        if (fs::exists(backupFolder)){
-            SPDLOG_WARN("Backup folder with name: {}, already exists", backupFolder.u8string());
-            continue;
-        } else {
-            fs::create_directories(backupFolder);
-        }
-
-        for (const auto& source : this->sources){
-            fs::create_directory(backupFolder / source.string());
-            for (const auto& file : fs::recursive_directory_iterator(source)) {
-                if (file.is_regular_file()) {
-                    copy(file.path(), backupFolder, source);
-                }
-            }
-        }
-        metadata.save(backupFolder / "metadata.json");
-    }
-    return true;
-}
-
-bool Errand::incremental() {
-    Settings& settings = Settings::getInstance();
     for (const auto& destinationKey : this->destinations){
         auto dest = settings.getDest(destinationKey);
         if (!dest) {
@@ -136,7 +87,7 @@ bool Errand::incremental() {
         Metadata metadata;
         metadata.initChangedFiles(this->sources, dest->destinationFolder, this->name);
 
-        fs::path backupFolder = dest->destinationFolder / this->name / formatDirName(this->currentType);
+        fs::path backupFolder = dest->destinationFolder / this->name / formatDirName();
         if (fs::exists(backupFolder)){
             SPDLOG_WARN("Backup folder with name: {}, already exists", backupFolder.u8string());
             continue;;
@@ -159,8 +110,59 @@ bool Errand::incremental() {
         metadata.initJson(this->Id, this->parentId);
         metadata.save(backupFolder / "metadata.json");
     }
+
+//    switch (this->currentType) {
+//    case BackupType::FULL:
+//        return full();
+//    case BackupType::INCREMENTAL:
+//        return incremental();
+//    default:
+//        return false;
+//    }
     return true;
 }
+
+//TODO: Count successful backups
+//bool Errand::full() {
+//    Metadata metadata;
+//    metadata.initAllFiles(this->sources);
+//    metadata.initJson(this->Id, this->parentId);
+
+//    Settings& settings = Settings::getInstance();
+//    for (const auto& destinationKey : this->destinations) {
+//        auto dest = settings.getDest(destinationKey);
+//        if (!dest) {
+//            SPDLOG_WARN("One of the destinations doesn't exist");
+//            continue;
+//        } else if (!fs::exists(dest->destinationFolder)) {
+//            SPDLOG_WARN("One of the destination folders doesn't exist");
+//            continue;
+//        }
+
+//        fs::path backupFolder = dest->destinationFolder / this->name / formatDirName(this->currentType);
+//        if (fs::exists(backupFolder)){
+//            SPDLOG_WARN("Backup folder with name: {}, already exists", backupFolder.u8string());
+//            continue;
+//        } else {
+//            fs::create_directories(backupFolder);
+//        }
+
+//        for (const auto& source : this->sources){
+//            fs::create_directory(backupFolder / source.string());
+//            for (const auto& file : fs::recursive_directory_iterator(source)) {
+//                if (file.is_regular_file()) {
+//                    copy(file.path(), backupFolder, source);
+//                }
+//            }
+//        }
+//        metadata.save(backupFolder / "metadata.json");
+//    }
+//    return true;
+//}
+
+//bool Errand::incremental() {
+
+//}
 
 
 

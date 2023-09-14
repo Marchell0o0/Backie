@@ -11,10 +11,10 @@ class Errand {
 public:
     bool perform();
 
-    void setCurrentType(BackupType type);
+//    void setCurrentType(BackupType type);
 
     std::string getKey() const;
-    BackupType getCurrentType() const;
+//    BackupType getCurrentType() const;
     std::vector<std::string> getDestinations() const;
     std::vector<fs::path> getSources() const;
     std::string getName() const;
@@ -23,23 +23,24 @@ protected:
     Errand(std::string& key,
            std::string& parentId,
            std::string& name,
-           BackupType type,
+//           BackupType type,
            std::vector<std::string> dests,
            std::vector<fs::path> srcs)
-        : key{key}, parentId{parentId}, name{name}, currentType{type}, destinations{dests}, sources{srcs} {};
+        : key{key}, parentId{parentId}, name{name}, destinations{dests}, sources{srcs} {};
+//currentType{type},
 
     std::string key;
     std::string name;
     std::string parentId;
     std::string Id;
-    BackupType currentType;
+//    BackupType currentType;
     std::vector<std::string> destinations;
     std::vector<fs::path> sources;
 
 
 private:
-    bool full();
-    bool incremental();
+//    bool full();
+//    bool incremental();
 };
 
 

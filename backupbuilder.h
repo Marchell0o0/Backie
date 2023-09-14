@@ -16,7 +16,7 @@ class BackupBuilder
 public:
     BackupBuilder& setName(const std::string& name);
 //    BackupBuilder& setLatestId(const std::string& id);
-    BackupBuilder& setCurrentType(const BackupType currentType);
+//    BackupBuilder& setCurrentType(const BackupType currentType);
     BackupBuilder& setDestinations(const std::vector<Destination> destinations);
     BackupBuilder& setDestinations(const std::vector<std::string> destinationsKeys);
     BackupBuilder& setSources(const std::vector<fs::path> sources);
@@ -31,7 +31,7 @@ private:
     std::string latestId = "";
     bool noNewKey = false;
     std::string name = "";
-    BackupType currentType = BackupType::NONE;
+//    BackupType currentType = BackupType::NONE;
     std::vector<std::string> destinationsKeys;
     std::vector<fs::path> sources;
     std::vector<std::shared_ptr<Schedule>> schedules;
