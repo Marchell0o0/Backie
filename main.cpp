@@ -14,6 +14,7 @@
 
 #include "mainwindow.h"
 
+#include "utils.h"
 #include "errand.h"
 #include "settings.h"
 #include "destination.h"
@@ -182,6 +183,10 @@ int guiMain(int argc, char* argv[]) {
     });
 
     QApplication app(argc, argv);
+
+    loadDefaultFonts();
+    loadStyleSheet(":/styles/global.css", nullptr);
+
     MainWindow mainWindow;
 
 

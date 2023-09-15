@@ -34,7 +34,6 @@ protected:
 private:
     HRESULT saveTaskScheduler() const;
     HRESULT deleteTaskScheduler() const;
-
 };
 
 class COMGuard {
