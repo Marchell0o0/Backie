@@ -25,6 +25,8 @@ std::string generate_uuid_v4();
 
 bool IsRunningAsAdmin();
 
+void loadDefaultFonts();
+
 void loadStyleSheet(const QString& stylePath, QWidget* widget);
 
 #endif // UTILS_H

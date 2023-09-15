@@ -102,6 +102,7 @@
                  <widget class="QLabel" name="createBackupL">
                   <property name="font">
                    <font>
+                    <family>Roboto</family>
                     <pointsize>16</pointsize>
                     <bold>false</bold>
                    </font>
@@ -116,11 +117,6 @@
                 </item>
                 <item alignment="Qt::AlignHCenter">
                  <widget class="QLabel" name="descrpBackupL">
-                  <property name="font">
-                   <font>
-                    <bold>false</bold>
-                   </font>
-                  </property>
                   <property name="styleSheet">
                    <string notr="true"/>
                   </property>

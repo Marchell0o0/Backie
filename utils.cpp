@@ -1,3 +1,4 @@
+#include <QFontDatabase>
 #include <QApplication>
 #include <QWidget>
 #include <QFile>
@@ -56,6 +57,16 @@ bool IsRunningAsAdmin() {
 //    }
 //    return "";
 //}
+
+void loadDefaultFonts() {
+    QFontDatabase::addApplicationFont(":/resources/assets/fonts/Roboto/Roboto-Regular.ttf");
+    QFontDatabase::addApplicationFont(":/resources/assets/fonts/Roboto/Roboto-Italic.ttf");
+    QFontDatabase::addApplicationFont(":/resources/assets/fonts/Roboto/Roboto-Medium.ttf");
+    QFontDatabase::addApplicationFont(":/resources/assets/fonts/Roboto/Roboto-Bold.ttf");
+
+//    QFont defaultFont("Roboto", 14);
+//    QApplication::setFont(defaultFont);
+}
 
 void loadStyleSheet(const QString& stylePath, QWidget* widget) {
     QFile styleFile(stylePath);

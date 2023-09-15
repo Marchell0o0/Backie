@@ -18,9 +18,15 @@
         <file>assets/icons/sideBar/active/recover_white.svg</file>
         <file>assets/icons/sideBar/active/settings_white.svg</file>
         <file>assets/icons/sideBar/active/backup_white.svg</file>
+        <file>assets/fonts/Roboto/Roboto-Bold.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Italic.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Medium.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-MediumItalic.ttf</file>
+        <file>assets/fonts/Roboto/Roboto-Regular.ttf</file>
+        <file>assets/icons/main/plus_icon.svg</file>
     </qresource>
     <qresource prefix="/">
-        <file>styles/mainWindow.css</file>
         <file>styles/backupScreen.css</file>
+        <file>styles/global.css</file>
     </qresource>
 </RCC>

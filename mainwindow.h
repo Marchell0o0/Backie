@@ -8,6 +8,7 @@
 #include "backupscreen.h"
 #include "signinscreen.h"
 #include "recoverscreen.h"
+#include "welcomebackupscreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,7 +36,7 @@ private:
     Ui::MainWindow *ui;
     BackupScreen *backupScreen;
     SignInScreen *signInScreen;
-    RecoverScreen *recoverScreen;
+    WelcomeBackupScreen *welcomeBackupScreen;
     QStackedWidget *mainStackedWidget;
     QStackedWidget *secondaryStackedWidget;
 
