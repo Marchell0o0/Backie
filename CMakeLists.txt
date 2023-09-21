@@ -25,7 +25,6 @@ set(PROJECT_SOURCES
         recoverscreen.h recoverscreen.cpp recoverscreen.ui
         Resources.qrc
 )
-add_subdirectory(FTXUI)
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Backie
         MANUAL_FINALIZATION
