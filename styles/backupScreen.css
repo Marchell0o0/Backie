@@ -24,3 +24,7 @@ QPushButton#dayOfWeekB5:checked, QPushButton#dayOfWeekB6:checked, QPushButton#da
     border: 1px solid #7E7E7E;
     color: white;
 }
+
+QPushButton#newTaskW {
+    color: white;
+}

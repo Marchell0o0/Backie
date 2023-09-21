@@ -24,6 +24,9 @@ QWidget#sidebarBase {
     background-color: #282828;
 }*/
 /*Default state*/
+* {
+    font-family: "Roboto";
+}
 QWidget, QStackedWidget {
     background-color: #1E1E1E;
 }

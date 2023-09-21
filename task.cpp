@@ -94,10 +94,10 @@ HRESULT Task::deleteTaskScheduler() const {
     HRESULT hr = guard.getLastError();
     if (!checkAndLog(hr, "Error initializing COMGuard")) return hr;
 
-
     std::wstring taskName = L"Backie " + strToWStr(this->key);
     hr = guard.getRootFolder()->DeleteTask(_bstr_t(taskName.c_str()), 0);
     checkAndLog(hr, "Error deleting task");
+
     return hr;
 }
 

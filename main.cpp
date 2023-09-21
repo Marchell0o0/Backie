@@ -15,8 +15,12 @@
 
 #include "mainwindow.h"
 
+<<<<<<< HEAD
 #include "backupbuilder.h"
 #include "destination.h"
+=======
+#include "utils.h"
+>>>>>>> 9157989411f83a042181f251ed5e055724f2bad8
 #include "errand.h"
 #include "settings.h"
 
@@ -61,6 +65,7 @@ namespace Test {
 void cleanSettings() {
 	Settings& settings = Settings::getInstance();
 
+<<<<<<< HEAD
 	// delete all tasks
 	for (auto& task : settings.getTaskVec()) {
 		//            SPDLOG_INFO("Removing task with key: {}", task.getKey());
@@ -78,6 +83,23 @@ void populateSettings() {
 	Settings& settings = Settings::getInstance();
 	Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
 	settings.addUpdate(test_dest1);
+=======
+        // delete all tasks
+        for (auto& task : settings.getTaskVec()) {
+//            SPDLOG_INFO("Removing task with key: {}", task.getKey());
+            task.deleteLocal();
+        }
+        // delete all destinations
+        for (auto& dest : settings.getDestVec()) {
+//            SPDLOG_INFO("Removing dest with key: {}", dessssazst.getKey());
+            settings.remove(dest);
+        }
+    }
+    void populateSettings() {
+        Settings& settings = Settings::getInstance();
+        Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
+        settings.addUpdate(test_dest1);
+>>>>>>> 9157989411f83a042181f251ed5e055724f2bad8
 
 	Destination test_dest2("Default destination 2", "W:\\Backie backups\\Dest 2");
 	settings.addUpdate(test_dest2);
@@ -210,8 +232,12 @@ int guiMain(int argc, char* argv[]) {
 		});
 	});
 
-	QApplication app(argc, argv);
-	MainWindow mainWindow;
+    QApplication app(argc, argv);
+
+    loadDefaultFonts();
+    loadStyleSheet(":/styles/global.css", nullptr);
+
+    MainWindow mainWindow;
 	Settings& settings = Settings::getInstance();
 
 	std::vector<Destination> dests = settings.getDestVec();
@@ -242,6 +268,7 @@ int guiMain(int argc, char* argv[]) {
 	//		const std::time_t now = time(0);
 	//		const std::tm time = *std::localtime(std::addressof(now));
 
+<<<<<<< HEAD
 	//		std::shared_ptr<OnceSchedule> once = std::make_shared<OnceSchedule>();
 	//		once->year = 2023;
 	//		once->month = time.tm_mon + 1;
@@ -258,12 +285,89 @@ int guiMain(int argc, char* argv[]) {
 	//							 .setDestinations({test_dest1})
 	//							 .setSources({"W:\\Src folder 1"})
 	//							 .buildTask();
+=======
+//    Test::cleanSettings();
+
+//    //    Test::populateSettings();
+
+//    //    Test::getPrintSettings();
+>>>>>>> 9157989411f83a042181f251ed5e055724f2bad8
 
 	//		test_task->saveLocal();
 	//	}
 
+<<<<<<< HEAD
 	mainWindow.show();
 	return app.exec();
+=======
+//    //TODO: check what happens if you bring back a deleted file
+//    Settings& settings = Settings::getInstance();
+////    if (settings.getTaskVec().empty()){
+////        SPDLOG_INFO("Task vector is empty, creating new task");
+//        const std::time_t now = time(0);
+//        const std::tm time = *std::localtime(std::addressof(now));
+
+//        std::shared_ptr<OnceSchedule> onceFull = std::make_shared<OnceSchedule>();
+//        onceFull->year = 2023;
+//        onceFull->month = time.tm_mon + 1;
+//        onceFull->day = time.tm_mday;
+//        onceFull->hour = time.tm_hour;
+//        onceFull->minute = time.tm_min + 2;
+
+////        std::shared_ptr<OnceSchedule> onceIncremental = std::make_shared<OnceSchedule>();
+////        onceIncremental->year = 2023;
+////        onceIncremental->month = 9;
+////        onceIncremental->day = 10;
+////        onceIncremental->hour = time.tm_hour;
+////        onceIncremental->minute = time.tm_min + 2;
+
+////        Destination test_dest1("Default destination 1", "W:\\Backie backups\\Dest 1");
+//        Destination test_dest1("Default destination 1", "D:\\Code\\sidebaricons");
+//        settings.addUpdate(test_dest1);
+
+//        BackupBuilder builder;
+//        auto test_task = builder
+//                        .setName("Current Dest 2")
+//                        .setSchedules({onceFull})
+//                        .setDestinations({test_dest1})
+//                        .setSources({"D:\\Gallery\\backgrounds"})
+//                        .buildTask();
+
+//        if (test_task) {
+//        test_task->saveLocal();
+
+//        } else {
+//        qDebug() << "Didnt perform saveLocal";
+//        }
+
+//        std::vector<Task> tasks = settings.getTaskVec();
+//        std::vector<Destination> dests = settings.getDestVec();
+
+//        std::cout << "Tasks:" << std::endl;
+//        for (auto& task : tasks) {
+//        std::cout << task << std::endl;
+//        }
+
+//        std::cout << "Global destinations:" << std::endl;
+//        for (auto& dest : dests) {
+//        std::cout << dest << std::endl;
+//        }
+//    }
+
+//    std::vector<Task> tasks = settings.getTaskVec();
+//        test_task->perform();
+//    if (!tasks.empty()) {
+//        if (argc > 1) {
+////            tasks[0].setCurrentType(static_cast<BackupType>(atoi(argv[1])));
+//            tasks[0].perform();
+//        }
+//    } else {
+//        SPDLOG_ERROR("Couldn't get the task");
+//    }
+
+    mainWindow.show();
+    return app.exec();
+>>>>>>> 9157989411f83a042181f251ed5e055724f2bad8
 }
 
 int main(int argc, char* argv[]) {
