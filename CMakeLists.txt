@@ -25,7 +25,7 @@ set(PROJECT_SOURCES
         recoverscreen.h recoverscreen.cpp recoverscreen.ui
         Resources.qrc
 )
-
+add_subdirectory(FTXUI)
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Backie
         MANUAL_FINALIZATION
@@ -55,6 +55,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         backupbuilder.h backupbuilder.cpp
         schedule.h schedule.cpp
         task.h task.cpp
+		recoveryfolder.h recoveryfolder.cpp
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -77,7 +78,12 @@ endif()
 
 
 add_subdirectory(spdlog)
-target_link_libraries(Backie PRIVATE Qt6::Network Qt${QT_VERSION_MAJOR}::Widgets ${TASKSCHED_LIB} spdlog::spdlog)
+
+target_link_libraries(Backie PRIVATE
+   Qt6::Network
+   Qt${QT_VERSION_MAJOR}::Widgets
+   ${TASKSCHED_LIB}
+   spdlog::spdlog)
 
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

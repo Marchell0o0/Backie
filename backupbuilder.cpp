@@ -115,8 +115,6 @@ std::optional<Task> BackupBuilder::buildTask() {
         this->latestId = settings.getKeyLatestId(key);
     }
 
-    SPDLOG_INFO("Creating a task with this latest id: {}", latestId);
-
     //TODO: other name checks
     if (this->name == "") {
         SPDLOG_ERROR("Name not specified or wrong format");

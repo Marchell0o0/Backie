@@ -130,57 +130,63 @@ COMGuard::COMGuard() {
 }
 
 HRESULT COMGuard::initNewTask() {
-    HRESULT hr = pService->NewTask(0, &pTask);
-    if (FAILED(hr)) return hr;
+	HRESULT hr = pService->NewTask(0, &pTask);
+	if (FAILED(hr))
+		return hr;
 
-    hr = pTask->get_Actions(&pActionCollection);
-    if (FAILED(hr)) return hr;
+	hr = pTask->get_Actions(&pActionCollection);
+	if (FAILED(hr))
+		return hr;
 
-    hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
-    if (FAILED(hr)) return hr;
+	hr = pActionCollection->Create(TASK_ACTION_EXEC, &pAction);
+	if (FAILED(hr))
+		return hr;
 
-    hr = pAction->QueryInterface(IID_IExecAction, (void **)&pExecAction);
-    if (FAILED(hr)) return hr;
+	hr = pAction->QueryInterface(IID_IExecAction, (void**)&pExecAction);
+	if (FAILED(hr))
+		return hr;
 
-    hr = pTask->get_Triggers(&pTriggerCollection);
-    return hr;
+	hr = pTask->get_Triggers(&pTriggerCollection);
+	return hr;
 }
 
 COMGuard::~COMGuard() {
     CoUninitialize();
 }
 
-HRESULT COMGuard::putScheduleTrigger(const std::shared_ptr<Schedule> schedule) const {
-    HRESULT hr;
-    switch (schedule->getRecurrence())
-    {
-    case ScheduleRecurrence::DAILY:
-        hr = createDailyTrigger(dynamic_cast<const DailySchedule&>(*schedule));
-        break;
-    case ScheduleRecurrence::WEEKLY:
-        hr = createWeeklyTrigger(dynamic_cast<const WeeklySchedule&>(*schedule));
-        break;
-    case ScheduleRecurrence::MONTHLY:
-        hr = createMonthlyTrigger(dynamic_cast<const MonthlySchedule&>(*schedule));
-        break;
-    case ScheduleRecurrence::ONCE:
-        hr = createOnceTrigger(dynamic_cast<const OnceSchedule&>(*schedule));
-        break;
-    }
-    return hr;
+HRESULT
+COMGuard::putScheduleTrigger(const std::shared_ptr<Schedule> schedule) const {
+	HRESULT hr;
+	switch (schedule->getRecurrence()) {
+	case ScheduleRecurrence::DAILY:
+		hr = createDailyTrigger(dynamic_cast<const DailySchedule&>(*schedule));
+		break;
+	case ScheduleRecurrence::WEEKLY:
+		hr = createWeeklyTrigger(
+			dynamic_cast<const WeeklySchedule&>(*schedule));
+		break;
+	case ScheduleRecurrence::MONTHLY:
+		hr = createMonthlyTrigger(
+			dynamic_cast<const MonthlySchedule&>(*schedule));
+		break;
+	case ScheduleRecurrence::ONCE:
+		hr = createOnceTrigger(dynamic_cast<const OnceSchedule&>(*schedule));
+		break;
+	}
+	return hr;
 }
 
 HRESULT COMGuard::createDailyTrigger(const DailySchedule& daily) const {
-    ComPtr<ITrigger> pTrigger = NULL;
-    std::wstring startTime = L"2023-08-01T"
-                             + std::to_wstring(daily.hour) + L":"
-                             + std::to_wstring(daily.minute) + L":00";
+	ComPtr<ITrigger> pTrigger = NULL;
+	std::wstring startTime = L"2023-08-01T" + std::to_wstring(daily.hour) + L":"
+							 + std::to_wstring(daily.minute) + L":00";
 
-    HRESULT hr = pTriggerCollection->Create(TASK_TRIGGER_DAILY, &pTrigger);
-    if (FAILED(hr)) return hr;
+	HRESULT hr = pTriggerCollection->Create(TASK_TRIGGER_DAILY, &pTrigger);
+	if (FAILED(hr))
+		return hr;
 
-    hr = pTrigger->put_StartBoundary(bstr_t(startTime.c_str()));
-    return hr;
+	hr = pTrigger->put_StartBoundary(bstr_t(startTime.c_str()));
+	return hr;
 }
 
 HRESULT COMGuard::createWeeklyTrigger(const WeeklySchedule& weekly) const {

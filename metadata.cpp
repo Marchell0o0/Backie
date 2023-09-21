@@ -10,187 +10,193 @@
 
 namespace fs = std::filesystem;
 
-static nlohmann::json toJson(FileMetadata meta){
-    return {
-        {"modificationTimestamp", meta.modificationTimestamp},
-        {"fileSize", meta.fileSize},
-        {"fileHash", meta.fileHash},
-        {"isDeleted", meta.isDeleted}
-    };
+static std::string getCurrentTimestamp() {
+	auto now = std::chrono::system_clock::now();
+
+	auto now_time_t = std::chrono::system_clock::to_time_t(now);
+
+	std::tm now_tm = *std::gmtime(&now_time_t);
+
+	std::ostringstream stream;
+
+	stream << std::put_time(&now_tm, "%Y-%m-%dT%H:%M:%SZ"); // ISO 8601 format
+
+	return stream.str();
 }
 
-static FileMetadata fromJson(const nlohmann::json& j) {
-    FileMetadata metadata;
-    metadata.modificationTimestamp = j.at("modificationTimestamp").get<std::time_t>();
-    metadata.fileSize = j.at("fileSize").get<uintmax_t>();
-    metadata.fileHash = j.at("fileHash").get<std::string>();
-    metadata.isDeleted = j.at("isDeleted").get<bool>();
-    return metadata;
+Metadata::Metadata(const fs::path& backupFolder) : backupFolder{backupFolder} {
+	fs::path globalMtdPath = backupFolder / "global_metadata.json";
+	if (!fs::exists(globalMtdPath)) {
+		globalData["latest folder"] = "";
+		std::ofstream globalMtd(globalMtdPath);
+		globalMtd << globalData.dump(4);
+	} else {
+		std::ifstream globalMtd(globalMtdPath);
+		globalMtd >> globalData;
+	}
 }
 
+Metadata::Metadata(const fs::path& backupFolder, const fs::path& localFolder)
+	: backupFolder{backupFolder}, localFolder{localFolder} {
 
-//TODO: load by parent backups until it's a full one
-std::optional<std::map<fs::path, FileMetadata>> Metadata::loadCombinedMdMap(const fs::path& destination, const std::string& name) {
-    std::vector<fs::directory_entry> backupDirs;
-    for (const auto& dirEntry : fs::directory_iterator(destination / name)) {
-        if (fs::is_directory(dirEntry)) {
-            backupDirs.push_back(dirEntry);
-        }
-    }
+	fs::path localMtdPath = localFolder / "local_metadata.json";
+	fs::path globalMtdPath = backupFolder / "global_metadata.json";
+	fs::path lastBackup;
 
-    std::sort(backupDirs.begin(), backupDirs.end(),
-              [](const fs::directory_entry& a, const fs::directory_entry& b) {
-                  return fs::last_write_time(a) < fs::last_write_time(b);
-              });
+	if (!fs::exists(globalMtdPath)) {
+		//		globalData["latest folder"] = "";
+		//		std::ofstream globalMtd(globalMtdPath);
+		//		globalMtd << globalData.dump(4);
+	} else {
+		std::ifstream globalMtd(globalMtdPath);
+		globalMtd >> globalData;
+		fs::path lastFolder = globalData["latest folder"];
+		lastBackup = lastFolder / "local_metadata.json";
+	}
 
-    // Identify the last FULL backup and mark its position
-    int lastFullBackupPos = -1;
-    for (int i = 0; i < backupDirs.size(); ++i) {
-        if (backupDirs[i].path().filename().string().find("FULL") != std::string::npos) {
-            lastFullBackupPos = i;
-            break;
-        }
-    }
+	SPDLOG_INFO("Initializing local data");
 
-    if (lastFullBackupPos == -1) {
-        SPDLOG_ERROR("No full backup found");
-        return std::nullopt;
-    }
+	//	if (fs::exists(localMtdPath)) {
+	//		std::ifstream file(localMtdPath);
+	//		file >> localData;
+	//	}
+	if (!lastBackup.empty()) {
+		std::ifstream file(lastBackup);
+		file >> localData;
+	}
+	//		else {
+	//		localData["deleted"] = nlohmann::json::object();
+	//		std::ofstream localMtd(localMtdPath);
+	//		localMtd << localData.dump(4);
+	//	}
 
-    std::map<fs::path, FileMetadata> combinedMetadata;
-
-    // Load the FULL backup metadata first
-    if (fs::exists(backupDirs[lastFullBackupPos].path() / "metadata.json")) {
-        combinedMetadata = loadMdMap(backupDirs[lastFullBackupPos].path() / "metadata.json");
-    } else {
-        SPDLOG_ERROR("FULL backup doesn't have a metadata file");
-        return std::nullopt;
-    }
-
-    // Iterate through each subsequent backup and combine the metadata
-    for (int i = lastFullBackupPos + 1; i < backupDirs.size(); ++i) {
-        std::map<fs::path, FileMetadata> currentBackupMetadata;
-        if (fs::exists(backupDirs[i].path() / "metadata.json")) {
-            currentBackupMetadata = loadMdMap(backupDirs[i].path() / "metadata.json");
-            for (const auto& [path, meta] : currentBackupMetadata) {
-                combinedMetadata[path] = meta; // This will overwrite old metadata with new if the path is the same
-            }
-        } else {
-            SPDLOG_WARN("Backup in folder '{}' doesn't have a metadata file", backupDirs[i].path().string());
-        }
-    }
-    return combinedMetadata;
+	//	id = generate_uuid_v4();
 }
 
-void Metadata::addFile(const fs::path& file) {
-    map[file] = MdFromFile(file);
+Metadata::~Metadata() {
+
+	if (globalData.find("latest folder") != globalData.end()) {
+		std::string parentFolder = globalData["latest folder"];
+		globalData[localFolder.string()]
+			= {{"parent folder", parentFolder},
+			   {"children folders", nlohmann::json::array()},
+			   {"timestamp", getCurrentTimestamp()}};
+		globalData[parentFolder]["children folders"].push_back(localFolder);
+	} else {
+		globalData[localFolder.string()]
+			= {{"parent folder", ""},
+			   {"children folders", nlohmann::json::array()},
+			   {"timestamp", getCurrentTimestamp()}};
+	}
+	globalData["latest folder"] = localFolder.string();
+
+	std::ofstream globalMtd(backupFolder / "global_metadata.json");
+	if (!globalMtd) {
+		SPDLOG_ERROR("Failed to open global metadata file for writing");
+	}
+	globalMtd << globalData.dump(4);
+	globalMtd.close();
+
+	// TODO: new local data is the same as the last
+	if (localFolder.empty()) {
+		return;
+	}
+
+	std::vector<std::string> emptyBackups;
+	for (const auto& [backupFolder, sources] : localData.items()) {
+		std::vector<std::string> emptySources;
+		for (const auto& [source, filePaths] : sources.items()) {
+
+			std::vector<std::string> deletedPaths;
+			for (auto& [path, hash] : filePaths.items()) {
+				fs::path object = path;
+				fs::path sourcePath = source;
+				fs::path objectAbsPath = sourcePath / object;
+				if (!fs::exists(objectAbsPath)) {
+					deletedPaths.push_back(path);
+				}
+			}
+
+			for (const auto& path : deletedPaths) {
+				filePaths.erase(path);
+			}
+
+			if (filePaths.empty()) {
+				emptySources.push_back(source);
+			}
+		}
+		for (const auto& emptySource : emptySources) {
+			sources.erase(emptySource);
+		}
+		if (sources.empty()) {
+			emptyBackups.push_back(backupFolder);
+		}
+	}
+	for (const auto& emptyBackup : emptyBackups) {
+		localData.erase(emptyBackup);
+	}
+
+	std::ofstream localMtd(localFolder / "local_metadata.json");
+	if (!localMtd) {
+		SPDLOG_ERROR("Failed to open local metadata file for writing");
+	}
+
+	localMtd << localData.dump(4);
+	localMtd.close();
+
+	// TODO: Add other attributes
+	//	SetFileAttributes(destination.c_str(),
+	//					  GetFileAttributes(destination.c_str())
+	//						  | FILE_ATTRIBUTE_HIDDEN);
 }
 
-void Metadata::initAllFiles(const std::vector<fs::path>& sources) {
-    for (const auto& source : sources) {
-        for (const auto& file : fs::recursive_directory_iterator(source)) {
-            if (file.is_regular_file()) {
-                addFile(file.path());
-            }
-        }
-    }
+std::vector<fs::path> Metadata::getBackupsVec() const {
+	std::vector<fs::path> backups;
+	for (auto& [folder, values] : globalData.items()) {
+		if (folder != "latest folder" && !folder.empty()
+			&& fs::exists(folder)) {
+			backups.push_back(folder);
+		}
+	}
+	return backups;
 }
 
-void Metadata::initJson(const std::string& Id, const std::string& parentId) {
-    for (const auto& [path, meta] : map) {
-        MdJson[path.string()] = toJson(meta);
-    }
-    MdJson["parentID"] = parentId;
-    MdJson["ID"] = Id;
+void Metadata::setNextParent(const fs::path& folder) {
+	globalData["latest folder"] = folder.string();
 }
 
-void Metadata::initChangedFiles(const std::vector<fs::path>& sources,
-                                const fs::path& destination,
-                                const std::string& name) {
-    this->combinedOldMap = *loadCombinedMdMap(destination, name);
+bool Metadata::changedUpdate(const fs::path& relativePath,
+							 const fs::path& source) {
+	std::string newHash
+		= std::to_string(fs::last_write_time(source / relativePath)
+							 .time_since_epoch()
+							 .count()); // TODO: hash
 
-    // Check for deleted files
-    for (const auto& [path, meta] : this->combinedOldMap) {
-        if (!fs::exists(path) && !meta.isDeleted) {
-            FileMetadata deletedMeta = meta;
-            deletedMeta.isDeleted = true;
-            this->map[path] = deletedMeta;
-        }
-    }
-}
+	for (auto& [backupFolder, sources] : localData.items()) {
+		if (sources.find(source.string()) == sources.end()) {
+			continue;
+		}
+		for (auto& filePaths : sources.items()) {
+			auto file = filePaths.value().find(relativePath.string());
+			if (file == filePaths.value().end()) {
+				continue;
+			}
 
-FileMetadata Metadata::MdFromFile(const fs::path& file){
-    FileMetadata meta;
-    meta.modificationTimestamp = fs::last_write_time(file).time_since_epoch().count();
-    meta.fileSize = fs::file_size(file);
-    meta.fileHash = std::to_string(meta.modificationTimestamp);  // TODO: Pseudo-hash for this example
-    meta.isDeleted = false;
-    return meta;
-}
+			const std::string& oldHash = file.value();
 
-bool Metadata::changed(const fs::path& file) {
-    auto it = this->combinedOldMap.find(file);
-
-    if (it == this->combinedOldMap.end()) {
-        return true;
-    } else {
-        const FileMetadata& oldMeta = it->second;
-
-        FileMetadata tempMeta;
-        tempMeta.modificationTimestamp = fs::last_write_time(file).time_since_epoch().count();
-        tempMeta.fileSize = fs::file_size(file);
-        tempMeta.fileHash = std::to_string(tempMeta.modificationTimestamp); // TODO: Pseudo-hash
-        tempMeta.isDeleted = false;
-
-        if (tempMeta.modificationTimestamp != oldMeta.modificationTimestamp ||
-            tempMeta.fileSize != oldMeta.fileSize ||
-            tempMeta.fileHash != oldMeta.fileHash ||
-            tempMeta.isDeleted != oldMeta.isDeleted) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool Metadata::save(const fs::path& jsonDestination) {
-    std::ofstream outFile(jsonDestination);
-    if (!outFile) {
-        SPDLOG_ERROR("Failed to open metadata file for writing");
-        return false;
-    }
-
-    if (MdJson.empty()) {
-        SPDLOG_WARN("Json that is saved is empty");
-    }
-
-    outFile << this->MdJson.dump(4);
-    outFile.close();
-    //TODO: Add other attributes
-    SetFileAttributes(jsonDestination.c_str(), GetFileAttributes(jsonDestination.c_str()) | FILE_ATTRIBUTE_HIDDEN);
-    return true;
-}
-
-std::map<fs::path, FileMetadata> Metadata::loadMdMap(const fs::path& jsonDestination) {
-    nlohmann::json j;
-    std::ifstream inFile(jsonDestination);
-
-    if (!inFile) {
-        throw std::runtime_error("Failed to open metadata file for reading");
-    }
-
-    inFile >> j;
-
-    std::map<fs::path, FileMetadata> metadata;
-    for (const auto& item : j.items()) {
-        if (item.key() == "parentID") {
-            continue;
-        } else if (item.key() == "ID") {
-            continue;
-        } else {
-            metadata[fs::path(item.key())] = fromJson(item.value());
-        }
-    }
-
-    return metadata;
+			if (oldHash != newHash) {
+				localData[backupFolder][source.string()].erase(
+					relativePath.string());
+				localData[localFolder.string()][source.string()]
+						 [relativePath.string()]
+					= newHash;
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	localData[localFolder.string()][source.string()][relativePath.string()]
+		= newHash; // TODO: hash
+	return true;
 }

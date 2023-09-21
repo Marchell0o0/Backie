@@ -9,35 +9,23 @@
 
 namespace fs = std::filesystem;
 
-struct FileMetadata {
-    std::time_t modificationTimestamp;
-    uintmax_t fileSize;
-    std::string fileHash;
-    bool isDeleted;
-};
-
 class Metadata {
 public:
-    Metadata(){};
+	Metadata(const fs::path& backupFolder, const fs::path& localFolder);
+	Metadata(const fs::path& backupFolder);
+	~Metadata();
 
-    void initAllFiles(const std::vector<fs::path>& sources);
-    void initChangedFiles(const std::vector<fs::path>& sources,
-                          const fs::path& destination,
-                          const std::string& name);
-    void initJson(const std::string& Id, const std::string& parentId);
+	fs::path backupFolder;
+	fs::path localFolder;
+	std::string id;
+	nlohmann::json localData;
+	nlohmann::json globalData;
 
-    bool changed(const fs::path& file);
-    void addFile(const fs::path& file);
-    bool save(const fs::path& jsonDestination);
-    std::map<fs::path, FileMetadata> map;
-private:
-    std::map<fs::path, FileMetadata> combinedOldMap;
-    nlohmann::json MdJson;
+	void setNextParent(const fs::path& folder);
 
-    FileMetadata MdFromFile(const fs::path& file);
-    std::map<fs::path, FileMetadata> loadMdMap(const fs::path& jsonDestination);
-    std::optional<std::map<fs::path, FileMetadata>> loadCombinedMdMap(const fs::path& jsonDestination, const std::string& name);
+	bool changedUpdate(const fs::path& file, const fs::path& source);
+
+	std::vector<fs::path> getBackupsVec() const;
 };
-
 
 #endif // METADATA_H
