@@ -28,3 +28,6 @@ QPushButton#dayOfWeekB5:checked, QPushButton#dayOfWeekB6:checked, QPushButton#da
 QPushButton#newTaskW {
     color: white;
 }
+QLineEdit#lineEdit {
+background-color:#1E1E1E;
+}

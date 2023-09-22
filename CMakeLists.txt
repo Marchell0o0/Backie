@@ -22,7 +22,7 @@ set(PROJECT_SOURCES
         mainwindow.cpp mainwindow.h mainwindow.ui
         backupscreen.h backupscreen.cpp backupscreen.ui
         signinscreen.h signinscreen.cpp signinscreen.ui
-        recoverscreen.h recoverscreen.cpp recoverscreen.ui
+        recoveryscreen.h recoveryscreen.cpp recoveryscreen.ui
         Resources.qrc
 )
 
@@ -37,7 +37,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         backupscreen.h backupscreen.cpp backupscreen.ui
         signinscreen.h signinscreen.cpp signinscreen.ui
         assets/icons/licenses/delete
-        recoverscreen.h recoverscreen.cpp recoverscreen.ui
+        recoveryscreen.h recoveryscreen.cpp recoveryscreen.ui
         styles/global.css
         assets/icons/sideBar/active/backup_grey.svg assets/icons/sideBar/active/history_grey.svg assets/icons/sideBar/active/home_grey.svg assets/icons/sideBar/active/recover_grey.svg assets/icons/sideBar/active/settings_grey.svg assets/icons/sideBar/iconLicenses/license-56530056-3916611.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917033.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917058.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917296.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917330.pdf assets/icons/sideBar/iconLicenses/license-56530056-3917688.pdf assets/icons/sideBar/notActive/account_white.svg assets/icons/sideBar/notActive/backup_white.svg assets/icons/sideBar/notActive/history_white.svg assets/icons/sideBar/notActive/home_white.svg assets/icons/sideBar/notActive/recover_white.svg assets/icons/sideBar/notActive/settings_white.svg
         styles/backupScreen.css
@@ -58,6 +58,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         assets/fonts/Roboto/Roboto-Bold.ttf assets/fonts/Roboto/Roboto-Italic.ttf assets/fonts/Roboto/Roboto-Medium.ttf assets/fonts/Roboto/Roboto-MediumItalic.ttf assets/fonts/Roboto/Roboto-Regular.ttf
         welcomebackupscreen.h welcomebackupscreen.cpp welcomebackupscreen.ui
         assets/icons/main/plus_icon.svg
+        taskcard.h taskcard.cpp taskcard.ui
+        styles/taskCard.css
+
     )
 # Define target properties for An
 #    set_property(TARGET Backie APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
