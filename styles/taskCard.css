@@ -1,0 +1,53 @@
+QFrame#detailsCardPart {
+    background-color: #323232;
+}
+QFrame#foldedCardPart {
+    background-color: #282828;
+}
+QFrame#nameDetailsFrame QLabel{
+    color: #7E7E7E;
+    background-color: #323232;
+}
+QPushButton#backupNowTaskB {
+    background-color: white;
+    color: black;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+}
+QWidget#scrollAreaWidgetContents {
+    background-color: #323232;
+    border: none;
+}
+
+/*TODO_OLEH:rewrite this*/
+QWidget#widget_4, QWidget#widget_4 QLabel {
+    background-color: #323232;
+    border: none;
+}
+
+
+QFrame#nameDetailsFrame, QPushButton#taskStatusB_2, QPushButton#taskStatusB_3 {
+    background-color: #323232;
+    color: #7E7E7E;
+}
+QWidget#foldedHandWidget, QWidget#foldedHandWidget QLabel {
+    background-color: #282828;
+}
+QPushButton#editTaskB, QPushButton#deleteTaskB, QPushButton#foldingTaskB {
+   border-radius: 20px;
+   background-color: #323232;
+
+}
+QPushButton#taskStatusB {
+    border-radius: 15px;
+    width: 62px;
+    height: 19px;
+    color: #16FEAB;
+    background-color: #1C3A30;
+    padding: 2px;
+    font-size: 9px;
+}
+QLabel#taskNameL {
+    font-weight: bold;
+}

@@ -7,8 +7,10 @@
 
 #include "backupscreen.h"
 #include "signinscreen.h"
-#include "recoverscreen.h"
+#include "recoveryscreen.h"
 #include "welcomebackupscreen.h"
+//#include "taskcard.h"
+#include "recoveryscreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,6 +34,8 @@ private slots:
 
     void on_accountScreenB_toggled(bool checked);
 
+    void on_historyScreenB_clicked();
+
 private:
     Ui::MainWindow *ui;
     BackupScreen *backupScreen;
@@ -39,6 +43,8 @@ private:
     WelcomeBackupScreen *welcomeBackupScreen;
     QStackedWidget *mainStackedWidget;
     QStackedWidget *secondaryStackedWidget;
+//    TaskCard *testTaskCard;
+    RecoveryScreen *recoveryScreen;
 
 };
 #endif // MAINWINDOW_H
