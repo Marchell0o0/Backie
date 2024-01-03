@@ -28,5 +28,6 @@
     <qresource prefix="/">
         <file>styles/backupScreen.css</file>
         <file>styles/global.css</file>
+        <file>styles/taskCard.css</file>
     </qresource>
 </RCC>

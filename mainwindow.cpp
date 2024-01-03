@@ -17,11 +17,15 @@ MainWindow::MainWindow(QWidget *parent)
     welcomeBackupScreen = new WelcomeBackupScreen(this);
     backupScreen = new BackupScreen(this);
     signInScreen = new SignInScreen(this);
+//    testTaskCard = new TaskCard(this);
+    recoveryScreen = new RecoveryScreen(this);
 
     // Add the screens to the corresponding QStackedWidgets
     mainStackedWidget->addWidget(ui->pageMainScreen);
     secondaryStackedWidget->addWidget(welcomeBackupScreen);
     secondaryStackedWidget->addWidget(backupScreen);
+//    secondaryStackedWidget->addWidget(testTaskCard);
+    secondaryStackedWidget->addWidget(recoveryScreen);
     mainStackedWidget->addWidget(signInScreen);
 
     // Starting with the main application view:
@@ -36,6 +40,7 @@ MainWindow::~MainWindow()
 {
     delete backupScreen;
     delete signInScreen;
+//    delete testTaskCard;
     delete ui;
 }
 
@@ -57,4 +62,10 @@ void MainWindow::on_accountScreenB_toggled(bool checked)
 void MainWindow::on_recoverScreenB_toggled(bool checked)
 {
     secondaryStackedWidget->setCurrentWidget(backupScreen);
+}
+
+void MainWindow::on_historyScreenB_clicked()
+{
+//    secondaryStackedWidget->setCurrentWidget(testTaskCard);
+    secondaryStackedWidget->setCurrentWidget(recoveryScreen);
 }
