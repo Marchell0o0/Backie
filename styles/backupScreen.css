@@ -1,0 +1,33 @@
+/*Default state*/
+QPushButton#dayOfWeekB1, QPushButton#dayOfWeekB2, QPushButton#dayOfWeekB3, QPushButton#dayOfWeekB4,
+QPushButton#dayOfWeekB5, QPushButton#dayOfWeekB6, QPushButton#dayOfWeekB7 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 3px;
+    padding-right: 3px;
+    border-color: #3A3A3A;
+    color: #7E7E7E;
+}
+
+/*Hover state*/
+QPushButton#dayOfWeekB1:hover, QPushButton#dayOfWeekB2:hover, QPushButton#dayOfWeekB3:hover, QPushButton#dayOfWeekB4:hover,
+QPushButton#dayOfWeekB5:hover, QPushButton#dayOfWeekB6:hover, QPushButton#dayOfWeekB7:hover {
+    background-color: #3A3A3A;
+    border: 1px solid #7E7E7E;
+    color: white;
+}
+
+/*Checked state*/
+QPushButton#dayOfWeekB1:checked, QPushButton#dayOfWeekB2:checked, QPushButton#dayOfWeekB3:checked, QPushButton#dayOfWeekB4:checked,
+QPushButton#dayOfWeekB5:checked, QPushButton#dayOfWeekB6:checked, QPushButton#dayOfWeekB7:checked {
+    background-color: #3A3A3A;
+    border: 1px solid #7E7E7E;
+    color: white;
+}
+
+QPushButton#newTaskW {
+    color: white;
+}
+QLineEdit#lineEdit {
+background-color:#1E1E1E;
+}
